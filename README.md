@@ -10,7 +10,7 @@
 
 ### A GitHub action to check i18n/L10n keys and values
 
-`i18n-check` is a GitHub action used to automate the validation of keys and values of your internationalization and localization processes.
+`i18n-check-action` is a GitHub action for [i18n-check](https://github.com/activist-org/i18n-check) used to automate the validation of keys and values of your internationalization and localization processes.
 
 Developed by the [activist community](https://github.com/activist-org), this action is meant to assure that development and i18n/L10n teams are in sync when using JSON based localization processes. The action can be expanded later to work for other file type processes as needed.
 
@@ -23,7 +23,7 @@ Developed by the [activist community](https://github.com/activist-org), this act
 
 - [Conventions](#contentions)
 - [How it works](#how-it-works)
-- [Usage](#usage)
+- [Configuration](#configuration)
 - [Contributors](#contributors)
 
 <a id="conventions"></a>
@@ -51,24 +51,35 @@ Developed by the [activist community](https://github.com/activist-org), this act
 
 # How it works [`⇧`](#contents)
 
-You provide `i18n-check` with the following arguments:
+### Arguments
+
+You provide `i18n-check-action` with the following arguments:
 
 - `src-dir`: The path to the directory that has source code to check
 - `i18n-dir`: The directory path to your i18n files
 - `i18n-src`: The name of the i18n source file
+- `i18n-map`: The path to the i18n-map file (optional - see [i18n-check](https://github.com/activist-org/i18n-check))
+
+### Checks
 
 From there the following checks are ran across your codebase:
 
 - `key_identifiers`: Does the source file have keys that don't match the above format or name conventions?
+  - Rename them so i18n key usage is consistent and their scope is communicated in their name.
 - `unused_keys`: Does the source file have keys that are not used in the codebase?
-- `non_source_keys`: Do the target files have keys that are not in the source file?
+  - Remove them so the localization team isn't working on strings that aren't used.
+- `non_source_keys`: Do the target locale files have keys that are not in the source file?
+  - Remove them as they won't be used in the application.
 - `repeat_values`: Does the source file have repeat values that can be combined into a single key?
+  - Combine them so the localization team only needs to localize one of them.
+- `map_object`: Do the `i18nMap` object keys match the `i18n-src` keys.
+  - Make sure that the key map object is up to date if using `i18nMap` (see [i18n-check](https://github.com/activist-org/i18n-check)).
 
-Each of the above checks is ran in parallel with directions for how to fix the i18n files being provided when errors are raised. Checks can also be disabled in the workflow via options passed in the YAML file.
+Each of the above checks is ran in parallel with directions for how to fix the i18n files being provided when errors are raised. Checks can also be disabled in the workflow via options passed in the configuration YAML file.
 
-<a id="usage"></a>
+<a id="configuration"></a>
 
-# Usage [`⇧`](#contents)
+# Configuration [`⇧`](#contents)
 
 To use this action, make a file `.github/workflows/i18n-check.yml` and include the following template configuration:
 
@@ -99,6 +110,7 @@ jobs:
           src-dir: PATH_TO_CODE_TO_CHECK
           i18n-dir: PATH_TO_I18N_FILES
           i18n-src: PATH_TO_SOURCE_I18N_FILE
+          i18n-map: PATH_TO_I18N_MAP_FILE
 ```
 
 <a id="contributors"></a>
