@@ -1,6 +1,6 @@
-# Contributing to i18n-check-action
+# Contributing to tsbe-check
 
-Thank you for contributing to i18n-check-action!
+Thank you for contributing to `tsbe-check`!
 
 Please take a moment to review this document in order to make the contribution process easy and effective for everyone involved.
 
@@ -13,12 +13,15 @@ If you have questions or would like to communicate with the team, please [join u
 ## **Contents**
 
 - [First steps as a contributor](#first-steps-)
+- [Learning the tech stack](#learning-the-tech-stack-)
 - [Development environment](#dev-env-)
 - [Linting](#linting-)
+- [Testing](#testing-)
 - [Issues and projects](#issues-projects-)
 - [Bug reports](#bug-reports-)
 - [Feature requests](#feature-requests-)
 - [Pull requests](#pull-requests-)
+- [Documentation](#documentation)
 
 <a id="first-steps-"></a>
 
@@ -32,6 +35,32 @@ Thank you for your interest in contributing to activist community projects! We l
   - The [General](https://matrix.to/#/!uIGQUxlCnEzrPiRsRw:matrix.org?via=matrix.org&via=effektio.org&via=acter.global) and [Development](https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz) channels would be great places to start!
   - Feel free to introduce yourself and tell us what your interests are if you're comfortable :)
 - Consider joining our [bi-weekly developer sync](https://etherpad.wikimedia.org/p/activist-dev-sync)!
+
+<a id="learning-the-tech-stack-"></a>
+
+## Learning the tech stack [`⇧`](#contents)
+
+`tsbe-check` is very open to contributions from people in the early stages of their coding journey! The following is a select list of documentation pages to help you understand the technologies we use.
+
+<details><summary>Docs for those new to programming</summary>
+<p>
+
+- [Mozilla Developer Network Learning Area](https://developer.mozilla.org/en-US/docs/Learn)
+  - Doing MDN sections for HTML, CSS and JavaScript is the best ways to get into web development!
+- [Open Source Guides](https://opensource.guide/)
+  - Guides from GitHub about open-source software including how to start and much more!
+
+</p>
+</details>
+
+<details><summary>Python learning docs</summary>
+<p>
+
+- [Python getting started guide](https://docs.python.org/3/tutorial/introduction.html)
+- [Python getting started resources](https://www.python.org/about/gettingstarted/)
+
+</p>
+</details>
 
 <a id="dev-env-"></a>
 
@@ -55,7 +84,7 @@ Thank you for your interest in contributing to activist community projects! We l
 > </p>
 > </details>
 
-2. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the [i18n-check-action repo](https://github.com/activist-org/i18n-check-action), clone your fork, and configure the remotes:
+2. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the [tsbe-check repo](https://github.com/activist-org/tsbe-check), clone your fork, and configure the remotes:
 
 > [!NOTE]
 >
@@ -67,7 +96,7 @@ Thank you for your interest in contributing to activist community projects! We l
 >
 > To run git commands with SSH, remember then to substitute the HTTPS URL, `https://github.com/...`, with the SSH one, `git@github.com:...`.
 >
-> - e.g. Cloning now becomes `git clone git@github.com:<your-username>/activist.git`
+> - e.g. Cloning now becomes `git clone git@github.com:<your-username>/tsbe-check.git`
 >
 > GitHub also has their documentation on how to [Generate a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) 🔑
 >
@@ -76,16 +105,16 @@ Thank you for your interest in contributing to activist community projects! We l
 
 ```bash
 # Clone your fork of the repo into the current directory.
-git clone https://github.com/<your-username>/i18n-check-action.git
+git clone https://github.com/<your-username>/tsbe-check.git
 # Navigate to the newly cloned directory.
-cd i18n-check-action
+cd tsbe-check
 # Assign the original repo to a remote called "upstream".
-git remote add upstream https://github.com/activist-org/i18n-check-action.git
+git remote add upstream https://github.com/activist-org/tsbe-check.git
 ```
 
 - Now, if you run `git remote -v` you should see two remote repositories named:
   - `origin` (forked repository)
-  - `upstream` (i18n-check-action repository)
+  - `upstream` (`tsbe-check` repository)
 
 3. Create a virtual environment, activate it and install dependencies:
 
@@ -100,8 +129,13 @@ git remote add upstream https://github.com/activist-org/i18n-check-action.git
 
    # After activating venv:
    pip install --upgrade pip
-   pip install -r backend/requirements-dev.txt
+   pip install -r requirements-dev.txt
+
+   # To install the CLI for local development:
+   pip install -e .
    ```
+
+You're now ready to work on `tsbe-check`!
 
 > [!NOTE]
 > Feel free to contact the team in the [Development room on Matrix](https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz) if you're having problems getting your environment setup!
@@ -112,11 +146,33 @@ git remote add upstream https://github.com/activist-org/i18n-check-action.git
 
 For the backend [Ruff](https://github.com/astral-sh/ruff) is installed via the required packages to assure that errors are reported correctly. We'd also suggest that VS Code users install the [Ruff extension](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff).
 
+<a id="testing-"></a>
+
+## Testing [`⇧`](#contents)
+
+Please run the following commands from the project root to test:
+
+```bash
+# Format the src directory, lint the code and run static type checks:
+ruff format ./src
+ruff check ./src
+mypy ./src --config-file ./pyproject.toml
+
+# Run tests:
+pytest
+
+# To run a specific test:
+pytest path/to/test_file.py::test_function
+
+# To run with a coverage report as is done in PRs:
+pytest . --cov=src --cov-report=term-missing --cov-config=./pyproject.toml
+```
+
 <a id="issues-projects"></a>
 
 ## Issues and projects [`⇧`](#contents)
 
-The [issue tracker for i18n-check](https://github.com/activist-org/i18n-check-action/issues) is the preferred channel for [bug reports](#bug-reports), [features requests](#feature-requests) and [submitting pull requests](#pull-requests). The activist community also organizes related issues into [projects](https://github.com/activist-org/i18n-check-action/projects).
+The [issue tracker for tsbe-check](https://github.com/activist-org/tsbe-check/issues) is the preferred channel for [bug reports](#bug-reports), [features requests](#feature-requests) and [submitting pull requests](#pull-requests). The activist community also organizes related issues into [projects](https://github.com/activist-org/tsbe-check/projects).
 
 <a name="bug-reports"></a>
 
@@ -140,7 +196,7 @@ Guidelines for bug reports:
 - What actually happens
 - Notes (why this might be happening, things tried that didn't work, etc)
 
-To make the above steps easier, the i18n-check-action team asks that contributors report bugs using the [bug report template](https://github.com/activist-org/i18n-check-action/issues/new?assignees=&labels=bug&projects=activist-org%2F1&template=bug_report.yml), with these issues further being marked with the [`Bug`](https://github.com/activist-org/i18n-check-action/issues?q=is%3Aissue%20state%3Aopen%20type%3ABug) type.
+To make the above steps easier, the `tsbe-check` team asks that contributors report bugs using the [bug report template](https://github.com/activist-org/tsbe-check/issues/new?assignees=&labels=bug&projects=activist-org%2F1&template=bug_report.yml), with these issues further being marked with the [`Bug`](https://github.com/activist-org/tsbe-check/issues?q=is%3Aissue%20state%3Aopen%20type%3ABug) type.
 
 Again, thank you for your time in reporting issues!
 
@@ -148,13 +204,13 @@ Again, thank you for your time in reporting issues!
 
 ## Feature requests [`⇧`](#contents)
 
-Feature requests are more than welcome! Please take a moment to find out whether your idea fits with the scope and aims of the project. When making a suggestion, provide as much detail and context as possible, and further make clear the degree to which you would like to contribute in its development. Feature requests are marked with the [`Feature`](https://github.com/activist-org/i18n-check-action/issues?q=is%3Aissue%20state%3Aopen%20type%3AFeature) type in the [issues](https://github.com/activist-org/i18n-check-action/issues).
+Feature requests are more than welcome! Please take a moment to find out whether your idea fits with the scope and aims of the project. When making a suggestion, provide as much detail and context as possible, and further make clear the degree to which you would like to contribute in its development. Feature requests are marked with the [`Feature`](https://github.com/activist-org/tsbe-check/issues?q=is%3Aissue%20state%3Aopen%20type%3AFeature) type in the [issues](https://github.com/activist-org/tsbe-check/issues).
 
 <a name="pull-requests-"></a>
 
 ## Pull requests [`⇧`](#contents)
 
-Good pull requests — patches, improvements and new features — are the foundation of our community making i18n-check-action. They should remain focused in scope and avoid containing unrelated commits. Note that all contributions to this project will be made under [the specified license](LICENSE.txt) and should follow the coding indentation and style standards (contact us if unsure).
+Good pull requests — patches, improvements and new features — are the foundation of our community making `tsbe-check`. They should remain focused in scope and avoid containing unrelated commits. Note that all contributions to this project will be made under [the specified license](LICENSE.txt) and should follow the coding indentation and style standards (contact us if unsure).
 
 **Please ask first** before embarking on any significant pull request (implementing features, refactoring code, etc), otherwise you risk spending a lot of time working on something that the developers might not want to merge into the project. With that being said, major additions are very appreciated!
 
@@ -178,6 +234,9 @@ When making a contribution, adhering to the [GitHub flow](https://docs.github.co
    ```bash
    # In the project root:
    pre-commit install
+
+   # Then test the pre-commit hooks to see how it works:
+   pre-commit run --all-files
    ```
 
 > [!NOTE]
@@ -217,3 +276,50 @@ When making a contribution, adhering to the [GitHub flow](https://docs.github.co
 7. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/) with a clear title and description.
 
 Thank you in advance for your contributions!
+
+<a id="documentation"></a>
+
+## Documentation [`⇧`](#contents)
+
+The documentation for `tsbe-check` can be found at [tsbe-check.readthedocs.io](https://tsbe-check.readthedocs.io/en/latest/). Documentation is an invaluable way to contribute to coding projects as it allows others to more easily understand the project structure and contribute. Issues related to documentation are marked with the [`documentation`](https://github.com/activist-org/tsbe-check/labels/documentation) label.
+
+### Function Docstrings
+
+`tsbe-check` generally follows [numpydoc conventions](https://numpydoc.readthedocs.io/en/latest/format.html) for documenting functions and Python code in general. Function docstrings should have the following format:
+
+```py
+def example_function(argument: argument_type) -> return_type:
+    """
+    An example docstring for a function so others understand your work.
+
+    Parameters
+    ----------
+    argument : argument_type
+        Description of your argument.
+
+    Returns
+    -------
+    return_value : return_type
+        Description of your return value.
+
+    Raises
+    ------
+    ErrorType
+        Description of the error and the condition that raises it.
+    """
+
+    ...
+
+    return return_value
+```
+
+### Building the Docs
+
+Use the following commands to build the documentation locally:
+
+```bash
+cd docs
+make html
+```
+
+You can then open `index.html` within `docs/build/html` to check the local version of the documentation.
