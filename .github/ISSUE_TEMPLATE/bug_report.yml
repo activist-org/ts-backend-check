@@ -1,5 +1,5 @@
 name: 🐞 Bug report
-description: Report a bug to help us improve i18n-check.
+description: Report a bug to help us improve tsbe-check.
 type: "task"
 projects: ["activist-org/1"]
 body:

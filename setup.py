@@ -30,7 +30,7 @@ setup_args = dict(
     packages=find_packages(where="src"),
     entry_points={
         "console_scripts": [
-            "tsbe-check=i18n_check.cli.main:main",
+            "tsbe-check=tsbe_check.cli.main:main",
         ],
     },
     install_requires=requirements,
