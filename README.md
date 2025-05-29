@@ -19,7 +19,112 @@
 
 # **Contents**
 
-- [Contributors](#contributors)
+- [Contributing](#contributing)
+- [Environment setup](#environment-setup)
+- [Contributors](#contributors-)
+
+<a id="contributing"></a>
+
+# Contributing [`⇧`](#contents)
+
+<a href="https://matrix.to/#/#activist_community:matrix.org"><img src="https://raw.githubusercontent.com/activist-org/Organization/main/resources/images/logos/MatrixLogoGrey.png" height="50" alt="Public Matrix Chat" align="right"></a>
+
+activist uses [Matrix](https://matrix.org/) for internal communication. You're more than welcome to [join us in our public chat rooms](https://matrix.to/#/#activist_community:matrix.org) to share ideas, ask questions or just say hi to the team :)
+
+Please see the [contribution guidelines](CONTRIBUTING.md) if you are interested in contributing. Work that is in progress or could be implemented is tracked in the [issues](https://github.com/activist-org/tsbe-check/issues) and [projects](https://github.com/activist-org/tsbe-check/projects).
+
+> [!NOTE]
+> Just because an issue is assigned on GitHub doesn't mean the team isn't open to your contribution! Feel free to write [in the issues](https://github.com/activist-org/tsbe-check/issues) and we can potentially reassign it to you.
+
+Also check the [`-next release-`](https://github.com/activist-org/tsbe-check/labels/-next%20release-) and [`-priority-`](https://github.com/activist-org/tsbe-check/labels/-priority-) labels in the [issues](https://github.com/activist-org/tsbe-check/issues) for those that are most important, as well as those marked [`good first issue`](https://github.com/activist-org/tsbe-check/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) that are tailored for first-time contributors. For those new to coding or our tech stack, we've collected [links to helpful documentation pages](CONTRIBUTING.md#learning-the-tech-stack-) in the [contribution guidelines](CONTRIBUTING.md).
+
+We would be happy to discuss granting you further rights as a contributor after your first pull requests, with a maintainer role then being possible after continued interest in the project. activist seeks to be an inclusive, diverse and supportive organization. We'd love to have you on the team!
+
+<a id="how-you-can-help"></a>
+
+## How you can help [`⇧`](#contents)
+
+- [Reporting bugs](https://github.com/activist-org/tsbe-check/issues/new?assignees=&labels=bug&template=bug_report.yml) as they're found 🐞
+- Working with us on [new features](https://github.com/activist-org/tsbe-check/issues?q=is%3Aissue+is%3Aopen+label%3Afeature) ✨
+- [Documentation](https://github.com/activist-org/tsbe-check/issues?q=is%3Aissue+is%3Aopen+label%3Adocumentation) for onboarding and project cohesion 📝
+
+<a id="environment-setup"></a>
+
+# Environment setup [`⇧`](#contents)
+
+1. First and foremost, please see the suggested IDE setup in the dropdown below to make sure that your editor is ready for development.
+
+> [!IMPORTANT]
+>
+> <details><summary>Suggested IDE setup</summary>
+>
+> <p>
+>
+> VS Code
+>
+> Install the following extensions:
+>
+> - [charliermarsh.ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
+> - [streetsidesoftware.code-spell-checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
+>
+> </p>
+> </details>
+
+2. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the [tsbe-check repo](https://github.com/activist-org/tsbe-check), clone your fork, and configure the remotes:
+
+> [!NOTE]
+>
+> <details><summary>Consider using SSH</summary>
+>
+> <p>
+>
+> Alternatively to using HTTPS as in the instructions below, consider SSH to interact with GitHub from the terminal. SSH allows you to connect without a user-pass authentication flow.
+>
+> To run git commands with SSH, remember then to substitute the HTTPS URL, `https://github.com/...`, with the SSH one, `git@github.com:...`.
+>
+> - e.g. Cloning now becomes `git clone git@github.com:<your-username>/tsbe-check.git`
+>
+> GitHub also has their documentation on how to [Generate a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) 🔑
+>
+> </p>
+> </details>
+
+```bash
+# Clone your fork of the repo into the current directory.
+git clone https://github.com/<your-username>/tsbe-check.git
+# Navigate to the newly cloned directory.
+cd tsbe-check
+# Assign the original repo to a remote called "upstream".
+git remote add upstream https://github.com/activist-org/tsbe-check.git
+```
+
+- Now, if you run `git remote -v` you should see two remote repositories named:
+  - `origin` (forked repository)
+  - `upstream` (tsbe-check repository)
+
+3. Create a virtual environment, activate it and install dependencies:
+
+   ```bash
+   # Unix or MacOS:
+   python3 -m venv venv
+   source venv/bin/activate
+
+   # Windows:
+   python -m venv venv
+   venv\Scripts\activate.bat
+
+   # After activating venv:
+   pip install --upgrade pip
+   pip install -r requirements-dev.txt
+
+   # To install the CLI for local development:
+   pip install -e .
+   ```
+
+You're now ready to work on `tsbe-check`!
+
+> [!NOTE]
+> Feel free to contact the team in the [Development room on Matrix](https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz) if you're having problems getting your environment setup!
 
 <a id="contributors"></a>
 

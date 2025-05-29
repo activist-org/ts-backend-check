@@ -10,7 +10,6 @@
 
 -r requirements.txt
 
-pyyaml
 mypy
 numpydoc
 pip-tools

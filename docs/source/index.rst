@@ -62,10 +62,7 @@ The following are example commands for `tsbe-check`:
 
 .. code-block:: shell
 
-    tsbe-check -gtf  # generate a test frontends to see how it works
-    tsbe-check -a  # run all checks
-    # Available IDs are ki, ik, uk, nsk, rk, rv and nk.
-    tsbe-check -CHECK_ID  # run a specific check
+    tsbe-check --command
 
 Contents
 ========

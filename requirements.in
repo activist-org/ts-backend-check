@@ -3,5 +3,3 @@
 #
 # - pip-compile --rebuild requirements.in
 # - pip-compile --rebuild requirements-dev.in
-
-pyyaml
