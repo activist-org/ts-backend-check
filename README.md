@@ -3,6 +3,7 @@
 </div>
 
 [![rtd](https://img.shields.io/readthedocs/tsbe-check.svg?label=%20&logo=read-the-docs&logoColor=ffffff)](http://tsbe-check.readthedocs.io/en/latest/)
+[![ci_backend](https://img.shields.io/github/actions/workflow/status/activist-org/tsbe-check/pr_ci.yaml?branch=main&label=%20&logo=pytest&logoColor=ffffff)](https://github.com/activist-org/tsbe-check/actions/workflows/pr_ci_backend.yaml)
 [![issues](https://img.shields.io/github/issues/activist-org/tsbe-check?label=%20&logo=github)](https://github.com/activist-org/tsbe-check/issues)
 [![python](https://img.shields.io/badge/Python-4B8BBE.svg?logo=python&logoColor=ffffff)](https://github.com/activist-org/tsbe-check/blob/main/CONTRIBUTING.md)
 [![pypi](https://img.shields.io/pypi/v/tsbe-check.svg?label=%20&color=4B8BBE)](https://pypi.org/project/tsbe-check/)
