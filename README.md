@@ -16,7 +16,18 @@
 
 `tsbe-check` is a Python package used to check TypeScript types against their corresponding backend models to assure that all fields have been accounted for.
 
-## Usage
+<a id="contents"></a>
+
+# **Contents**
+
+- [Usage](#usage-)
+- [Contributing](#contributing-)
+- [Environment setup](#environment-setup)
+- [Contributors](#contributors-)
+
+<a id="usage"></a>
+
+## Usage [`⇧`](#contents)
 
 ### Installation
 
@@ -29,13 +40,13 @@ pip install tsbe-check
 The CLI provides a simple interface to check TypeScript types against backend models:
 
 ```bash
-# Show help and available commands
+# Show help and available commands:
 tsbe-check --help
 
-# Check a TypeScript type against a backend model
+# Check a TypeScript type against a backend model:
 tsbe-check check <typescript_file> <backend_model>
 
-# Example
+# Example command:
 tsbe-check check src/types/user.ts src/models/user.py
 ```
 
@@ -46,17 +57,10 @@ tsbe-check check src/types/user.ts src/models/user.py
   - `backend_model`: Path to the backend model file (e.g. Python class)
 
 ### Version Information
+
 ```bash
 tsbe-check --version
 ```
-
-<a id="contents"></a>
-
-# **Contents**
-
-- [Contributing](#contributing)
-- [Environment setup](#environment-setup)
-- [Contributors](#contributors-)
 
 <a id="contributing"></a>
 
