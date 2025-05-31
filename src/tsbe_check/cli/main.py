@@ -18,9 +18,9 @@ def cli():
 
 
 @cli.command()
-@click.argument("typescript_file", type=click.Path(exists=True))
 @click.argument("backend_model", type=click.Path(exists=True))
-def check(typescript_file: str, backend_model: str):
+@click.argument("typescript_file", type=click.Path(exists=True))
+def check(backend_model: str, typescript_file: str):
     """Check TypeScript types against backend models.
 
     This command checks if all fields from the backend model are properly represented
@@ -28,9 +28,9 @@ def check(typescript_file: str, backend_model: str):
     special comments in the TypeScript file.
 
     Example usage:
-    tsbe-check check src/types/user.ts src/models/user.py
+    tsbe-check check src/models/user.py src/types/user.ts
     """
-    checker = TypeChecker(backend_model, typescript_file)
+    checker = TypeChecker(models_file=backend_model, types_file=typescript_file)
     if missing := checker.check():
         click.echo("Missing TypeScript fields found:")
         click.echo("\n".join(missing))
