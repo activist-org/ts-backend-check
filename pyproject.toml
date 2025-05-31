@@ -1,3 +1,19 @@
+[project]
+name = "tsbe-check"
+version = "1.0.0"
+description = "tsbe-check is a Python package used to check TypeScript types against their corresponding backend models to assure that all fields have been accounted for."
+authors = [{ name = "tsbe-check developers" }]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["click>=8.1"]
+
+[project.scripts]
+tsbe-check = "tsbe_check:cli"
+
+[build-system]
+requires = ["flit_core>=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 exclude = [

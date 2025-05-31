@@ -20,9 +20,47 @@
 
 # **Contents**
 
-- [Contributing](#contributing)
+- [Usage](#usage-)
+- [Contributing](#contributing-)
 - [Environment setup](#environment-setup)
 - [Contributors](#contributors-)
+
+<a id="usage"></a>
+
+## Usage [`⇧`](#contents)
+
+### Installation
+
+```bash
+pip install tsbe-check
+```
+
+### Basic Usage
+
+The CLI provides a simple interface to check TypeScript types against backend models:
+
+```bash
+# Show help and available commands:
+tsbe-check --help
+
+# Check a TypeScript type against a backend model:
+tsbe-check check <typescript_file> <backend_model>
+
+# Example command:
+tsbe-check check src/types/user.ts src/models/user.py
+```
+
+### Command Options
+
+- `check`: Compare TypeScript types with backend models
+  - `typescript_file`: Path to the TypeScript interface/type file
+  - `backend_model`: Path to the backend model file (e.g. Python class)
+
+### Version Information
+
+```bash
+tsbe-check --version
+```
 
 <a id="contributing"></a>
 
