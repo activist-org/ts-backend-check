@@ -205,7 +205,7 @@ Feature requests are more than welcome! Please take a moment to find out whether
 Pull requests
 -------------
 
-Good pull requests — patches, improvements and new features — are the foundation of our community making ``ts-backend-check``. They should remain focused in scope and avoid containing unrelated commits. Note that all contributions to this project will be made under `the specified license <LICENSE.txt>`__ and should follow the coding indentation and style standards (contact us if unsure).
+Good pull requests — patches, improvements and new features — are the foundation of our community making ``ts-backend-check``. They should remain focused in scope and avoid containing unrelated commits. Note that all contributions to this project will be made under `the specified license <https://github.com/activist-org/ts-backend-check/tree/main/LICENSE.txt>`__ and should follow the coding indentation and style standards (contact us if unsure).
 
 **Please ask first** before embarking on any significant pull request (implementing features, refactoring code, etc), otherwise you risk spending a lot of time working on something that the developers might not want to merge into the project. With that being said, major additions are very appreciated!
 
@@ -234,7 +234,7 @@ When making a contribution, adhering to the `GitHub flow <https://docs.github.co
     # Then test the pre-commit hooks to see how it works:
     pre-commit run --all-files
 
-pre-commit is a Python package that can be installed via pip or any other Python package manager. You can also find it in our `requirements.txt <backend/requirements.txt>`__ file.
+pre-commit is a Python package that can be installed via pip or any other Python package manager. You can also find it in our `requirements-dev.txt <https://github.com/activist-org/ts-backend-check/tree/main/requirements-dev.txt>`__ file.
 
 .. code-block:: bash
 
