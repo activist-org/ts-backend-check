@@ -6,5 +6,11 @@ ts-backend-check
 .. toctree::
     :maxdepth: 1
 
+    checker
+    utils
+
 .. toctree::
     :maxdepth: 2
+
+    cli/index
+    parsers/index

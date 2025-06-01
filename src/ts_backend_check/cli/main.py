@@ -7,7 +7,7 @@ import sys
 
 import click
 
-from ..checker import TypeChecker
+from ts_backend_check.checker import TypeChecker
 
 
 @click.group()

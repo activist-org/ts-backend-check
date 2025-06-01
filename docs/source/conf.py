@@ -169,14 +169,14 @@ texinfo_documents = [
 ]
 
 # Adding logo to the docs sidebar.
-html_logo = "_static/TSBECheckLogo.png"
+html_logo = "_static/TSBackendCheckLogo.png"
 html_theme_options = {
     "logo_only": True,
     # "display_version": True,
 }
 
 # Adding favicon to the docs.
-html_favicon = "_static/TSBECheckFavicon.ico"
+html_favicon = "_static/TSBackendCheckFavicon.ico"
 
 # Importing custom css for theme customization.
 html_css_files = [

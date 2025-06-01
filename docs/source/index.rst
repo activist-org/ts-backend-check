@@ -1,4 +1,4 @@
-.. image:: https://raw.githubusercontent.com/activist-org/ts-backend-check/main/.github/resources/tsbeCheckGitHubBanner.png
+.. image:: https://raw.githubusercontent.com/activist-org/ts-backend-check/main/.github/resources/TSBackendCheckGitHubBanner.png
     :width: 100%
     :align: center
     :target: https://github.com/activist-org/ts-backend-check
@@ -34,7 +34,7 @@
 Installation
 ============
 
-`ts-backend-check` is available for installation via `pip <https://pypi.org/project/ts-backend-check/>`_:
+``ts-backend-check`` is available for installation via `pip <https://pypi.org/project/ts-backend-check/>`_:
 
 .. code-block:: shell
 
@@ -58,11 +58,25 @@ To utilize the ts-backend-check CLI, you can execute variations of the following
 Commands
 ========
 
-The following are example commands for `ts-backend-check`:
+The CLI provides a simple interface to check TypeScript types against backend models:
 
 .. code-block:: shell
 
-    ts-backend-check --command
+    # Show help and available commands:
+    ts-backend-check --help
+
+    # Check a TypeScript type against a backend model:
+    ts-backend-check check <typescript_file> <backend_model>
+
+    # Example command:
+    ts-backend-check check src/types/user.ts src/models/user.py
+
+Command Options
+===============
+
+- ``check``: Compare TypeScript types with backend models
+    - ``typescript_file``: Path to the TypeScript interface/type file
+    - ``backend_model``: Path to the backend model file (e.g. Python class)
 
 Contents
 ========
