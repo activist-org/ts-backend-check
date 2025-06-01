@@ -95,7 +95,7 @@ def extract_model_fields(models_file: str) -> Dict[str, Set[str]]:
         The fields from the models file extracted into a dictionary for future processing.
     """
     with open(models_file, "r", encoding="utf-8") as f:
-        content = f.read().strip() 
+        content = f.read().strip()
         # Skip any empty lines at the beginning
         while content.startswith("\n"):
             content = content[1:]
@@ -110,4 +110,4 @@ def extract_model_fields(models_file: str) -> Dict[str, Set[str]]:
     visitor = DjangoModelVisitor()
     visitor.visit(tree)
 
-    return visitor.models 
+    return visitor.models

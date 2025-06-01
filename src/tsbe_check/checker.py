@@ -182,4 +182,4 @@ class TypeChecker:
             f"is missing in TypeScript types.\n"
             f"Expected to find in interface(s): {', '.join(interfaces.keys())}\n"
             f"To ignore this field, add a comment that references it like: '// Note: {camel_field} is backend only'"
-        ) 
+        )

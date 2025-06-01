@@ -102,4 +102,4 @@ class TypeScriptParser:
         # Readonly fields
         fields.update(re.findall(r"readonly\s+(\w+)\s*[?]?\s*:", interface_body))
 
-        return fields 
+        return fields
