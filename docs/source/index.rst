@@ -3,10 +3,13 @@
     :align: center
     :target: https://github.com/activist-org/ts-backend-check
 
-|rtd| |issues| |language| |pypi| |pypistatus| |license| |coc| |matrix|
+|rtd| |ci_backend| |issues| |language| |pypi| |pypistatus| |license| |coc| |matrix|
 
 .. |rtd| image:: https://img.shields.io/readthedocs/ts-backend-check.svg?label=%20&logo=read-the-docs&logoColor=ffffff
     :target: http://ts-backend-check.readthedocs.io/en/latest/
+
+.. |ci_backend| image:: https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/pr_ci.yaml?branch=main&label=%20&logo=pytest&logoColor=ffffff
+    :target: https://github.com/activist-org/ts-backend-check/actions/workflows/pr_ci_backend.yaml
 
 .. |issues| image:: https://img.shields.io/github/issues/activist-org/ts-backend-check?label=%20&logo=github
     :target: https://github.com/activist-org/ts-backend-check/issues
