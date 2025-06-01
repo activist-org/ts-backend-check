@@ -3,8 +3,6 @@
 Utility functions for tsbe-check.
 """
 
-import re
-
 
 def snake_to_camel(input_str: str) -> str:
     """
