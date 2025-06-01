@@ -120,7 +120,10 @@ GitHub also has their documentation on how to `Generate a new SSH key <https://d
 
 You're now ready to work on ``ts-backend-check``!
 
-Feel free to contact the team in the `Development room on Matrix <https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz>`__ if you're having problems getting your environment setup!
+..
+
+    | **Note**
+    | Feel free to contact the team in the `Development room on Matrix <https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz>`__ if you're having problems getting your environment setup!
 
 Linting
 -------
@@ -154,6 +157,16 @@ Issues and projects
 -------------------
 
 The `issue tracker for ts-backend-check <https://github.com/activist-org/ts-backend-check/issues>`__ is the preferred channel for `bug reports <#bug-reports>`_, `features requests <#feature-requests>`_ and `submitting pull requests <#pull-requests>`_. The activist community also organizes related issues into `projects <https://github.com/activist-org/ts-backend-check/projects>`__.
+
+..
+
+    | **Note**
+    | Just because an issue is assigned on GitHub doesn't mean that the team isn't interested in your contribution! Feel free to write `in the issues <https://github.com/activist-org/ts-backend-check/issues>`__ and we can potentially reassign it to you.
+
+Be sure to check the `-next release- <https://github.com/activist-org/ts-backend-check/labels/-next%20release->`__
+and `-priority- <https://github.com/activist-org/ts-backend-check/labels/-priority->`__
+labels in the `issues <https://github.com/activist-org/ts-backend-check/issues>`__ for those
+that are most important, as well as those marked `good first issue <https://github.com/activist-org/ts-backend-check/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22>`__ that are tailored for first-time contributors.
 
 .. _bug-reports:
 
@@ -235,10 +248,10 @@ If you are having issues with pre-commit and want to send along your changes reg
 
 4. Commit your changes in logical chunks, and please try to adhere to `Conventional Commits <https://www.conventionalcommits.org/en/v1.0.0/>`__.
 
-The following are tools and methods to help you write good commit messages ✨
-
-- `commitlint <https://commitlint.io/>`__ helps write `Conventional Commits <https://www.conventionalcommits.org/en/v1.0.0/>`__
-- Git's `interactive rebase <https://docs.github.com/en/github/getting-started-with-github/about-git-rebase>`__ cleans up commits
+    | **Note**
+    | The following are tools and methods to help you write good commit messages ✨
+    | •  `commitlint <https://commitlint.io/>`__ helps write `Conventional Commits <https://www.conventionalcommits.org/en/v1.0.0/>`__
+    | •  Git's `interactive rebase <https://docs.github.com/en/github/getting-started-with-github/about-git-rebase>`__ cleans up commits
 
 5. Locally merge (or rebase) the upstream development branch into your topic branch:
 
