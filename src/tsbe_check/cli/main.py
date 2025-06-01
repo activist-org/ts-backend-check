@@ -13,7 +13,9 @@ from ..checker import TypeChecker
 @click.group()
 @click.version_option()
 def cli():
-    """tsbe-check is a Python package used to check TypeScript types against their corresponding backend models."""
+    """
+    TS Backend Check is a Python package used to check TypeScript types against their corresponding backend models.
+    """
     pass
 
 
@@ -21,13 +23,23 @@ def cli():
 @click.argument("backend_model", type=click.Path(exists=True))
 @click.argument("typescript_file", type=click.Path(exists=True))
 def check(backend_model: str, typescript_file: str):
-    """Check TypeScript types against backend models.
+    """
+    Check TypeScript types against backend models.
 
     This command checks if all fields from the backend model are properly represented
     in the TypeScript types file. It supports marking fields as backend-only using
     special comments in the TypeScript file.
 
-    Example usage:
+    Parameters
+    ----------
+    backend_model : str
+        The path to the backend model file (e.g. Python class).
+
+    typescript_file : str
+        The path to the TypeScript interface/type file.
+
+    Examples
+    --------
     tsbe-check check src/models/user.py src/types/user.ts
     """
     checker = TypeChecker(models_file=backend_model, types_file=typescript_file)
