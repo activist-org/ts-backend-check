@@ -1,8 +1,8 @@
 # Changelog
 
-See the [releases for tsbe-check](https://github.com/activist-org/tsbe-check/releases) for an up to date list of versions and their release dates.
+See the [releases for ts-backend-check](https://github.com/activist-org/ts-backend-check/releases) for an up to date list of versions and their release dates.
 
-`tsbe-check` tries to follow [semantic versioning](https://semver.org/), a MAJOR.MINOR.PATCH version where increments are made of the:
+`ts-backend-check` tries to follow [semantic versioning](https://semver.org/), a MAJOR.MINOR.PATCH version where increments are made of the:
 
 - MAJOR version when we make incompatible API changes
 - MINOR version when we add functionality in a backwards compatible manner
@@ -10,4 +10,4 @@ See the [releases for tsbe-check](https://github.com/activist-org/tsbe-check/rel
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
-## [Upcoming] tsbe-check 1.0.0
+## [Upcoming] ts-backend-check 1.0.0

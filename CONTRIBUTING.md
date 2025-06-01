@@ -1,6 +1,6 @@
-# Contributing to tsbe-check
+# Contributing to ts-backend-check
 
-Thank you for contributing to `tsbe-check`!
+Thank you for contributing to `ts-backend-check`!
 
 Please take a moment to review this document in order to make the contribution process easy and effective for everyone involved.
 
@@ -40,7 +40,7 @@ Thank you for your interest in contributing to activist community projects! We l
 
 ## Learning the tech stack [`⇧`](#contents)
 
-`tsbe-check` is very open to contributions from people in the early stages of their coding journey! The following is a select list of documentation pages to help you understand the technologies we use.
+`ts-backend-check` is very open to contributions from people in the early stages of their coding journey! The following is a select list of documentation pages to help you understand the technologies we use.
 
 <details><summary>Docs for those new to programming</summary>
 <p>
@@ -84,7 +84,7 @@ Thank you for your interest in contributing to activist community projects! We l
 > </p>
 > </details>
 
-2. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the [tsbe-check repo](https://github.com/activist-org/tsbe-check), clone your fork, and configure the remotes:
+2. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the [ts-backend-check repo](https://github.com/activist-org/ts-backend-check), clone your fork, and configure the remotes:
 
 > [!NOTE]
 >
@@ -96,7 +96,7 @@ Thank you for your interest in contributing to activist community projects! We l
 >
 > To run git commands with SSH, remember then to substitute the HTTPS URL, `https://github.com/...`, with the SSH one, `git@github.com:...`.
 >
-> - e.g. Cloning now becomes `git clone git@github.com:<your-username>/tsbe-check.git`
+> - e.g. Cloning now becomes `git clone git@github.com:<your-username>/ts-backend-check.git`
 >
 > GitHub also has their documentation on how to [Generate a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) 🔑
 >
@@ -105,16 +105,16 @@ Thank you for your interest in contributing to activist community projects! We l
 
 ```bash
 # Clone your fork of the repo into the current directory.
-git clone https://github.com/<your-username>/tsbe-check.git
+git clone https://github.com/<your-username>/ts-backend-check.git
 # Navigate to the newly cloned directory.
-cd tsbe-check
+cd ts-backend-check
 # Assign the original repo to a remote called "upstream".
-git remote add upstream https://github.com/activist-org/tsbe-check.git
+git remote add upstream https://github.com/activist-org/ts-backend-check.git
 ```
 
 - Now, if you run `git remote -v` you should see two remote repositories named:
   - `origin` (forked repository)
-  - `upstream` (`tsbe-check` repository)
+  - `upstream` (`ts-backend-check` repository)
 
 3. Create a virtual environment, activate it and install dependencies:
 
@@ -135,7 +135,7 @@ git remote add upstream https://github.com/activist-org/tsbe-check.git
    pip install -e .
    ```
 
-You're now ready to work on `tsbe-check`!
+You're now ready to work on `ts-backend-check`!
 
 > [!NOTE]
 > Feel free to contact the team in the [Development room on Matrix](https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz) if you're having problems getting your environment setup!
@@ -172,7 +172,7 @@ pytest . --cov=src --cov-report=term-missing --cov-config=./pyproject.toml
 
 ## Issues and projects [`⇧`](#contents)
 
-The [issue tracker for tsbe-check](https://github.com/activist-org/tsbe-check/issues) is the preferred channel for [bug reports](#bug-reports), [features requests](#feature-requests) and [submitting pull requests](#pull-requests). The activist community also organizes related issues into [projects](https://github.com/activist-org/tsbe-check/projects).
+The [issue tracker for ts-backend-check](https://github.com/activist-org/ts-backend-check/issues) is the preferred channel for [bug reports](#bug-reports), [features requests](#feature-requests) and [submitting pull requests](#pull-requests). The activist community also organizes related issues into [projects](https://github.com/activist-org/ts-backend-check/projects).
 
 <a name="bug-reports"></a>
 
@@ -196,7 +196,7 @@ Guidelines for bug reports:
 - What actually happens
 - Notes (why this might be happening, things tried that didn't work, etc)
 
-To make the above steps easier, the `tsbe-check` team asks that contributors report bugs using the [bug report template](https://github.com/activist-org/tsbe-check/issues/new?assignees=&labels=bug&projects=activist-org%2F1&template=bug_report.yml), with these issues further being marked with the [`Bug`](https://github.com/activist-org/tsbe-check/issues?q=is%3Aissue%20state%3Aopen%20type%3ABug) type.
+To make the above steps easier, the `ts-backend-check` team asks that contributors report bugs using the [bug report template](https://github.com/activist-org/ts-backend-check/issues/new?assignees=&labels=bug&projects=activist-org%2F1&template=bug_report.yml), with these issues further being marked with the [`Bug`](https://github.com/activist-org/ts-backend-check/issues?q=is%3Aissue%20state%3Aopen%20type%3ABug) type.
 
 Again, thank you for your time in reporting issues!
 
@@ -204,13 +204,13 @@ Again, thank you for your time in reporting issues!
 
 ## Feature requests [`⇧`](#contents)
 
-Feature requests are more than welcome! Please take a moment to find out whether your idea fits with the scope and aims of the project. When making a suggestion, provide as much detail and context as possible, and further make clear the degree to which you would like to contribute in its development. Feature requests are marked with the [`Feature`](https://github.com/activist-org/tsbe-check/issues?q=is%3Aissue%20state%3Aopen%20type%3AFeature) type in the [issues](https://github.com/activist-org/tsbe-check/issues).
+Feature requests are more than welcome! Please take a moment to find out whether your idea fits with the scope and aims of the project. When making a suggestion, provide as much detail and context as possible, and further make clear the degree to which you would like to contribute in its development. Feature requests are marked with the [`Feature`](https://github.com/activist-org/ts-backend-check/issues?q=is%3Aissue%20state%3Aopen%20type%3AFeature) type in the [issues](https://github.com/activist-org/ts-backend-check/issues).
 
 <a name="pull-requests-"></a>
 
 ## Pull requests [`⇧`](#contents)
 
-Good pull requests — patches, improvements and new features — are the foundation of our community making `tsbe-check`. They should remain focused in scope and avoid containing unrelated commits. Note that all contributions to this project will be made under [the specified license](LICENSE.txt) and should follow the coding indentation and style standards (contact us if unsure).
+Good pull requests — patches, improvements and new features — are the foundation of our community making `ts-backend-check`. They should remain focused in scope and avoid containing unrelated commits. Note that all contributions to this project will be made under [the specified license](LICENSE.txt) and should follow the coding indentation and style standards (contact us if unsure).
 
 **Please ask first** before embarking on any significant pull request (implementing features, refactoring code, etc), otherwise you risk spending a lot of time working on something that the developers might not want to merge into the project. With that being said, major additions are very appreciated!
 
@@ -281,11 +281,11 @@ Thank you in advance for your contributions!
 
 ## Documentation [`⇧`](#contents)
 
-The documentation for `tsbe-check` can be found at [tsbe-check.readthedocs.io](https://tsbe-check.readthedocs.io/en/latest/). Documentation is an invaluable way to contribute to coding projects as it allows others to more easily understand the project structure and contribute. Issues related to documentation are marked with the [`documentation`](https://github.com/activist-org/tsbe-check/labels/documentation) label.
+The documentation for `ts-backend-check` can be found at [ts-backend-check.readthedocs.io](https://ts-backend-check.readthedocs.io/en/latest/). Documentation is an invaluable way to contribute to coding projects as it allows others to more easily understand the project structure and contribute. Issues related to documentation are marked with the [`documentation`](https://github.com/activist-org/ts-backend-check/labels/documentation) label.
 
 ### Function Docstrings
 
-`tsbe-check` generally follows [numpydoc conventions](https://numpydoc.readthedocs.io/en/latest/format.html) for documenting functions and Python code in general. Function docstrings should have the following format:
+`ts-backend-check` generally follows [numpydoc conventions](https://numpydoc.readthedocs.io/en/latest/format.html) for documenting functions and Python code in general. Function docstrings should have the following format:
 
 ```py
 def example_function(argument: argument_type) -> return_type:

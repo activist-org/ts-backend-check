@@ -22,9 +22,9 @@ sys.path.insert(0, os.path.abspath("../../src"))
 
 # -- Project information -----------------------------------------------------
 
-project = "tsbe-check"
-copyright = "2024, tsbe-check developers (GPL 3.0 License)"
-author = "tsbe-check developers"
+project = "ts-backend-check"
+copyright = "2024, ts-backend-check developers (GPL 3.0 License)"
+author = "ts-backend-check developers"
 
 # The full version, including alpha/beta/rc tags
 release = "0.1.0"
@@ -110,7 +110,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "tsbe-check_doc"
+htmlhelp_basename = "ts-backend-check_doc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -136,8 +136,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "tsbe-check.tex",
-        "tsbe-check Documentation",
+        "ts-backend-check.tex",
+        "ts-backend-check Documentation",
         "activist-org",
         "manual",
     )
@@ -148,7 +148,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "tsbe-check", "tsbe-check Documentation", [author], 1)]
+man_pages = [(master_doc, "ts-backend-check", "ts-backend-check Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -159,10 +159,10 @@ man_pages = [(master_doc, "tsbe-check", "tsbe-check Documentation", [author], 1)
 texinfo_documents = [
     (
         master_doc,
-        "tsbe-check",
-        "tsbe-check Documentation",
+        "ts-backend-check",
+        "ts-backend-check Documentation",
         author,
-        "tsbe-check",
+        "ts-backend-check",
         "Check TypeScript types against backend models",
         "Miscellaneous",
     )

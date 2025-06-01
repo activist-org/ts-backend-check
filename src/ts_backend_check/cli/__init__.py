@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """
-CLI package for tsbe-check.
+CLI package for ts-backend-check.
 """
 
 from .main import cli

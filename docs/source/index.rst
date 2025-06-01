@@ -1,30 +1,30 @@
-.. image:: https://raw.githubusercontent.com/activist-org/tsbe-check/main/.github/resources/tsbeCheckGitHubBanner.png
+.. image:: https://raw.githubusercontent.com/activist-org/ts-backend-check/main/.github/resources/tsbeCheckGitHubBanner.png
     :width: 100%
     :align: center
-    :target: https://github.com/activist-org/tsbe-check
+    :target: https://github.com/activist-org/ts-backend-check
 
 |rtd| |issues| |language| |pypi| |pypistatus| |license| |coc| |matrix|
 
-.. |rtd| image:: https://img.shields.io/readthedocs/tsbe-check.svg?label=%20&logo=read-the-docs&logoColor=ffffff
-    :target: http://tsbe-check.readthedocs.io/en/latest/
+.. |rtd| image:: https://img.shields.io/readthedocs/ts-backend-check.svg?label=%20&logo=read-the-docs&logoColor=ffffff
+    :target: http://ts-backend-check.readthedocs.io/en/latest/
 
-.. |issues| image:: https://img.shields.io/github/issues/activist-org/tsbe-check?label=%20&logo=github
-    :target: https://github.com/activist-org/tsbe-check/issues
+.. |issues| image:: https://img.shields.io/github/issues/activist-org/ts-backend-check?label=%20&logo=github
+    :target: https://github.com/activist-org/ts-backend-check/issues
 
 .. |language| image:: https://img.shields.io/badge/Python%203-306998.svg?logo=python&logoColor=ffffff
-    :target: https://github.com/activist-org/tsbe-check/blob/main/CONTRIBUTING.md
+    :target: https://github.com/activist-org/ts-backend-check/blob/main/CONTRIBUTING.md
 
-.. |pypi| image:: https://img.shields.io/pypi/v/tsbe-check.svg?label=%20&color=4B8BBE
-    :target: https://pypi.org/project/tsbe-check/
+.. |pypi| image:: https://img.shields.io/pypi/v/ts-backend-check.svg?label=%20&color=4B8BBE
+    :target: https://pypi.org/project/ts-backend-check/
 
-.. |pypistatus| image:: https://img.shields.io/pypi/status/tsbe-check.svg?label=%20
-    :target: https://pypi.org/project/tsbe-check/
+.. |pypistatus| image:: https://img.shields.io/pypi/status/ts-backend-check.svg?label=%20
+    :target: https://pypi.org/project/ts-backend-check/
 
-.. |license| image:: https://img.shields.io/github/license/activist-org/tsbe-check.svg?label=%20
-    :target: https://github.com/activist-org/tsbe-check/blob/main/LICENSE.txt
+.. |license| image:: https://img.shields.io/github/license/activist-org/ts-backend-check.svg?label=%20
+    :target: https://github.com/activist-org/ts-backend-check/blob/main/LICENSE.txt
 
 .. |coc| image:: https://img.shields.io/badge/Contributor%20Covenant-ff69b4.svg
-    :target: https://github.com/activist-org/tsbe-check/blob/main/.github/CODE_OF_CONDUCT.md
+    :target: https://github.com/activist-org/ts-backend-check/blob/main/.github/CODE_OF_CONDUCT.md
 
 .. |matrix| image:: https://img.shields.io/badge/Matrix-000000.svg?logo=matrix&logoColor=ffffff
     :target: https://matrix.to/#/#activist_community:matrix.org
@@ -34,35 +34,35 @@
 Installation
 ============
 
-tsbe-check is available for installation via `pip <https://pypi.org/project/tsbe-check/>`_:
+`ts-backend-check` is available for installation via `pip <https://pypi.org/project/ts-backend-check/>`_:
 
 .. code-block:: shell
 
-    pip install tsbe-check
+    pip install ts-backend-check
 
-The latest development version can further be installed the `source code on GitHub <https://github.com/activist-org/tsbe-check>`_:
+The latest development version can further be installed the `source code on GitHub <https://github.com/activist-org/ts-backend-check>`_:
 
 .. code-block:: shell
 
-    git clone https://github.com/activist-org/tsbe-check.git
-    cd tsbe-check
+    git clone https://github.com/activist-org/ts-backend-check.git
+    cd ts-backend-check
     pip install -e .
 
-To utilize the tsbe-check CLI, you can execute variations of the following command in your terminal:
+To utilize the ts-backend-check CLI, you can execute variations of the following command in your terminal:
 
 .. code-block:: shell
 
-    tsbe-check -h  # view the cli options
-    tsbe-check [command]
+    ts-backend-check -h  # view the cli options
+    ts-backend-check [command]
 
 Commands
 ========
 
-The following are example commands for `tsbe-check`:
+The following are example commands for `ts-backend-check`:
 
 .. code-block:: shell
 
-    tsbe-check --command
+    ts-backend-check --command
 
 Contents
 ========
@@ -70,7 +70,7 @@ Contents
 .. toctree::
     :maxdepth: 2
 
-    tsbe_check/index
+    ts_backend_check/index
 
 Contributing
 ============

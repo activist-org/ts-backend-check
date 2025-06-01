@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """
-Setup and commands for the tsbe-check command line interface.
+Setup and commands for the ts-backend-check command line interface.
 """
 
 import sys
@@ -40,7 +40,7 @@ def check(backend_model: str, typescript_file: str):
 
     Examples
     --------
-    tsbe-check check src/models/user.py src/types/user.ts
+    ts-backend-check check src/models/user.py src/types/user.ts
     """
     checker = TypeChecker(models_file=backend_model, types_file=typescript_file)
     if missing := checker.check():

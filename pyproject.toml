@@ -1,14 +1,14 @@
 [project]
-name = "tsbe-check"
+name = "ts-backend-check"
 version = "1.0.0"
-description = "tsbe-check is a Python package used to check TypeScript types against their corresponding backend models to assure that all fields have been accounted for."
-authors = [{ name = "tsbe-check developers" }]
+description = "ts-backend-check is a Python package used to check TypeScript types against their corresponding backend models to assure that all fields have been accounted for."
+authors = [{ name = "ts-backend-check developers" }]
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["click>=8.1"]
 
 [project.scripts]
-tsbe-check = "tsbe_check:cli"
+ts-backend-check = "ts_backend_check:cli"
 
 [build-system]
 requires = ["flit_core>=3.4,<4"]
