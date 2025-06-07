@@ -1,4 +1,5 @@
-import pytest
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from tsbe_check.checker import TypeChecker
 
 

@@ -1,4 +1,5 @@
-import pytest
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from click.testing import CliRunner
 from tsbe_check.cli.main import cli
 

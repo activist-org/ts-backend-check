@@ -1,5 +1,7 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import pytest
-from tsbe_check.django_parser import extract_model_fields, DjangoModelVisitor
+from tsbe_check.django_parser import extract_model_fields
 
 
 def test_extract_model_fields(temp_django_model):
