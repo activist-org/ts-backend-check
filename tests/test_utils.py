@@ -3,7 +3,7 @@
 Tests for utility functions in ts-backend-check.
 """
 
-from tsbe_check.utils import snake_to_camel
+from ts_backend_check.utils import snake_to_camel
 
 
 def test_snake_to_camel():

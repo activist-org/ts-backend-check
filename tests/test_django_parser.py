@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import pytest
-from tsbe_check.django_parser import extract_model_fields
+from ts_backend_check.django_parser import extract_model_fields
 
 
 def test_extract_model_fields(temp_django_model):
@@ -10,7 +10,7 @@ def test_extract_model_fields(temp_django_model):
     assert "EventModel" in fields
     event_fields = fields["EventModel"]
 
-    # Check that all non-private fields are extracted
+    # Check that all non-private fields are extracted.
     assert "title" in event_fields
     assert "description" in event_fields
     assert "date" in event_fields
@@ -18,7 +18,7 @@ def test_extract_model_fields(temp_django_model):
     assert "organizer" in event_fields
     assert "participants" in event_fields
 
-    # Check that private fields are ignored
+    # Check that private fields are ignored.
     assert "_private_field" not in event_fields
 
 

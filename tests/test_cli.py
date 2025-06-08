@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from click.testing import CliRunner
-from tsbe_check.cli.main import cli
+from ts_backend_check.cli.main import cli
 
 
 def test_cli_check_command_success(temp_django_model, temp_typescript_file):
@@ -13,7 +13,7 @@ def test_cli_check_command_success(temp_django_model, temp_typescript_file):
 
 
 def test_cli_check_command_with_missing_fields(tmp_path):
-    # Create a model with fields
+    # Create a model with fields.
     model_content = """from django.db import models
 
 class TestModel(models.Model):
@@ -23,7 +23,7 @@ class TestModel(models.Model):
     model_file = tmp_path / "test_model.py"
     model_file.write_text(model_content)
 
-    # Create a type with missing field
+    # Create a type with missing field.
     type_content = """export interface Test {
     name: string;
 }"""

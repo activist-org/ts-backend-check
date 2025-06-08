@@ -1,19 +1,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from tsbe_check.checker import TypeChecker
+from ts_backend_check.checker import TypeChecker
 
 
 def test_checker_finds_missing_fields(temp_django_model, temp_typescript_file):
     checker = TypeChecker(temp_django_model, temp_typescript_file)
     missing = checker.check()
 
-    # We know 'date' and 'participants' are marked as backend-only
-    # So they shouldn't be reported as missing
+    # We know 'date' and 'participants' are marked as backend-only.
+    # So they shouldn't be reported as missing.
     assert len(missing) == 0
 
 
 def test_checker_with_actual_missing_fields(tmp_path):
-    # Create a model with an extra field
+    # Create a model with an extra field.
     model_content = """from django.db import models
 
 class TestModel(models.Model):
@@ -24,7 +24,7 @@ class TestModel(models.Model):
     model_file = tmp_path / "test_model.py"
     model_file.write_text(model_content)
 
-    # Create a type with missing field
+    # Create a type with missing field.
     type_content = """export interface Test {
     name: string;
 }
@@ -41,7 +41,7 @@ class TestModel(models.Model):
 
 
 def test_checker_with_no_matching_interface(tmp_path):
-    # Create a model
+    # Create a model.
     model_content = """from django.db import models
 
 class UnmatchedModel(models.Model):
@@ -51,7 +51,7 @@ class UnmatchedModel(models.Model):
     model_file = tmp_path / "unmatched_model.py"
     model_file.write_text(model_content)
 
-    # Create a type file with no matching interface
+    # Create a type file with no matching interface.
     type_content = """export interface DifferentInterface {
     something: string;
 }

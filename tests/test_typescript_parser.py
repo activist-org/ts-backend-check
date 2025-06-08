@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from tsbe_check.typescript_parser import TypeScriptParser
+from ts_backend_check.typescript_parser import TypeScriptParser
 
 
 def test_parse_interfaces(temp_typescript_file):
     parser = TypeScriptParser(temp_typescript_file)
     interfaces = parser.parse_interfaces()
 
-    # Check Event interface
+    # Check Event interface.
     assert "Event" in interfaces
     event = interfaces["Event"]
     assert event.name == "Event"
@@ -16,7 +16,7 @@ def test_parse_interfaces(temp_typescript_file):
     assert "isActive" in event.fields
     assert "organizer" in event.fields
 
-    # Check User interface
+    # Check User interface.
     assert "User" in interfaces
     user = interfaces["User"]
     assert user.name == "User"
@@ -38,7 +38,7 @@ def test_parse_interfaces_with_extends(tmp_path):
         id: number;
         title: string;
     }
-    
+
     export interface ExtendedEvent extends BaseEvent {
         description: string;
     }
