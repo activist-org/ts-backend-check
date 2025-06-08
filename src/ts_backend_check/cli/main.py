@@ -12,7 +12,7 @@ from ts_backend_check.checker import TypeChecker
 
 @click.group()
 @click.version_option()
-def cli():
+def cli() -> None:
     """
     TS Backend Check is a Python package used to check TypeScript types against their corresponding backend models.
     """
@@ -22,7 +22,7 @@ def cli():
 @cli.command()
 @click.argument("backend_model", type=click.Path(exists=True))
 @click.argument("typescript_file", type=click.Path(exists=True))
-def check(backend_model: str, typescript_file: str):
+def check(backend_model: str, typescript_file: str) -> None:
     """
     Check TypeScript types against backend models.
 
