@@ -38,6 +38,11 @@ jobs:
           echo PATH=$PATH >> $GITHUB_ENV
           uv pip install -r requirements-dev.txt
 
+      - name: Install Package in Editable Mode
+        run: |
+          . .venv/bin/activate
+          pip install -e .
+
       - name: Run Ruff Format - Formatting Check
         run: ruff format ./src --check
 
@@ -51,4 +56,4 @@ jobs:
 
       - name: Run pytest - Unit Tests
         if: always()
-        run: pytest . --cov=src --cov-report=term-missing --cov-fail-under=10 --cov-config=./pyproject.toml
+        run: pytest . --cov=src --cov-report=term-missing --cov-fail-under=95 --cov-config=./pyproject.toml
