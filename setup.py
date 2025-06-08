@@ -18,19 +18,19 @@ if on_rtd:
     requirements = []
 
 setup_args = dict(
-    name="tsbe-check",
-    version="0.1.0",
+    name="ts-backend-check",
+    version="1.0.0",
     package_dir={"": "src"},
     author="Andrew Tavis McAllister",
     author_email="andrew.t.mcallister@gmail.com",
     description="Check TypeScript types against backend models",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/activist-org/tsbe-check",
+    url="https://github.com/activist-org/ts-backend-check",
     packages=find_packages(where="src"),
     entry_points={
         "console_scripts": [
-            "tsbe-check=tsbe_check.cli.main:main",
+            "ts-backend-check=ts_backend_check.cli.main:main",
         ],
     },
     install_requires=requirements,

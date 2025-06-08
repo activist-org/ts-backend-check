@@ -5,9 +5,9 @@ Main module for checking Django models against TypeScript types.
 
 from typing import Dict, List, Set
 
-from .django_parser import extract_model_fields
-from .typescript_parser import TypeScriptParser
-from .utils import snake_to_camel
+from ts_backend_check.parsers.django_parser import extract_model_fields
+from ts_backend_check.parsers.typescript_parser import TypeScriptParser
+from ts_backend_check.utils import snake_to_camel
 
 
 class TypeChecker:

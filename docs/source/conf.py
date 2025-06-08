@@ -22,12 +22,12 @@ sys.path.insert(0, os.path.abspath("../../src"))
 
 # -- Project information -----------------------------------------------------
 
-project = "tsbe-check"
-copyright = "2024, tsbe-check developers (GPL 3.0 License)"
-author = "tsbe-check developers"
+project = "ts-backend-check"
+copyright = "2024, ts-backend-check developers (GPL 3.0 License)"
+author = "ts-backend-check developers"
 
 # The full version, including alpha/beta/rc tags
-release = "0.1.0"
+release = "1.0.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -110,7 +110,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "tsbe-check_doc"
+htmlhelp_basename = "ts-backend-check_doc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -136,8 +136,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "tsbe-check.tex",
-        "tsbe-check Documentation",
+        "ts-backend-check.tex",
+        "ts-backend-check Documentation",
         "activist-org",
         "manual",
     )
@@ -148,7 +148,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "tsbe-check", "tsbe-check Documentation", [author], 1)]
+man_pages = [(master_doc, "ts-backend-check", "ts-backend-check Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -159,24 +159,24 @@ man_pages = [(master_doc, "tsbe-check", "tsbe-check Documentation", [author], 1)
 texinfo_documents = [
     (
         master_doc,
-        "tsbe-check",
-        "tsbe-check Documentation",
+        "ts-backend-check",
+        "ts-backend-check Documentation",
         author,
-        "tsbe-check",
+        "ts-backend-check",
         "Check TypeScript types against backend models",
         "Miscellaneous",
     )
 ]
 
 # Adding logo to the docs sidebar.
-html_logo = "_static/TSBECheckLogo.png"
+html_logo = "_static/TSBackendCheckLogo.png"
 html_theme_options = {
     "logo_only": True,
     # "display_version": True,
 }
 
 # Adding favicon to the docs.
-html_favicon = "_static/TSBECheckFavicon.ico"
+html_favicon = "_static/TSBackendCheckFavicon.ico"
 
 # Importing custom css for theme customization.
 html_css_files = [

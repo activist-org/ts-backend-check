@@ -1,5 +1,5 @@
 m2r2
 numpydoc
-tsbe-check
+ts-backend-check
 sphinx
 sphinx_rtd_theme
