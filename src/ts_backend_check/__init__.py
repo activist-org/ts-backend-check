@@ -2,6 +2,6 @@
 __version__ = "1.0.0"
 
 from .checker import TypeChecker
-from .cli import cli
+from .cli.main import check
 
-__all__ = ["cli", "TypeChecker"]
+__all__ = ["check", "TypeChecker"]

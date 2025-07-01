@@ -1,12 +1,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from click.testing import CliRunner
-from ts_backend_check.cli.main import cli
+
+from ts_backend_check.cli.main import check
 
 
 def test_cli_check_command_success(temp_django_model, temp_typescript_file):
     runner = CliRunner()
-    result = runner.invoke(cli, ["check", temp_django_model, temp_typescript_file])
+    result = runner.invoke(check, ["check", temp_django_model, temp_typescript_file])
 
     assert result.exit_code == 0
     assert "All model fields are properly typed in TypeScript!" in result.output
@@ -32,7 +33,7 @@ class TestModel(models.Model):
     type_file.write_text(type_content)
 
     runner = CliRunner()
-    result = runner.invoke(cli, ["check", str(model_file), str(type_file)])
+    result = runner.invoke(check, ["check", str(model_file), str(type_file)])
 
     assert result.exit_code == 1
     assert "Missing TypeScript fields found:" in result.output
@@ -41,7 +42,7 @@ class TestModel(models.Model):
 
 def test_cli_check_command_with_nonexistent_files():
     runner = CliRunner()
-    result = runner.invoke(cli, ["check", "nonexistent.py", "nonexistent.ts"])
+    result = runner.invoke(check, ["check", "nonexistent.py", "nonexistent.ts"])
 
     assert result.exit_code == 2
     assert "does not exist" in result.output
@@ -49,7 +50,7 @@ def test_cli_check_command_with_nonexistent_files():
 
 def test_cli_version():
     runner = CliRunner()
-    result = runner.invoke(cli, ["--version"])
+    result = runner.invoke(check, ["--version"])
 
     assert result.exit_code == 0
     assert result.output.strip().startswith("cli, version")

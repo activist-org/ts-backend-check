@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import pytest
+
 from ts_backend_check.django_parser import extract_model_fields
 
 
