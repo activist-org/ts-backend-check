@@ -12,30 +12,33 @@ from ts_backend_check.checker import TypeChecker
 ROOT_DIR = Path(__file__).cwd()
 parser = argparse.ArgumentParser(
     prog="ts-backend-checker",
-    description="Checks the types in .ts files against the corresponding backend models.",
+    description="Checks the types in TypeScript files against the corresponding backend models.",
 )
 
-parser.add_argument("-b", "--backend-model")
-parser.add_argument("-ts", "--typescript-file")
+parser.add_argument("-bmf", "--backend-model-file")
+parser.add_argument("-tsf", "--typescript-file")
 args = parser.parse_args()
 
 
-def check():
+def check() -> None:
+    """
+    The main check function to compare a the methods within a backend model to a corresponding TypeScript file.
+    """
     args_dict = vars(args)
-    backend_model_path = (
-        ROOT_DIR / f"{args_dict['backend_model']}"
-    )
-    ts_file_path = (
-        ROOT_DIR / f"{args_dict['typescript_file']}"
-    )
+    backend_mode_filel_path = ROOT_DIR / f"{args_dict['backend-model-file']}"
+    ts_file_path = ROOT_DIR / f"{args_dict['typescript_file']}"
 
-    if not backend_model_path.is_file():
+    if not backend_mode_filel_path.is_file():
         print("File containing the Django Model does not exist. Please check again.")
+
     elif not ts_file_path.is_file():
-        print("File containing the TypeScript Interface does not exist. Please check again.")
+        print(
+            "File containing the TypeScript Interface does not exist. Please check again."
+        )
+
     else:
         checker = TypeChecker(
-            models_file=args_dict["backend_model"],
+            models_file=args_dict["backend_mode_filel-file"],
             types_file=args_dict["typescript_file"],
         )
         if missing := checker.check():
