@@ -44,7 +44,7 @@ def check():
             print(
                 f"\nPlease fix the {len(missing)} fields to have the backend models synced with the typescript models."
             )
-            sys.exit(2)
+            sys.exit(1)
 
         print("All models are synced perfectly.")
 
