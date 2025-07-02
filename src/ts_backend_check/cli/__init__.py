@@ -3,6 +3,6 @@
 CLI package for ts-backend-check.
 """
 
-from .main import check
+from .main import main
 
-__all__ = ["check"]
+__all__ = ["main"]

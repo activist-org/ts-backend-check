@@ -19,10 +19,11 @@ parser.add_argument("-bmf", "--backend-model-file")
 parser.add_argument("-tsf", "--typescript-file")
 
 
-def check() -> None:
+def main() -> None:
     """
     The main check function to compare a the methods within a backend model to a corresponding TypeScript file.
     """
+    args = parser.parse_args()
     args_dict = vars(args)
     backend_model_file_path = ROOT_DIR / f"{args_dict['backend_model_file']}"
     ts_file_path = ROOT_DIR / f"{args_dict['typescript_file']}"
@@ -53,5 +54,4 @@ def check() -> None:
 
 
 if __name__ == "__main__":
-    args = parser.parse_args()
-    check()
+    main()
