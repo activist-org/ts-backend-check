@@ -9,6 +9,7 @@ from pathlib import Path
 
 from ts_backend_check.checker import TypeChecker
 
+ROOT_DIR = Path(__file__).cwd()
 parser = argparse.ArgumentParser(
     prog="ts-backend-checker",
     description="Checks the types in .ts files against the corresponding backend models.",
@@ -22,12 +23,11 @@ args = parser.parse_args()
 def check():
     args_dict = vars(args)
     backend_model_path = (
-        Path(__file__).parent.parent / f"test_folder/{args_dict['backend_model']}"
+        ROOT_DIR / f"{args_dict['backend_model']}"
     )
     ts_file_path = (
-        Path(__file__).parent.parent / f"test_folder/{args_dict['typescript_file']}"
+        ROOT_DIR / f"{args_dict['typescript_file']}"
     )
-    print(backend_model_path)
 
     if not backend_model_path.is_file():
         print("File containing the backend model does not exist. Please check again.")
