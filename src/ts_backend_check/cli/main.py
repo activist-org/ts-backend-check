@@ -30,9 +30,9 @@ def check():
     )
 
     if not backend_model_path.is_file():
-        print("File containing the backend model does not exist. Please check again.")
+        print("File containing the Django Model does not exist. Please check again.")
     elif not ts_file_path.is_file():
-        print("Typescript file does not exist. Please check again.")
+        print("File containing the TypeScript Interface does not exist. Please check again.")
     else:
         checker = TypeChecker(
             models_file=args_dict["backend_model"],
