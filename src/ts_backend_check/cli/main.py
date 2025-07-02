@@ -17,7 +17,6 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument("-bmf", "--backend-model-file")
 parser.add_argument("-tsf", "--typescript-file")
-args = parser.parse_args()
 
 
 def check() -> None:
@@ -25,10 +24,10 @@ def check() -> None:
     The main check function to compare a the methods within a backend model to a corresponding TypeScript file.
     """
     args_dict = vars(args)
-    backend_mode_filel_path = ROOT_DIR / f"{args_dict['backend-model-file']}"
+    backend_model_file_path = ROOT_DIR / f"{args_dict['backend-model-file']}"
     ts_file_path = ROOT_DIR / f"{args_dict['typescript_file']}"
 
-    if not backend_mode_filel_path.is_file():
+    if not backend_model_file_path.is_file():
         print("File containing the Django Model does not exist. Please check again.")
 
     elif not ts_file_path.is_file():
@@ -38,9 +37,10 @@ def check() -> None:
 
     else:
         checker = TypeChecker(
-            models_file=args_dict["backend_mode_filel-file"],
+            models_file=args_dict["backend_model_file"],
             types_file=args_dict["typescript_file"],
         )
+
         if missing := checker.check():
             print("Missing typescript fields found: ")
             print("\n".join(missing))
@@ -53,4 +53,5 @@ def check() -> None:
 
 
 if __name__ == "__main__":
+    args = parser.parse_args()
     check()
