@@ -1,7 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-__version__ = "1.0.0"
+from ts_backend_check.checker import TypeChecker
+from ts_backend_check.cli.main import main
 
-from .checker import TypeChecker
-from .cli import cli
-
-__all__ = ["cli", "TypeChecker"]
+__all__ = ["main", "TypeChecker"]

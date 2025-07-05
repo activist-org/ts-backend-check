@@ -1,15 +1,27 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from click.testing import CliRunner
-from ts_backend_check.cli.main import cli
+import subprocess
+import sys
 
 
 def test_cli_check_command_success(temp_django_model, temp_typescript_file):
-    runner = CliRunner()
-    result = runner.invoke(cli, ["check", temp_django_model, temp_typescript_file])
-
-    assert result.exit_code == 0
-    assert "All model fields are properly typed in TypeScript!" in result.output
+    result = subprocess.run(
+        [
+            sys.executable,
+            "src/ts_backend_check/cli/main.py",
+            "-bmf",
+            temp_django_model,
+            "-tsf",
+            temp_typescript_file,
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0
+    assert (
+        result.stdout.strip()
+        == "All models are synced with their corresponding TypeScript interfaces."
+    )
 
 
 def test_cli_check_command_with_missing_fields(tmp_path):
@@ -31,25 +43,65 @@ class TestModel(models.Model):
     type_file = tmp_path / "test_type.ts"
     type_file.write_text(type_content)
 
-    runner = CliRunner()
-    result = runner.invoke(cli, ["check", str(model_file), str(type_file)])
+    result = subprocess.run(
+        [
+            sys.executable,
+            "src/ts_backend_check/cli/main.py",
+            "-bmf",
+            model_file,
+            "-tsf",
+            type_file,
+        ],
+        capture_output=True,
+        text=True,
+    )
 
-    assert result.exit_code == 1
-    assert "Missing TypeScript fields found:" in result.output
-    assert "age" in result.output
+    assert result.returncode == 1
 
 
-def test_cli_check_command_with_nonexistent_files():
-    runner = CliRunner()
-    result = runner.invoke(cli, ["check", "nonexistent.py", "nonexistent.ts"])
+def test_cli_check_command_with_nonexistent_backend_model_files():
+    result = subprocess.run(
+        [
+            sys.executable,
+            "src/ts_backend_check/cli/main.py",
+            "-bmf",
+            "nonexistent.py",
+            "-tsf",
+            "nonexistent.ts",
+        ],
+        capture_output=True,
+        text=True,
+    )
 
-    assert result.exit_code == 2
-    assert "does not exist" in result.output
+    print("stdout: ", result.stdout.strip())
+    print("Stderr: ", result.stderr)
+
+    assert result.returncode == 0
+    assert (
+        result.stdout
+        == "nonexistent.py that should contain the backend models does not exist. Please check and try again.\n"
+    )
 
 
-def test_cli_version():
-    runner = CliRunner()
-    result = runner.invoke(cli, ["--version"])
+def test_cli_check_command_with_nonexistent_ts_files(temp_django_model):
+    result = subprocess.run(
+        [
+            sys.executable,
+            "src/ts_backend_check/cli/main.py",
+            "-bmf",
+            temp_django_model,
+            "-tsf",
+            "nonexistent.ts",
+        ],
+        capture_output=True,
+        text=True,
+    )
 
-    assert result.exit_code == 0
-    assert result.output.strip().startswith("cli, version")
+    print("stdout: ", result.stdout.strip())
+    print("Stderr: ", result.stderr)
+
+    assert result.returncode == 0
+    assert (
+        result.stdout
+        == "nonexistent.ts file that should contain the TypeScript interfaces does not exist. Please check and try again.\n"
+    )

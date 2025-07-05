@@ -1,8 +1,4 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""
-CLI package for ts-backend-check.
-"""
+from ts_backend_check.cli.main import main
 
-from .main import cli
-
-__all__ = ["cli"]
+__all__ = ["main"]

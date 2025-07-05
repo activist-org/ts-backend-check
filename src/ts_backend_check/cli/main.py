@@ -3,56 +3,84 @@
 Setup and commands for the ts-backend-check command line interface.
 """
 
+import argparse
 import sys
-
-import click
+from pathlib import Path
 
 from ts_backend_check.checker import TypeChecker
 
 
-@click.group()
-@click.version_option()
-def cli() -> None:
+def main() -> None:
     """
-    TS Backend Check is a Python package used to check TypeScript types against their corresponding backend models.
-    """
-    pass
+    The main check function to compare a the methods within a backend model to a corresponding TypeScript file.
 
-
-@cli.command()
-@click.argument("backend_model", type=click.Path(exists=True))
-@click.argument("typescript_file", type=click.Path(exists=True))
-def check(backend_model: str, typescript_file: str) -> None:
-    """
-    Check TypeScript types against backend models.
-
-    This command checks if all fields from the backend model are properly represented
-    in the TypeScript types file. It supports marking fields as backend-only using
-    special comments in the TypeScript file.
-
-    Parameters
-    ----------
-    backend_model : str
-        The path to the backend model file (e.g. Python class).
-
-    typescript_file : str
-        The path to the TypeScript interface/type file.
+    Notes
+    -----
+    The available command line arguments are:
+    - --backend-model-file (-bmf): Path to the backend model file (e.g. Python class)
+    - --typescript-file (-tsf): Path to the TypeScript interface/type file
 
     Examples
     --------
-    ts-backend-check check src/models/user.py src/types/user.ts
+    >>> ts-backend-check -bmf <backend-model-file> -tsf <typescript-file>
     """
-    checker = TypeChecker(models_file=backend_model, types_file=typescript_file)
-    if missing := checker.check():
-        click.echo("Missing TypeScript fields found:")
-        click.echo("\n".join(missing))
-        click.echo(
-            f"\nPlease correct the {len(missing)} fields above to have backend models and frontend types fully synced."
-        )
-        sys.exit(1)
+    # MARK: CLI Base
 
-    click.echo("All model fields are properly typed in TypeScript!")
+    ROOT_DIR = Path(__file__).cwd()
+    parser = argparse.ArgumentParser(
+        prog="ts-backend-check",
+        description="Checks the types in TypeScript files against the corresponding backend models.",
+        epilog="Visit the codebase at https://github.com/activist-org/ts-backend-check to learn more!",
+        formatter_class=lambda prog: argparse.HelpFormatter(prog, max_help_position=60),
+    )
+
+    parser._actions[0].help = "Show this help message and exit."
+
+    parser.add_argument(
+        "-bmf",
+        "--backend-model-file",
+        help="Path to the backend model file (e.g. Python class).",
+    )
+    parser.add_argument(
+        "-tsf",
+        "--typescript-file",
+        help="Path to the TypeScript interface/type file.",
+    )
+
+    # MARK: Setup CLI
+
+    args = parser.parse_args()
+    backend_model_file_path = ROOT_DIR / args.backend_model_file
+    ts_file_path = ROOT_DIR / args.typescript_file
+
+    if not backend_model_file_path.is_file():
+        print(
+            f"{args.backend_model_file} that should contain the backend models does not exist. Please check and try again."
+        )
+
+    elif not ts_file_path.is_file():
+        print(
+            f"{args.typescript_file} file that should contain the TypeScript interfaces does not exist. Please check and try again."
+        )
+
+    else:
+        checker = TypeChecker(
+            models_file=args.backend_model_file,
+            types_file=args.typescript_file,
+        )
+
+        if missing := checker.check():
+            print("Missing typescript fields found: ")
+            print("\n".join(missing))
+
+            field_or_fields = "fields" if len(missing) > 1 else "field"
+            print(
+                f"\nPlease fix the {len(missing)} {field_or_fields} to have the backend models synced with the typescript interfaces."
+            )
+            sys.exit(1)
+
+        print("All models are synced with their corresponding TypeScript interfaces.")
 
 
 if __name__ == "__main__":
-    cli()
+    main()
