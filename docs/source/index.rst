@@ -58,6 +58,12 @@ To utilize the ts-backend-check CLI, you can execute variations of the following
     ts-backend-check -h  # view the cli options
     ts-backend-check [command]
 
+Command Options
+===============
+
+- ``backend-model-file`` (``bmf```): Path to the backend model file (e.g. Python class)
+- ``typescript-file`` (``tsf```): Path to the TypeScript interface/type file
+
 Commands
 ========
 
@@ -69,17 +75,10 @@ The CLI provides a simple interface to check TypeScript types against backend mo
     ts-backend-check --help
 
     # Check a TypeScript type against a backend model:
-    ts-backend-check check <typescript-file> <backend-model-file>
+    ts-backend-check -bmf <backend-model-file> -tsf <typescript-file>
 
     # Example command:
-    ts-backend-check check src/types/user.ts src/models/user.py
-
-Command Options
-===============
-
-- ``check``: Compare TypeScript types with backend models
-    - ``typescript-file``: Path to the TypeScript interface/type file
-    - ``backend-model-file``: Path to the backend model file (e.g. Python class)
+    ts-backend-check -bmf src/models/user.py -tsf src/types/user.ts
 
 Contents
 ========
