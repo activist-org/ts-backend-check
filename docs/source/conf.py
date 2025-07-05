@@ -27,7 +27,7 @@ copyright = "2024, ts-backend-check developers (GPL 3.0 License)"
 author = "ts-backend-check developers"
 
 # The full version, including alpha/beta/rc tags
-release = "1.0.0"
+release = "1.1.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -148,7 +148,9 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "ts-backend-check", "ts-backend-check Documentation", [author], 1)]
+man_pages = [
+    (master_doc, "ts-backend-check", "ts-backend-check Documentation", [author], 1)
+]
 
 
 # -- Options for Texinfo output -------------------------------------------

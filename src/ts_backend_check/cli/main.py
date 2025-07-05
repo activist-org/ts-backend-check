@@ -60,7 +60,7 @@ def main() -> None:
 
     elif not ts_file_path.is_file():
         print(
-            f"{args.typescript_file} file that should contain the TypeScript interfaces does not exist. Please check and try again."
+            f"{args.typescript_file} file that should contain the TypeScript types does not exist. Please check and try again."
         )
 
     else:

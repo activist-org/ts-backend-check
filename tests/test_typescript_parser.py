@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from ts_backend_check.typescript_parser import TypeScriptParser
+from ts_backend_check.parsers.typescript_parser import TypeScriptParser
 
 
 def test_parse_interfaces(temp_typescript_file):

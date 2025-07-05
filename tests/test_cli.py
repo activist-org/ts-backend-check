@@ -103,5 +103,5 @@ def test_cli_check_command_with_nonexistent_ts_files(temp_django_model):
     assert result.returncode == 0
     assert (
         result.stdout
-        == "nonexistent.ts file that should contain the TypeScript interfaces does not exist. Please check and try again.\n"
+        == "nonexistent.ts file that should contain the TypeScript types does not exist. Please check and try again.\n"
     )

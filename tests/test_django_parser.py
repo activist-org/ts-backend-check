@@ -2,7 +2,7 @@
 
 import pytest
 
-from ts_backend_check.django_parser import extract_model_fields
+from ts_backend_check.parsers.django_parser import extract_model_fields
 
 
 def test_extract_model_fields(temp_django_model):
