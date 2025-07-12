@@ -12,6 +12,10 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## [Upcoming] ts-backend-check 1.x
 
+### ✨ Features
+
+- Adds the ability for the user to check the most recent version of the package via the CLI's version command and upgrade it via a simple CLI argument ([#12](https://github.com/activist-org/ts-backend-check/issues/12)).
+
 ## ts-backend-check 1.1.0
 
 ### ✨ Features
