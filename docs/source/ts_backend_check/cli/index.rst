@@ -7,3 +7,5 @@ cli/
     :maxdepth: 1
 
     main
+    upgrade
+    version

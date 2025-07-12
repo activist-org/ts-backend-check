@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 
 from ts_backend_check.checker import TypeChecker
+from ts_backend_check.cli.upgrade import upgrade_cli
+from ts_backend_check.cli.version import get_version_message
 
 
 def main() -> None:
@@ -37,10 +39,26 @@ def main() -> None:
     parser._actions[0].help = "Show this help message and exit."
 
     parser.add_argument(
+        "-v",
+        "--version",
+        action="version",
+        version=f"{get_version_message()}",
+        help="Show the version of the ts-backend-check CLI.",
+    )
+
+    parser.add_argument(
+        "-u",
+        "--upgrade",
+        action="store_true",
+        help="Upgrade the ts-backend-check CLI to the latest version.",
+    )
+
+    parser.add_argument(
         "-bmf",
         "--backend-model-file",
         help="Path to the backend model file (e.g. Python class).",
     )
+
     parser.add_argument(
         "-tsf",
         "--typescript-file",
@@ -50,6 +68,13 @@ def main() -> None:
     # MARK: Setup CLI
 
     args = parser.parse_args()
+
+    if args.upgrade:
+        upgrade_cli()
+        return
+
+    # MARK: Run Check
+
     backend_model_file_path = ROOT_DIR / args.backend_model_file
     ts_file_path = ROOT_DIR / args.typescript_file
 
@@ -75,7 +100,7 @@ def main() -> None:
 
             field_or_fields = "fields" if len(missing) > 1 else "field"
             print(
-                f"\nPlease fix the {len(missing)} {field_or_fields} to have the backend models synced with the typescript interfaces."
+                f"\nPlease fix the {len(missing)} {field_or_fields} above to have the backend models synced with the typescript interfaces."
             )
             sys.exit(1)
 

@@ -16,7 +16,7 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ✨ Features
 
-- An argparse based CLI was developed ([#7](https://github.com/activist-org/i18n-check/issues/7)) to help check TypeScript types against their corresponding backend models.
+- An argparse based CLI was developed ([#7](https://github.com/activist-org/ts-backend-check/issues/7)) to help check TypeScript types against their corresponding backend models.
   - Arguments include passing a backend model file and a TypeScript file that should be compared.
   - The backend model fields are extracted, which currently works for Django based models.
   - These model fields are then compared against a TypeScript file to check if they have been mentioned in the code.
@@ -33,14 +33,14 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ✅ Tests
 
-- Testing has been written for the CLI functionalities ([#2](https://github.com/activist-org/i18n-check/issues/2)).
+- Testing has been written for the CLI functionalities ([#2](https://github.com/activist-org/ts-bachend-check/issues/2)).
 - GitHub Actions based checks are used to validate file license headers, ruff based code formatting, mypy static type checking and pytest based tests on each pull request.
 - pre-commit hooks are used to enforce code quality before commits during development.
 
 ### 📝 Documentation
 
 - All onboarding documentation has been written including an extensive readme, a contributing guide and GitHub templates to help people contribute effectively.
-- Read the Docs documentation has been generated for the project and can be found at [ts-backend-check.readthedocs.io](https://ts-backend-check.readthedocs.io/en/latest/) ([#3](https://github.com/activist-org/i18n-check/issues/3)).
+- Read the Docs documentation has been generated for the project and can be found at [ts-backend-check.readthedocs.io](https://ts-backend-check.readthedocs.io/en/latest/) ([#3](https://github.com/activist-org/ts-bachend-check/issues/3)).
 - All docstrings for functions and classes were standardized based on numpydoc.
 
 ### ♻️ Code Refactoring
