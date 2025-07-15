@@ -18,7 +18,7 @@ def path_exits(path: str) -> bool:
     return False
 
 
-def write_config(config: dict[str: str]) -> None:
+def write_config(config: dict[str, dict[str, str]]) -> None:
     options = f"""
 # Configuration file for ts-backend-check validation.
 # See https://github.com/activist-org/ts-backend-check for details.

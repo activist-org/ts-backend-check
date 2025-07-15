@@ -3,14 +3,9 @@
 Tests for the CLI config file generation functionality.
 """
 
-import builtins
-from pathlib import Path
-from unittest.mock import mock_open, patch
-
-import pytest
+from unittest.mock import patch
 
 from ts_backend_check.cli.config import (
-    YAML_CONFIG_FILE_PATH,
     create_config,
     path_exits,
     write_config,
