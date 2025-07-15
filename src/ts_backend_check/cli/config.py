@@ -4,13 +4,15 @@ from pathlib import Path
 
 from yaml import dump
 
-ROOT_PATH = Path(__file__).parent.parent.parent / ".ts-backend-check.yaml"
+YAML_CONFIG_FILE_PATH = (
+    Path(__file__).parent.parent.parent.parent / ".ts-backend-check.yaml"
+)
 
 config_options = {}
 
 
 def path_exits(path: str) -> bool:
-    full_path = Path(__file__).parent.parent.parent / path
+    full_path = Path(__file__).parent.parent.parent.parent / path
     if Path(full_path).is_file():
         return True
     return False
@@ -25,13 +27,13 @@ def write_config(config: dict) -> None:
 {dump(config)}
 
 """
-    with open(ROOT_PATH, "w") as file:
+    with open(YAML_CONFIG_FILE_PATH, "w") as file:
         file.write(options)
     return None
 
 
 def create_config() -> None:
-    if ROOT_PATH.is_file():
+    if YAML_CONFIG_FILE_PATH.is_file():
         reconfig_choice = input(
             "Config exists. Do you want to re-configure your config.yaml file? "
         )
@@ -72,7 +74,7 @@ def create_config() -> None:
         print(
             "Creating a new .ts-backend-check.yaml file in the root dir. Run ts-backend-check --configure to configure your checks."
         )
-        open(ROOT_PATH, "w").close()
+        open(YAML_CONFIG_FILE_PATH, "w").close()
 
 
 if __name__ == "__main__":
