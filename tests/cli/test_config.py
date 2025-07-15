@@ -9,8 +9,12 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from ts_backend_check.cli.config import (YAML_CONFIG_FILE_PATH, create_config,
-                                         path_exits, write_config)
+from ts_backend_check.cli.config import (
+    YAML_CONFIG_FILE_PATH,
+    create_config,
+    path_exits,
+    write_config,
+)
 
 
 def test_path_exits_false(tmp_path):
