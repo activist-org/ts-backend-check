@@ -1,4 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
+"""
+Configure cli to run based on .yaml configuration file.
+"""
 
 from pathlib import Path
 
@@ -8,73 +11,142 @@ YAML_CONFIG_FILE_PATH = (
     Path(__file__).parent.parent.parent.parent / ".ts-backend-check.yaml"
 )
 
-config_options = {}
+PROJECT_ROOT_PATH = Path(__file__).parent.parent.parent.parent
 
 
-def path_exits(path: str) -> bool:
+def configure_paths() -> None:
+    """
+    Function to receive paths from user.
+    """
+    config_options = {}
+    while True:
+        print("\n--- Adding new model/interface configuration ---")
+
+        key = input(
+            "Enter the model-interface type (eg: 'auth', 'orgs', 'groups'): "
+        ).strip()
+        if not key:
+            print("Key cannot be empty. Please try again.")
+            continue
+
+        # Get backend path.
+        while True:
+            backend_path = input("Enter the path for Django models.py file: ").strip()
+            if not backend_path:
+                print("Path cannot be empty.")
+                continue
+            if path_exists(backend_path):
+                break
+            print(f"File not found: {PROJECT_ROOT_PATH / backend_path}")
+            print("Please check the path and try again.")
+
+        # Get frontend path.
+        while True:
+            frontend_path = input("Enter path to TypeScript interface file: ").strip()
+            if not frontend_path:
+                print("Path cannot be empty. Please try again.")
+                continue
+            if path_exists(frontend_path):
+                break
+            print(f"File not found: {PROJECT_ROOT_PATH / frontend_path}")
+            print("Please check the path and try again.")
+
+        config_options[key] = {
+            "backend_model_path": backend_path,
+            "frontend_interface_path": frontend_path,
+        }
+
+        print(f"✓ Added configuration for '{key}'")
+
+        continue_config = input(
+            "Do you wish to add another model/interface configuration? (y/n)"
+        ).strip()
+
+        if continue_config.lower() == "n":
+            if config_options:
+                write_config(config_options)
+                print(
+                    f"\n✓ Configuration complete! Added {len(config_options)} configuration(s)."
+                )
+            break
+
+        if config_options:  # MARK: Fix test 67-73
+            write_config(config_options)
+            print(
+                f"\n✓ Configuration complete! Added {len(config_options)} configuration(s)."
+            )
+        else:
+            print("\nNo configurations added.")
+
+
+def path_exists(path: str) -> bool:
+    """
+    Check if path entered by the user exists withing the filesystem.
+
+    Parameters
+    ----------
+    path : str
+        Path should be entered as a string from the user.
+
+    Returns
+    -------
+    bool
+        Return true or false based on if path exists.
+    """
     full_path = Path(__file__).parent.parent.parent.parent / path
     if Path(full_path).is_file():
-        return True
+        return True  # MARK: Fix test
     return False
 
 
 def write_config(config: dict[str, dict[str, str]]) -> None:
-    options = f"""
-# Configuration file for ts-backend-check validation.
+    """
+    Function to write into .ts-backend-check.yaml file.
+
+    Parameters
+    ----------
+    config : dict[str, dict[str, str]]
+        Passing a dictionary as key str with another dict as value.
+    """
+    try:
+        options = f"""# Configuration file for ts-backend-check validation.
 # See https://github.com/activist-org/ts-backend-check for details.
 
 # Paths:
 {dump(config)}
 
 """
-    with open(YAML_CONFIG_FILE_PATH, "w") as file:
-        file.write(options)
-    return None
+        with open(YAML_CONFIG_FILE_PATH, "w") as file:
+            file.write(options)
+    except IOError as e:  # MARK: Fix test 94-95
+        print(f"Error while writing config file: {e}")
 
 
 def create_config() -> None:
+    """Main function to create or update configuration."""
+    print("ts-backend-check Configuration Setup")
+    print("=" * 40)
+
     if YAML_CONFIG_FILE_PATH.is_file():
         reconfig_choice = input(
-            "Config exists. Do you want to re-configure your config.yaml file? "
+            "Config exists. Do you want to re-configure your config.yaml file?(y/n) "
         )
-        if reconfig_choice.lower() == "y":
-            while_cond = True
-            while while_cond:
-                if reconfig_choice.lower() == "y":
-                    key = input(
-                        "Enter the model/interface type (ex: auth models/interface, org models/interface): "
-                    )
-                    backend_model_path = input("Enter path to Django models.py file: ")
-                    frontend_interface_path = input(
-                        "Enter path to TypeScript interface file: "
-                    )
-                    if path_exits(backend_model_path) and path_exits(
-                        frontend_interface_path
-                    ):
-                        config_options[key] = {
-                            "backend_model_path": backend_model_path,
-                            "frontend_interface_path": frontend_interface_path,
-                        }
-                        loop_end = input(
-                            "Continue entering paths to other models-interface? "
-                        )
-                        print("\n")
-                        if loop_end.lower() == "n":
-                            while_cond = False
-                    else:
-                        print(
-                            "Check the paths entered, one or more file does not exist in the given path."
-                        )
+        if reconfig_choice.lower() == "n":
+            print("Exiting without changes.")
+            return
 
-            write_config(config_options)
-        else:
-            print("Exiting.")
+        print("Reconfiguring......")
 
     else:
-        print(
-            "Creating a new .ts-backend-check.yaml file in the root dir. Run ts-backend-check --configure to configure your checks."
-        )
-        open(YAML_CONFIG_FILE_PATH, "w").close()
+        print("Creating new configuration file......")
+
+    try:
+        configure_paths()
+    except KeyboardInterrupt:  # MARK: Fix test 118-122
+        print("\n\nConfiguration cancelled by user.")
+    except Exception as e:
+        print(f"\nError during configuration: {e}")
+        print("Configuration cancelled.")
 
 
 if __name__ == "__main__":
