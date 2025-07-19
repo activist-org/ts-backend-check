@@ -44,6 +44,7 @@ def test_write_config_creates_yaml(tmp_path, monkeypatch):
     write_config(config)
 
     assert yaml_file.exists()
+
     content = yaml_file.read_text()
     assert "auth:" in content
     assert "backend_model_path" in content
@@ -176,6 +177,7 @@ def test_configure_paths_invalid_then_valid(mock_path, tmp_path, monkeypatch):
     configure_paths()
 
     assert yaml_file.exists()
+
     content = yaml_file.read_text()
     assert "valid/backend.py" in content
     assert "valid/frontend.ts" in content
@@ -216,12 +218,3 @@ def test_create_config_existing_user_skips(mock_configure, tmp_path, monkeypatch
     create_config()
 
     mock_configure.assert_not_called()
-
-
-# @patch("builtins.input", side_effect=KeyboardInterrupt)
-# def test_create_config_simulate_keyboard_interrupt(mock_input, capsys):
-#     result = create_config()
-#     assert result is None
-#
-#     captured_err = capsys.readouterr()
-#     assert "\n\nConfiguration cancelled by user." in captured_err.out

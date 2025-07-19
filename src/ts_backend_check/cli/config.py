@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """
-Configure cli to run based on .yaml configuration file.
+Configure cli to run based on a YAML configuration file.
 """
 
 from pathlib import Path
@@ -35,8 +35,10 @@ def configure_paths() -> None:
             if not backend_path:
                 print("Path cannot be empty.")
                 continue
+
             if path_exists(backend_path):
                 break
+
             print(f"File not found: {PROJECT_ROOT_PATH / backend_path}")
             print("Please check the path and try again.")
 
@@ -46,8 +48,10 @@ def configure_paths() -> None:
             if not frontend_path:
                 print("Path cannot be empty. Please try again.")
                 continue
+
             if path_exists(frontend_path):
                 break
+
             print(f"File not found: {PROJECT_ROOT_PATH / frontend_path}")
             print("Please check the path and try again.")
 
@@ -59,10 +63,10 @@ def configure_paths() -> None:
         print(f"✓ Added configuration for '{key}'")
 
         continue_config = input(
-            "Do you wish to add another model/interface configuration? (y/n)"
+            "Do you wish to add another model/interface configuration? (y/[n])"
         ).strip()
 
-        if continue_config.lower() == "n":
+        if continue_config.lower() in ["n", ""]:
             if config_options:
                 write_config(config_options)
                 print(
@@ -70,11 +74,12 @@ def configure_paths() -> None:
                 )
             break
 
-        if config_options:  # MARK: Fix test 67-73
+        if config_options:
             write_config(config_options)
             print(
                 f"\n✓ Configuration complete! Added {len(config_options)} configuration(s)."
             )
+
         else:
             print("\nNo configurations added.")
 
@@ -95,7 +100,8 @@ def path_exists(path: str) -> bool:
     """
     full_path = Path(__file__).parent.parent.parent.parent / path
     if Path(full_path).is_file():
-        return True  # MARK: Fix test
+        return True
+
     return False
 
 
@@ -118,7 +124,8 @@ def write_config(config: dict[str, dict[str, str]]) -> None:
 """
         with open(YAML_CONFIG_FILE_PATH, "w") as file:
             file.write(options)
-    except IOError as e:  # MARK: Fix test 94-95
+
+    except IOError as e:
         print(f"Error while writing config file: {e}")
 
 
@@ -129,21 +136,23 @@ def create_config() -> None:
 
     if YAML_CONFIG_FILE_PATH.is_file():
         reconfig_choice = input(
-            "Config exists. Do you want to re-configure your config.yaml file?(y/n) "
+            "Configuration file exists. Do you want to re-configure your .ts-backend-check.yaml file? (y/[n]) "
         )
-        if reconfig_choice.lower() == "n":
+        if reconfig_choice.lower() in ["n", ""]:
             print("Exiting without changes.")
             return
 
-        print("Reconfiguring......")
+        print("Reconfiguring...")
 
     else:
-        print("Creating new configuration file......")
+        print("Creating new configuration file...")
 
     try:
         configure_paths()
-    except KeyboardInterrupt:  # MARK: Fix test 118-122
+
+    except KeyboardInterrupt:
         print("\n\nConfiguration cancelled by user.")
+
     except Exception as e:
         print(f"\nError during configuration: {e}")
         print("Configuration cancelled.")

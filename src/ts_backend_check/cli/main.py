@@ -70,7 +70,7 @@ def main() -> None:
         "-c",
         "--configure",
         action="store_true",
-        help="Configure a .yaml file to simplify your checks.",
+        help="Configure a YAML file to simplify your checks.",
     )
 
     # MARK: Setup CLI
