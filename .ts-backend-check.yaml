@@ -1,0 +1,7 @@
+# Configuration file for ts-backend-check validation.
+# See https://github.com/activist-org/ts-backend-check for details.
+
+# Paths:
+auth:
+  backend_model_path: backend/auth/models.py
+  frontend_interface_path: frontend/auth/auth.d.ts

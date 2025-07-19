@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from ts_backend_check.checker import TypeChecker
+from ts_backend_check.cli.config import create_config
 from ts_backend_check.cli.upgrade import upgrade_cli
 from ts_backend_check.cli.version import get_version_message
 
@@ -65,12 +66,23 @@ def main() -> None:
         help="Path to the TypeScript interface/type file.",
     )
 
+    parser.add_argument(
+        "-c",
+        "--configure",
+        action="store_true",
+        help="Configure a YAML file to simplify your checks.",
+    )
+
     # MARK: Setup CLI
 
     args = parser.parse_args()
 
     if args.upgrade:
         upgrade_cli()
+        return
+
+    if args.configure:
+        create_config()
         return
 
     # MARK: Run Check
