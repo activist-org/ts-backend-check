@@ -24,7 +24,7 @@ setup_args = dict(
     author="ts-backend-check developers",
     author_email="team@activist.org",
     description="Check TypeScript types against their corresponding backend models to assure that all fields have been accounted for.",
-    long_description=open("README.md").read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/activist-org/ts-backend-check",
     packages=find_packages(where="src"),

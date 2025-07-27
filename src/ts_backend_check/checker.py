@@ -149,8 +149,8 @@ class TypeChecker:
         """
         potential_names = TypeChecker._generate_potential_names(model_name)
         return (
-            f"\nNo matching TypeScript interface found for model: {model_name}\n"
-            f"Searched for interfaces: {', '.join(potential_names)}"
+            f"\nNo matching TypeScript interface found for model: {model_name}"
+            f"\nSearched for interfaces: {', '.join(potential_names)}"
         )
 
     @staticmethod
@@ -178,8 +178,8 @@ class TypeChecker:
         """
         camel_field = snake_to_camel(input_str=field)
         return (
-            f"\nField '{field}' (camelCase: '{camel_field}') from model '{model_name}' "
-            f"is missing in TypeScript types.\n"
-            f"Expected to find in interface(s): {', '.join(interfaces.keys())}\n"
-            f"To ignore this field, add a comment that references it like: '// Note: {camel_field} is backend only'"
+            f"\nField '{field}' (camelCase: '{camel_field}') from model '{model_name}' is missing in TypeScript types."
+            f"\nExpected to find in interface(s): {', '.join(interfaces.keys())}"
+            f"\nTo ignore this field, add a comment that references it like: '// Note: {camel_field} is backend only'"
+            "\n"
         )
