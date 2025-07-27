@@ -112,7 +112,7 @@ def main() -> None:
         )
 
         if missing := checker.check():
-            console.print("[yellow]Missing typescript fields found:[/yellow]")
+            console.print("\n[bold yellow]Missing typescript fields found:[/bold yellow]\n")
             
             # Print each error message in red
             for msg in missing:
