@@ -5,8 +5,8 @@ Setup and commands for the ts-backend-check command line interface.
 
 import argparse
 import sys
-from pathlib import Path
 from argparse import ArgumentParser
+from pathlib import Path
 
 from rich.console import Console
 from rich.text import Text
@@ -18,6 +18,7 @@ from ts_backend_check.cli.version import get_version_message
 
 ROOT_DIR = Path.cwd()
 console = Console()
+
 
 def main() -> None:
     """
@@ -112,9 +113,11 @@ def main() -> None:
         )
 
         if missing := checker.check():
-            console.print("\n[bold yellow]Missing typescript fields found:[/bold yellow]\n")
-            
-            # Print each error message in red
+            console.print(
+                "\n[bold yellow]Missing typescript fields found:[/bold yellow]\n"
+            )
+
+            # Print each error message in red.
             for msg in missing:
                 console.print(Text.from_markup(f"[red]{msg}[/red]"))
 
@@ -124,7 +127,9 @@ def main() -> None:
             )
             sys.exit(1)
 
-        console.print("[green]All models are synced with their corresponding TypeScript interfaces.[/green]")
+        console.print(
+            "[green]All models are synced with their corresponding TypeScript interfaces.[/green]"
+        )
 
 
 if __name__ == "__main__":
