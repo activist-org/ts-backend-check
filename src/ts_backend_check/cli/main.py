@@ -5,12 +5,19 @@ Setup and commands for the ts-backend-check command line interface.
 
 import argparse
 import sys
+from argparse import ArgumentParser
 from pathlib import Path
+
+from rich.console import Console
+from rich.text import Text
 
 from ts_backend_check.checker import TypeChecker
 from ts_backend_check.cli.config import create_config
 from ts_backend_check.cli.upgrade import upgrade_cli
 from ts_backend_check.cli.version import get_version_message
+
+ROOT_DIR = Path.cwd()
+console = Console()
 
 
 def main() -> None:
@@ -29,8 +36,7 @@ def main() -> None:
     """
     # MARK: CLI Base
 
-    ROOT_DIR = Path(__file__).cwd()
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         prog="ts-backend-check",
         description="Checks the types in TypeScript files against the corresponding backend models.",
         epilog="Visit the codebase at https://github.com/activist-org/ts-backend-check to learn more!",
@@ -91,13 +97,13 @@ def main() -> None:
     ts_file_path = ROOT_DIR / args.typescript_file
 
     if not backend_model_file_path.is_file():
-        print(
-            f"{args.backend_model_file} that should contain the backend models does not exist. Please check and try again."
+        console.print(
+            f"[red]{args.backend_model_file} that should contain the backend models does not exist. Please check and try again.[/red]"
         )
 
     elif not ts_file_path.is_file():
-        print(
-            f"{args.typescript_file} file that should contain the TypeScript types does not exist. Please check and try again."
+        console.print(
+            f"[red]{args.typescript_file} file that should contain the TypeScript types does not exist. Please check and try again.[/red]"
         )
 
     else:
@@ -107,16 +113,23 @@ def main() -> None:
         )
 
         if missing := checker.check():
-            print("Missing typescript fields found: ")
-            print("\n".join(missing))
+            console.print(
+                "\n[bold red]❌ ts-backend-check error: Missing typescript fields found:[/bold red]\n"
+            )
+
+            # Print each error message in red.
+            for msg in missing:
+                console.print(Text.from_markup(f"[red]{msg}[/red]"))
 
             field_or_fields = "fields" if len(missing) > 1 else "field"
-            print(
-                f"\nPlease fix the {len(missing)} {field_or_fields} above to have the backend models synced with the typescript interfaces."
+            console.print(
+                f"\n[red]Please fix the {len(missing)} {field_or_fields} above to have the backend models synced with the typescript interfaces.[/red]"
             )
             sys.exit(1)
 
-        print("All models are synced with their corresponding TypeScript interfaces.")
+        console.print(
+            "[green]✅ Success: All models are synced with their corresponding TypeScript interfaces.[/green]"
+        )
 
 
 if __name__ == "__main__":
