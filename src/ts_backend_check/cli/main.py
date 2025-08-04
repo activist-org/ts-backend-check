@@ -114,7 +114,7 @@ def main() -> None:
 
         if missing := checker.check():
             console.print(
-                "\n[bold yellow]Missing typescript fields found:[/bold yellow]\n"
+                "\n[bold red]❌ ts-backend-check error: Missing typescript fields found:[/bold red]\n"
             )
 
             # Print each error message in red.
@@ -128,7 +128,7 @@ def main() -> None:
             sys.exit(1)
 
         console.print(
-            "[green]All models are synced with their corresponding TypeScript interfaces.[/green]"
+            "[green]✅ Success: All models are synced with their corresponding TypeScript interfaces.[/green]"
         )
 
 

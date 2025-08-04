@@ -15,6 +15,7 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 ### ✨ Features
 
 - Adds the ability for the user to check the most recent version of the package via the CLI's version command and upgrade it via a simple CLI argument ([#12](https://github.com/activist-org/ts-backend-check/issues/12)).
+- The outputs of the CLI are colored using [Rich](https://github.com/Textualize/rich) ([#10](https://github.com/activist-org/ts-backend-check/issues/10)).
 
 ### ⬆️ Dependencies
 

@@ -19,8 +19,8 @@ def test_cli_check_command_success(temp_django_model, temp_typescript_file):
     )
     assert result.returncode == 0
     assert (
-        result.stdout.strip()
-        == "All models are synced with their corresponding TypeScript interfaces."
+        result.stdout.strip().replace("\n", "")
+        == "✅ Success: All models are synced with their corresponding TypeScript interfaces."
     )
 
 
@@ -78,8 +78,8 @@ def test_cli_check_command_with_nonexistent_backend_model_files():
 
     assert result.returncode == 0
     assert (
-        result.stdout
-        == "nonexistent.py that should contain the backend models does not exist. Please check and try again.\n"
+        result.stdout.strip().replace("\n", "")
+        == "nonexistent.py that should contain the backend models does not exist. Please check and try again."
     )
 
 
@@ -102,6 +102,6 @@ def test_cli_check_command_with_nonexistent_ts_files(temp_django_model):
 
     assert result.returncode == 0
     assert (
-        result.stdout
-        == "nonexistent.ts file that should contain the TypeScript types does not exist. Please check and try again.\n"
+        result.stdout.strip().replace("\n", "")
+        == "nonexistent.ts file that should contain the TypeScript types does not exist. Please check and try again."
     )
