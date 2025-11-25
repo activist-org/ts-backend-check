@@ -96,7 +96,7 @@ def extract_model_fields(models_file: str) -> Dict[str, Set[str]]:
     """
     with open(models_file, "r", encoding="utf-8") as f:
         content = f.read().strip()
-        # Skip any empty lines at the beginning
+        # Skip any empty lines at the beginning.
         while content.startswith("\n"):
             content = content[1:]
 
