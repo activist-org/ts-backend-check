@@ -16,6 +16,7 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 - Adds the ability for the user to check the most recent version of the package via the CLI's version command and upgrade it via a simple CLI argument ([#12](https://github.com/activist-org/ts-backend-check/issues/12)).
 - The outputs of the CLI are colored using [Rich](https://github.com/Textualize/rich) ([#10](https://github.com/activist-org/ts-backend-check/issues/10)).
+- The help message is now displayed to the user instead of an error when no arguments are passed to an execution of `ts-backend-check` ([#18](https://github.com/activist-org/ts-backend-check/issues/18)).
 
 ### ⬆️ Dependencies
 
@@ -55,3 +56,7 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 ### ♻️ Code Refactoring
 
 - Code originally developed in the [activist-org/activist](https://github.com/activist-org/activist) project was moved to a separate repo.
+
+## ts-backend-check 1.0.0
+
+- Initial release of the package to PyPI with a basic structure.
