@@ -81,7 +81,7 @@ def main() -> None:
 
     # MARK: Setup CLI
 
-    args = parser.parse_args()
+    args = parser.parse_args(args=None if sys.argv[1:] else ["--help"])
 
     if args.upgrade:
         upgrade_cli()
