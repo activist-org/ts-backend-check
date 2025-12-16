@@ -5,67 +5,18 @@ from typing import Dict, Set
 
 from rich.console import Console
 
+from ts_backend_check.parsers.django_parser import DjangoModelVisitor
+
 ROOT_DIR = Path.cwd()
 console = Console()
 
 
-class BlankParser(ast.NodeVisitor):
-    """
-    AST visitor to extract fields from Django models.
-    """
+class BlankParser(DjangoModelVisitor):
+    def __init__(self):
+        super().__init__()
+        self.blank_models: Dict[str, Set[str]] = {}
 
-    DJANGO_FIELD_TYPES = {
-        "Field",
-        "CharField",
-        "TextField",
-        "IntegerField",
-        "BooleanField",
-        "DateTimeField",
-        "ForeignKey",
-        "ManyToManyField",
-        "OneToOneField",
-        "EmailField",
-        "URLField",
-        "FileField",
-        "ImageField",
-        "DecimalField",
-        "AutoField",
-    }
-
-    def __init__(self) -> None:
-        self.models: Dict[str, Set[str]] = {}
-        self.current_model: str | None = None
-
-    def visit_ClassDef(self, node: ast.ClassDef) -> None:
-        """
-        Check class definitions, specifically those that inherit from other classes.
-
-        Parameters
-        ----------
-        node : ast.ClassDef
-            A class definition from Python AST (Abstract Syntax Tree).
-            It contains information about the class, such as its name, base classes, body, decorators, etc.
-        """
-        # Only process classes that inherit from something.
-        if node.bases:
-            self.current_model = node.name
-            if self.current_model not in self.models:
-                self.models[self.current_model] = set()
-
-            self.generic_visit(node)
-
-        self.current_model = None
-
-    def visit_Assign(self, node: ast.Assign) -> None:
-        """
-        Check assignment statements within a class.
-
-        Parameters
-        ----------
-        node : ast.Assign
-            An assignment definition from Python AST (Abstract Syntax Tree).
-            It represents an assignment statement (e.g., x = 42).
-        """
+    def visit_Assign(self, node: ast.Assign):
         if not self.current_model:
             return
 
@@ -88,7 +39,10 @@ class BlankParser(ast.NodeVisitor):
                     for kw in node.value.keywords
                 )
             ):
-                self.models[self.current_model].add(target.id)
+                if self.current_model not in self.blank_models:
+                    self.blank_models[self.current_model] = set()
+
+                self.blank_models[self.current_model].add(target.id)
 
 
 def check_blank(file_path: str) -> Dict[str, Set[str]]:
@@ -111,10 +65,10 @@ def check_blank(file_path: str) -> Dict[str, Set[str]]:
         parser = BlankParser()
         parser.visit(tree)
 
-        for k, v in parser.models.items():
-            if len(v) == 0:
-                console.print(f"[green]Model {k} has no fields set as optional.[green]")
-            else:
+        if len(parser.blank_models) == 0:
+            console.print("[green]No models have any blank fields specified.[green]")
+        else:
+            for k, v in parser.blank_models.items():
                 console.print(
                     f"[yellow]Model {k} has fields {sorted(v)} set as optional."
                 )
@@ -122,4 +76,4 @@ def check_blank(file_path: str) -> Dict[str, Set[str]]:
     else:
         print("Check the path entered.")
 
-    return parser.models
+    return parser.blank_models

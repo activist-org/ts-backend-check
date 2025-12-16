@@ -21,6 +21,19 @@ class UserFlag(models.Model):
     desc = models.CharField(max_length=255)
     created_by = models.ForeignKey("authentication.UserModel", on_delete=models.CASCADE)
     creation_date = models.DateTimeField(auto_now=True)
+
+
+class OrgFlag(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid4)
+    user = models.ForeignKey(
+        "authentication.UserModel",
+        on_delete=models.CASCADE,
+        related_name="flagged_user",
+    )
+    name = models.CharField(max_length=255)
+    about = models.CharField(max_length=255)
+    created_by = models.ForeignKey("authentication.UserModel", on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(auto_now=True)
 """
     model_file = tmp_path / "models.py"
     model_file.write_text(model_content)
@@ -32,7 +45,7 @@ class UserFlag(models.Model):
     assert "name" in event_fields
 
 
-def test_extract_incorrect_file_path(tmp_path):
+def test_check_blank_syntax_error(tmp_path):
     invalid_model = tmp_path / "invalid_model.py"
     invalid_model.write_text("this is not valid python syntax")
 
