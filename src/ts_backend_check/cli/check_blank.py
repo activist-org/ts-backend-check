@@ -12,11 +12,11 @@ console = Console()
 
 
 class BlankParser(DjangoModelVisitor):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.blank_models: Dict[str, Set[str]] = {}
 
-    def visit_Assign(self, node: ast.Assign):
+    def visit_Assign(self, node: ast.Assign) -> None:
         if not self.current_model:
             return
 
