@@ -12,6 +12,7 @@ from rich.console import Console
 from rich.text import Text
 
 from ts_backend_check.checker import TypeChecker
+from ts_backend_check.cli.check_blank import check_blank
 from ts_backend_check.cli.config import create_config
 from ts_backend_check.cli.upgrade import upgrade_cli
 from ts_backend_check.cli.version import get_version_message
@@ -79,6 +80,12 @@ def main() -> None:
         help="Configure a YAML file to simplify your checks.",
     )
 
+    parser.add_argument(
+        "-cb",
+        "--check-blank",
+        help="Check for fields marked blank=True within Django models.",
+    )
+
     # MARK: Setup CLI
 
     args = parser.parse_args(args=None if sys.argv[1:] else ["--help"])
@@ -89,6 +96,10 @@ def main() -> None:
 
     if args.configure:
         create_config()
+        return
+
+    if args.check_blank:
+        check_blank(args.check_blank)
         return
 
     # MARK: Run Check
