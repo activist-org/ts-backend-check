@@ -61,6 +61,7 @@ def test_cli_check_command_success(temp_django_model, temp_typescript_file):
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
     assert result.returncode == 0
     assert (
@@ -99,6 +100,7 @@ class TestModel(models.Model):
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
 
     assert result.returncode == 1
@@ -116,6 +118,7 @@ def test_cli_check_command_with_nonexistent_backend_model_files():
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
 
     print("stdout: ", result.stdout.strip())
@@ -140,6 +143,7 @@ def test_cli_check_command_with_nonexistent_ts_files(temp_django_model):
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
 
     print("stdout: ", result.stdout.strip())
