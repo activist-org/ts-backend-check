@@ -60,7 +60,11 @@ jobs:
 
       - name: Install Package in Editable Mode
         run: |
-          . .venv/bin/activate
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            . .venv/Scripts/activate
+          else
+            . .venv/bin/activate
+          fi
           pip install -e .
 
       - name: Run pytest - Unit Tests
