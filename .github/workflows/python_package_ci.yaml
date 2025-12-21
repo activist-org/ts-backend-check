@@ -50,7 +50,11 @@ jobs:
         run: |
           python -m pip install --upgrade uv
           uv venv
-          . .venv/bin/activate
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            . .venv/Scripts/activate
+          else
+            . .venv/bin/activate
+          fi
           echo PATH=$PATH >> $GITHUB_ENV
           uv pip install -r requirements-dev.txt
 
