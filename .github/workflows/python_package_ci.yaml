@@ -48,15 +48,11 @@ jobs:
 
       - name: Create Environment and Install Dependencies
         run: |
-          python -m venv venv
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            source venv/Scripts/activate
-          else
-            source venv/bin/activate
-          fi
+          python -m pip install --upgrade uv
+          uv venv
+          . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          uv pip install -r requirements-dev.txt
 
       - name: Install Package in Editable Mode
         run: |
