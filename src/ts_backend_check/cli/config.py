@@ -130,7 +130,9 @@ def write_config(config: dict[str, dict[str, str]]) -> None:
 
 
 def create_config() -> None:
-    """Main function to create or update configuration."""
+    """
+    Main function to create or update configuration.
+    """
     print("ts-backend-check Configuration Setup")
     print("=" * 40)
 
