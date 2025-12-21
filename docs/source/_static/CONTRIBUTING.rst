@@ -34,7 +34,7 @@ Thank you for your interest in contributing to activist community projects! We l
 
 - Please join the `public Matrix chat <https://matrix.to/#/#activist_community:matrix.org>`__ to connect with the community
     - `Matrix <https://matrix.org/>`__ is a network for secure, decentralized communication
-    - activist would suggest that you use the `Element <https://element.io/>`__ client
+    - We'd suggest that you use the `Element <https://element.io//>`_ client and `Element X <https://element.io/app/>`_ for a mobile app
     - The `General <https://matrix.to/#/!uIGQUxlCnEzrPiRsRw:matrix.org?via=matrix.org&via=effektio.org&via=acter.global>`__ and `Development <https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz>`__ channels would be great places to start!
     - Feel free to introduce yourself and tell us what your interests are if you're comfortable :)
 - Consider joining our `bi-weekly developer sync <https://etherpad.wikimedia.org/p/activist-dev-sync>`__!
@@ -128,7 +128,7 @@ You're now ready to work on ``ts-backend-check``!
 Linting
 -------
 
-For the backend `Ruff <https://github.com/astral-sh/ruff>`__ is installed via the required packages to assure that errors are reported correctly. We'd also suggest that VS Code users install the `Ruff extension <https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff>`__.
+`Ruff <https://github.com/astral-sh/ruff>`__ is installed via the required packages to assure that errors are reported correctly. We'd also suggest that VS Code users install the `Ruff extension <https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff>`__.
 
 Testing
 -------
