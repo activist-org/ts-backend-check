@@ -58,5 +58,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
+      - name: Install Package in Editable Mode
+        run: |
+          . .venv/bin/activate
+          pip install -e .
+
       - name: Run pytest - Unit Tests
         run: pytest . --cov=src --cov-report=term-missing --cov-fail-under=85 --cov-config=./pyproject.toml
