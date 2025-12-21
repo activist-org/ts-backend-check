@@ -8,7 +8,7 @@ import sys
 from argparse import ArgumentParser
 from pathlib import Path
 
-from rich.console import Console
+from rich import print as rprint
 from rich.text import Text
 
 from ts_backend_check.checker import TypeChecker
@@ -18,7 +18,6 @@ from ts_backend_check.cli.upgrade import upgrade_cli
 from ts_backend_check.cli.version import get_version_message
 
 ROOT_DIR = Path.cwd()
-console = Console()
 
 
 def main() -> None:
@@ -108,12 +107,12 @@ def main() -> None:
     ts_file_path = ROOT_DIR / args.typescript_file
 
     if not backend_model_file_path.is_file():
-        console.print(
+        rprint(
             f"[red]{args.backend_model_file} that should contain the backend models does not exist. Please check and try again.[/red]"
         )
 
     elif not ts_file_path.is_file():
-        console.print(
+        rprint(
             f"[red]{args.typescript_file} file that should contain the TypeScript types does not exist. Please check and try again.[/red]"
         )
 
@@ -124,21 +123,21 @@ def main() -> None:
         )
 
         if missing := checker.check():
-            console.print(
-                "\n[bold red]❌ ts-backend-check error: Missing typescript fields found:[/bold red]\n"
+            rprint(
+                "\n[red]❌ ts-backend-check error: Missing typescript fields found:[/red]\n"
             )
 
             # Print each error message in red.
             for msg in missing:
-                console.print(Text.from_markup(f"[red]{msg}[/red]"))
+                rprint(Text.from_markup(f"[red]{msg}[/red]"))
 
             field_or_fields = "fields" if len(missing) > 1 else "field"
-            console.print(
+            rprint(
                 f"\n[red]Please fix the {len(missing)} {field_or_fields} above to have the backend models synced with the typescript interfaces.[/red]"
             )
             sys.exit(1)
 
-        console.print(
+        rprint(
             "[green]✅ Success: All models are synced with their corresponding TypeScript interfaces.[/green]"
         )
 

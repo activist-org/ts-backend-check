@@ -32,6 +32,8 @@ jobs:
           - "3.11"
 
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: 1
 
     defaults:
       run:
