@@ -1,7 +1,52 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
+"""
+Tests for the CLI main functionality rewritten in unittest style.
+"""
 
 import subprocess
 import sys
+import unittest
+from unittest.mock import patch
+
+from ts_backend_check.cli.main import main
+
+
+class TestCliMain(unittest.TestCase):
+    """
+    Test suite for the main CLI entry point of ts-backend-check.
+    """
+
+    @patch("ts_backend_check.cli.main.argparse.ArgumentParser.print_help")
+    def test_main_no_args(self, mock_print_help):
+        """
+        Test that `print_help` is called when no arguments are provided.
+        """
+        with patch("sys.argv", ["ts-backend-check"]):
+            with self.assertRaises(SystemExit) as cm:
+                main()
+
+        self.assertEqual(cm.exception.code, 0)
+        mock_print_help.assert_called_once()
+
+    @patch("ts_backend_check.cli.main.upgrade_cli")
+    def test_main_upgrade(self, mock_upgrade_cli):
+        """
+        Test that `upgrade_cli` is called with the --upgrade flag.
+        """
+        with patch("sys.argv", ["ts-backend-check", "--upgrade"]):
+            main()
+
+        mock_upgrade_cli.assert_called_once()
+
+    @patch("ts_backend_check.cli.main.create_config")
+    def test_main_generate_config_file(self, mock_generate_config_file):
+        """
+        Test that `create_config` is called with the --configure flag.
+        """
+        with patch("sys.argv", ["ts-backend-check", "--configure"]):
+            main()
+
+        mock_generate_config_file.assert_called_once()
 
 
 def test_cli_check_command_success(temp_django_model, temp_typescript_file):

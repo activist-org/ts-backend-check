@@ -144,7 +144,7 @@ You're now ready to work on `ts-backend-check`!
 
 ## Linting [`⇧`](#contents)
 
-For the backend [Ruff](https://github.com/astral-sh/ruff) is installed via the required packages to assure that errors are reported correctly. We'd also suggest that VS Code users install the [Ruff extension](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff).
+[Ruff](https://github.com/astral-sh/ruff) is installed via the required packages to assure that errors are reported correctly. We'd also suggest that VS Code users install the [Ruff extension](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff).
 
 <a id="testing-"></a>
 
@@ -240,7 +240,7 @@ When making a contribution, adhering to the [GitHub flow](https://docs.github.co
    ```
 
 > [!NOTE]
-> pre-commit is Python package that can be installed via pip or any other Python package manager. You can also find it in our [requirements.txt](backend/requirements.txt) file.
+> pre-commit is Python package that can be installed via pip or any other Python package manager. You can also find it in our [requirements-dev.txt](./requirements-dev.txt) file.
 >
 > ```bash
 > pip install pre-commit

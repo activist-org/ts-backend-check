@@ -23,10 +23,10 @@
 
 - [Usage](#usage-)
 - [Contributing](#contributing-)
-- [Environment setup](#environment-setup)
+- [Environment setup](#environment-setup-)
 - [Contributors](#contributors-)
 
-<a id="usage"></a>
+<a id="usage-"></a>
 
 ## Usage [`⇧`](#contents)
 
@@ -56,7 +56,7 @@ ts-backend-check -bmf <backend-model-file> -tsf <typescript-file>
 ts-backend-check -bmf src/models/user.py -tsf src/types/user.ts
 ```
 
-<a id="contributing"></a>
+<a id="contributing-"></a>
 
 # Contributing [`⇧`](#contents)
 
@@ -73,7 +73,7 @@ Also check the [`-next release-`](https://github.com/activist-org/ts-backend-che
 
 We would be happy to discuss granting you further rights as a contributor after your first pull requests, with a maintainer role then being possible after continued interest in the project. activist seeks to be an inclusive, diverse and supportive organization. We'd love to have you on the team!
 
-<a id="how-you-can-help"></a>
+<a id="how-you-can-help-"></a>
 
 ## How you can help [`⇧`](#contents)
 
@@ -81,7 +81,7 @@ We would be happy to discuss granting you further rights as a contributor after 
 - Working with us on [new features](https://github.com/activist-org/ts-backend-check/issues?q=is%3Aissue+is%3Aopen+label%3Afeature) ✨
 - [Documentation](https://github.com/activist-org/ts-backend-check/issues?q=is%3Aissue+is%3Aopen+label%3Adocumentation) for onboarding and project cohesion 📝
 
-<a id="environment-setup"></a>
+<a id="environment-setup-"></a>
 
 # Environment setup [`⇧`](#contents)
 
