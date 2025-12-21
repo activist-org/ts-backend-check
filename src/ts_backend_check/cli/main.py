@@ -3,6 +3,13 @@
 Setup and commands for the ts-backend-check command line interface.
 """
 
+import io
+import sys
+
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+
 import argparse
 import sys
 from argparse import ArgumentParser
@@ -113,7 +120,7 @@ def main() -> None:
 
         if missing := checker.check():
             rprint(
-                "\n[bold red]❌ ts-backend-check error: Missing typescript fields found:[/bold red]\n"
+                "\n[red]❌ ts-backend-check error: Missing typescript fields found:[/red]\n"
             )
 
             # Print each error message in red.
