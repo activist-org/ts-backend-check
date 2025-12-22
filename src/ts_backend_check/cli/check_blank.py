@@ -1,4 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
+"""
+Functionality to check TypeScript interfaces for fields that should be optional based on Django models.
+"""
+
 import ast
 from pathlib import Path
 from typing import Dict, Set
@@ -83,6 +87,7 @@ def check_blank(file_path: str) -> Dict[str, Set[str]]:
 
         try:
             tree = ast.parse(content)
+
         except SyntaxError as e:
             raise SyntaxError(
                 f"Failed to parse {model_path}. Make sure it's a valid Python file. Error: {str(e)}"
@@ -93,6 +98,7 @@ def check_blank(file_path: str) -> Dict[str, Set[str]]:
 
         if len(parser.blank_models) == 0:
             console.print("[green]No models have any blank fields specified.[green]")
+
         else:
             for k, v in parser.blank_models.items():
                 console.print(
