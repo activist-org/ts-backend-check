@@ -10,17 +10,22 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
-## [Upcoming] ts-backend-check 1.x
+## [Upcoming] ts-backend-check 1.2.0
 
 ### ✨ Features
 
 - Adds the ability for the user to check the most recent version of the package via the CLI's version command and upgrade it via a simple CLI argument ([#12](https://github.com/activist-org/ts-backend-check/issues/12)).
 - The outputs of the CLI are colored using [Rich](https://github.com/Textualize/rich) ([#10](https://github.com/activist-org/ts-backend-check/issues/10)).
 - The help message is now displayed to the user instead of an error when no arguments are passed to an execution of `ts-backend-check` ([#18](https://github.com/activist-org/ts-backend-check/issues/18)).
+- The CLI can now check if a Django model field can be set as blank and asserts that the corresponding field in TypeScript interfaces be optional ([#11](https://github.com/activist-org/ts-backend-check/issues/11)).
 
 ### ⬆️ Dependencies
 
 - Dependencies were updated due to detected vulnerabilities.
+
+### ✅ Tests
+
+- Tests were expanded to account for the new features.
 
 ## ts-backend-check 1.1.0
 
