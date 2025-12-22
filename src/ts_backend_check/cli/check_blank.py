@@ -12,11 +12,24 @@ console = Console()
 
 
 class BlankParser(DjangoModelVisitor):
+    """
+    AST visitor to extract blank fields from Django models based on DjangoModelVisitor.
+    """
+
     def __init__(self) -> None:
         super().__init__()
         self.blank_models: Dict[str, Set[str]] = {}
 
     def visit_Assign(self, node: ast.Assign) -> None:
+        """
+        Check assignment statements within a class which accepts blank fields.
+
+        Parameters
+        ----------
+        node : ast.Assign
+            An assignment definition from Python AST (Abstract Syntax Tree).
+            It represents an assignment statement (e.g., x = 42).
+        """
         if not self.current_model:
             return
 
@@ -46,6 +59,19 @@ class BlankParser(DjangoModelVisitor):
 
 
 def check_blank(file_path: str) -> Dict[str, Set[str]]:
+    """
+    Function to extract fields from Django models file which accepts blank values.
+
+    Parameters
+    ----------
+    file_path : str
+        A models.py file that defines Django models.
+
+    Returns
+    -------
+    Dict[str, Set[str]]
+        The fields from the models file extracted into a dictionary for future processing.
+    """
     model_path = ROOT_DIR / file_path
 
     if model_path.is_file():
