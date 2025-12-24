@@ -19,7 +19,7 @@ if on_rtd:
 
 setup_args = dict(
     name="ts-backend-check",
-    version="1.1.0",
+    version="1.2.0",
     package_dir={"": "src"},
     author="ts-backend-check developers",
     author_email="team@activist.org",
