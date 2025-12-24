@@ -88,7 +88,6 @@ Example success and error outputs for the CLI are:
 .. code-block::
 
     ts-backend-check -bmf backend/models/user.py -tsf frontend/types/user.ts
-
     ✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided files.
 
 .. code-block::

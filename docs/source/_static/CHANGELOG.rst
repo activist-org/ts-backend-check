@@ -11,6 +11,11 @@ See the `releases for ts-backend-check <https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on `gitmoji <https://gitmoji.dev/>`_.
 
+ts-backend-check 1.2.2
+----------------------
+
+- Updated the spacing of the CLI outputs to improve readability.
+
 ts-backend-check 1.2.1
 ----------------------
 
