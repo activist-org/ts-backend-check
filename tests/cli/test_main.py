@@ -65,8 +65,11 @@ def test_cli_check_command_success(temp_django_model, temp_typescript_file):
     )
     assert result.returncode == 0
     assert (
-        result.stdout.strip().replace("\n", "")
-        == "✅ Success: All models are synced with their corresponding TypeScript interfaces."
+        "✅ Success: All backend models are synced with their corresponding TypeScript"
+        in result.stdout.strip().replace("\n", "")
+    )
+    assert "interfaces for the provided files." in result.stdout.strip().replace(
+        "\n", ""
     )
 
 

@@ -51,9 +51,26 @@ ts-backend-check --help
 
 # Check a TypeScript type against a backend model:
 ts-backend-check -bmf <backend-model-file> -tsf <typescript-file>
+```
 
-# Example command:
-ts-backend-check -bmf src/models/user.py -tsf src/types/user.ts
+Example success and error outputs for the CLI are:
+
+```
+ts-backend-check -bmf backend/models/user.py -tsf frontend/types/user.ts
+
+✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided files.
+```
+
+```
+ts-backend-check -bmf backend/models/user.py -tsf frontend/types/user.ts
+
+❌ ts-backend-check error: There are inconsistencies between the provided backend models and TypeScript interfaces. Please see the output below for details.
+
+Field 'user_name' (camelCase: 'userName') from model 'UserModel' is missing in the TypeScript interfaces.
+Expected to find this field in the frontend interface: User
+To ignore this field, add the following comment to the TypeScript interface: '// ts-backend-check: ignore field userName'
+
+Please fix the 1 field above to have the backend models of backend/models/user.py synced with the typescript interfaces of frontend/types/user.ts.
 ```
 
 <a id="contributing-"></a>

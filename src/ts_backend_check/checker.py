@@ -29,7 +29,7 @@ class TypeChecker:
         self.model_fields = extract_model_fields(models_file)
         self.ts_parser = TypeScriptParser(types_file)
         self.ts_interfaces = self.ts_parser.parse_interfaces()
-        self.backend_only = self.ts_parser.get_backend_only_fields()
+        self.backend_only = self.ts_parser.get_ignored_fields()
 
     def check(self) -> List[str]:
         """
@@ -177,9 +177,12 @@ class TypeChecker:
             The message displayed to the user when missing fields are found.
         """
         camel_field = snake_to_camel(input_str=field)
+        interface_of_interfaces = (
+            "interface" if len(interfaces.keys()) == 1 else "interfaces"
+        )
+
         return (
-            f"\nField '{field}' (camelCase: '{camel_field}') from model '{model_name}' is missing in TypeScript types."
-            f"\nExpected to find in interface(s): {', '.join(interfaces.keys())}"
-            f"\nTo ignore this field, add a comment that references it like: '// Note: {camel_field} is backend only'"
-            "\n"
+            f"\nField '{field}' (camelCase: '{camel_field}') from model '{model_name}' is missing in the TypeScript interfaces."
+            f"\nExpected to find this field in the frontend {interface_of_interfaces}: {', '.join(interfaces.keys())}"
+            f"\nTo ignore this field, add the following comment to the TypeScript file: '// ts-backend-check: ignore field {camel_field}'"
         )

@@ -25,10 +25,10 @@ def sample_typescript_interface():
 export interface Event {
     title: string;
     description: string;
-    // Note: date is backend only
+    // ts-backend-check: ignore field date
     isActive: boolean;
     organizer: User;
-    // participants is backend only
+    // ts-backend-check: ignore field participants
 }
 
 export interface User {

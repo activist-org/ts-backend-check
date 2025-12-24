@@ -60,24 +60,17 @@ class TypeScriptParser:
 
         return interfaces
 
-    def get_backend_only_fields(self) -> Set[str]:
+    def get_ignored_fields(self) -> Set[str]:
         """
-        Extract fields marked as backend-only in comments.
+        Extract fields marked as ignored in comments.
 
         Returns
         -------
         Set[str]
-            The field names that are marked with a backend-only identifier to ignore them.
+            The field names that are marked with a ts-backend-check-ignore identifier to ignore them.
         """
-        patterns = [
-            r"//.*?Note:\s*(\w+)\s+is\s+backend\s+only",
-            r"//.*?(\w+)\s+is\s+backend\s+only",
-            r"//\s*@backend-only\s+(\w+)",
-            r"//.*?backend-only:\s*(\w+)",
-        ]
-        return {
-            match for pattern in patterns for match in re.findall(pattern, self.content)
-        }
+        ignore_pattern = r"//.*?ts-backend-check: ignore field\s+(\w+)"
+        return set(re.findall(ignore_pattern, self.content))
 
     @staticmethod
     def _extract_fields(interface_body: str) -> Set[str]:

@@ -124,7 +124,7 @@ def main() -> None:
 
         if missing := checker.check():
             rprint(
-                "\n[red]❌ ts-backend-check error: Missing typescript fields found:[/red]\n"
+                "\n[red]❌ ts-backend-check error: There are inconsistencies between the provided backend models and TypeScript interfaces. Please see the output below for details.[/red]\n"
             )
 
             # Print each error message in red.
@@ -133,12 +133,12 @@ def main() -> None:
 
             field_or_fields = "fields" if len(missing) > 1 else "field"
             rprint(
-                f"\n[red]Please fix the {len(missing)} {field_or_fields} above to have the backend models synced with the typescript interfaces.[/red]"
+                f"[red]Please fix the {len(missing)} {field_or_fields} above to have the backend models of {args.backend_model_file} synced with the typescript interfaces of {(args.typescript_file)}.[/red]"
             )
             sys.exit(1)
 
         rprint(
-            "[green]✅ Success: All models are synced with their corresponding TypeScript interfaces.[/green]"
+            "[green]✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided files.[/green]"
         )
 
 

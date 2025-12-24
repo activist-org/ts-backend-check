@@ -12,6 +12,21 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## [Upcoming] ts-backend-check 1.x
 
+## ts-backend-check 1.2.1
+
+### ♻️ Code Refactoring
+
+- The comment to ignore fields within TypeScript interfaces has been updated to `// ts-backend-check: ignore field {fieldName}`.
+- The output messages were updated to improve clarity with regards to file names being compared as well as word choice.
+
+### ✅ Tests
+
+- Tests were updated to account for the code refactoring.
+
+### 📝 Documentation
+
+- The readme and documentation files were updated to show the functionality of the package ([#20](https://github.com/activist-org/ts-backend-check/issues/20)).
+
 ## ts-backend-check 1.2.0
 
 ### ✨ Features

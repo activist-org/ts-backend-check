@@ -24,9 +24,9 @@ def test_parse_interfaces(temp_typescript_file):
     assert "name" in user.fields
 
 
-def test_get_backend_only_fields(temp_typescript_file):
+def test_get_ignored_fields(temp_typescript_file):
     parser = TypeScriptParser(temp_typescript_file)
-    backend_only = parser.get_backend_only_fields()
+    backend_only = parser.get_ignored_fields()
 
     assert "date" in backend_only
     assert "participants" in backend_only
