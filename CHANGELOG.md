@@ -12,6 +12,10 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## [Upcoming] ts-backend-check 1.x
 
+### ⬆️ Dependencies
+
+- Dependencies were updated given dependabot warnings.
+
 ## ts-backend-check 1.2.2
 
 - Updated the spacing of the CLI outputs to improve readability.
