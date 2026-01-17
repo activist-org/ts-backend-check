@@ -74,4 +74,4 @@ jobs:
           pip install -e .
 
       - name: Run pytest - Unit Tests
-        run: pytest . --cov=src --cov-report=term-missing --cov-fail-under=85 --cov-config=./pyproject.toml -v
+        run: pytest . --cov=src --cov-report=term-missing --cov-fail-under=90 --cov-config=./pyproject.toml -v
