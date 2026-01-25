@@ -40,10 +40,14 @@
 Installation
 ============
 
-``ts-backend-check`` is available for installation via `pip <https://pypi.org/project/ts-backend-check/>`_:
+``ts-backend-check`` is available for installation via `uv <https://docs.astral.sh/uv/>`_ or `pip <https://pypi.org/project/ts-backend-check/>`_:
 
 .. code-block:: shell
 
+    # Using uv (recommended - fast, Rust-based installer):
+    uv pip install ts-backend-check
+
+    # Or using pip:
     pip install ts-backend-check
 
 The latest development version can further be installed the `source code on GitHub <https://github.com/activist-org/ts-backend-check>`_:
@@ -52,6 +56,16 @@ The latest development version can further be installed the `source code on GitH
 
     git clone https://github.com/activist-org/ts-backend-check.git
     cd ts-backend-check
+
+    # With uv (recommended):
+    uv sync --all-extras  # install all dependencies
+    source .venv/bin/activate  # activate venv (macOS/Linux)
+    # .venv\Scripts\activate  # activate venv (Windows)
+
+    # Or with pip:
+    python -m venv .venv  # create virtual environment
+    source .venv/bin/activate  # activate venv (macOS/Linux)
+    # .venv\Scripts\activate  # activate venv (Windows)
     pip install -e .
 
 To utilize the ts-backend-check CLI, you can execute variations of the following command in your terminal:

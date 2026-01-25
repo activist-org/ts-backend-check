@@ -10,13 +10,63 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from ts_backend_check.cli.main import main
+from ts_backend_check.cli.main import config, get_config_file_path, main
 
 
 class TestCliMain(unittest.TestCase):
     """
     Test suite for the main CLI entry point of ts-backend-check.
     """
+
+    def setUp(self) -> None:
+        """
+        Create a temporary directory for each test to mimic pytest's tmp_path.
+        """
+        # Create a temporary directory object
+        self._temp_dir_obj = tempfile.TemporaryDirectory()
+        # Convert it to a pathlib.Path object for ease of use
+        self.tmp_path = Path(self._temp_dir_obj.name)
+        # Ensure it gets cleaned up after the test runs
+        self.addCleanup(self._temp_dir_obj.cleanup)
+
+    def test_get_config_file_path_yaml_exists(self) -> None:
+        """
+        Test that .yaml file is preferred when both .yaml and .yml exist.
+        """
+        yaml_file = self.tmp_path / ".ts-backend-check.yaml"
+        yml_file = self.tmp_path / ".ts-backend-check.yml"
+
+        yaml_file.write_text("yaml: true", encoding="utf-8")
+        yml_file.write_text("yml: true", encoding="utf-8")
+
+        # Mock CWD_PATH to use self.tmp_path.
+        with patch("ts_backend_check.cli.main.CWD_PATH", self.tmp_path):
+            result = get_config_file_path()
+            self.assertEqual(result.name, ".ts-backend-check.yaml")
+            self.assertTrue(result.is_file())
+
+    def test_get_config_file_path_only_yml_exists(self) -> None:
+        """
+        Test that .yml file is found when only .yml exists.
+        """
+        yml_file = self.tmp_path / ".ts-backend-check.yml"
+        yml_file.write_text("yml: true", encoding="utf-8")
+
+        # Mock CWD_PATH to use self.tmp_path.
+        with patch("ts_backend_check.cli.main.CWD_PATH", self.tmp_path):
+            result = get_config_file_path()
+            self.assertEqual(result.name, ".ts-backend-check.yml")
+            self.assertTrue(result.is_file())
+
+    def test_get_config_file_path_neither_exists(self) -> None:
+        """
+        Test that .yaml is returned as default when neither file exists.
+        """
+        # Mock CWD_PATH to use self.tmp_path.
+        with patch("ts_backend_check.cli.main.CWD_PATH", self.tmp_path):
+            result = get_config_file_path()
+            self.assertEqual(result.name, ".ts-backend-check.yaml")
+            self.assertFalse(result.is_file())
 
     @patch("ts_backend_check.cli.main.argparse.ArgumentParser.print_help")
     def test_main_no_args(self, mock_print_help):
@@ -40,12 +90,12 @@ class TestCliMain(unittest.TestCase):
 
         mock_upgrade_cli.assert_called_once()
 
-    @patch("ts_backend_check.cli.main.create_config")
+    @patch("ts_backend_check.cli.main.generate_config_file")
     def test_main_generate_config_file(self, mock_generate_config_file):
         """
-        Test that `create_config` is called with the --configure flag.
+        Test that `generate_config_file` is called with the --generate-config-file flag.
         """
-        with patch("sys.argv", ["ts-backend-check", "--configure"]):
+        with patch("sys.argv", ["ts-backend-check", "--generate-config-file"]):
             main()
 
         mock_generate_config_file.assert_called_once()
@@ -54,36 +104,17 @@ class TestCliMain(unittest.TestCase):
         """
         Successful run when backend models and TypeScript types are in sync.
         """
-        model_content = """from django.db import models
-
-class TestModel(models.Model):
-    name = models.CharField(max_length=100)
-    age = models.IntegerField()
-"""
-        type_content = """export interface TestModel {
-    name: string;
-    age: number;
-}
-"""
-
-        with tempfile.TemporaryDirectory() as td:
-            model_file = Path(td) / "test_model.py"
-            ts_file = Path(td) / "test_model.ts"
-            model_file.write_text(model_content)
-            ts_file.write_text(type_content)
-
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "src/ts_backend_check/cli/main.py",
-                    "-bmf",
-                    str(model_file),
-                    "-tsf",
-                    str(ts_file),
-                ],
-                capture_output=True,
-                text=True,
-            )
+        model_name = "valid_model"
+        result = subprocess.run(
+            [
+                sys.executable,
+                "src/ts_backend_check/cli/main.py",
+                "-m",
+                model_name,
+            ],
+            capture_output=True,
+            text=True,
+        )
 
         self.assertEqual(result.returncode, 0)
         stdout_flat = result.stdout.strip().replace("\n", "")
@@ -91,103 +122,70 @@ class TestModel(models.Model):
             "✅ Success: All backend models are synced with their corresponding TypeScript",
             stdout_flat,
         )
-        self.assertIn("interfaces for the provided files.", stdout_flat)
+        self.assertIn(f"interfaces for the provided '{model_name}' files.", stdout_flat)
 
     def test_cli_check_command_with_missing_fields(self):
         """
-        CLI should return non-zero when TypeScript types are missing fields present
+        CLI should return non-zero exit code when TypeScript types are missing fields present
         in the Django model.
-        """
-        model_content = """from django.db import models
-
-class TestModel(models.Model):
-    name = models.CharField(max_length=100)
-    age = models.IntegerField()
-"""
-        type_content = """export interface TestModel {
-    name: string;
-}
-"""
-
-        with tempfile.TemporaryDirectory() as td:
-            model_file = Path(td) / "test_model.py"
-            ts_file = Path(td) / "test_type.ts"
-            model_file.write_text(model_content)
-            ts_file.write_text(type_content)
-
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "src/ts_backend_check/cli/main.py",
-                    "-bmf",
-                    str(model_file),
-                    "-tsf",
-                    str(ts_file),
-                ],
-                capture_output=True,
-                text=True,
-            )
-
-        self.assertEqual(result.returncode, 1)
-
-    def test_cli_check_command_with_nonexistent_backend_model_files(self):
-        """
-        When backend model file does not exist, CLI should print an informative message
-        and exit with code 0 per original behavior.
         """
         result = subprocess.run(
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-bmf",
-                "nonexistent.py",
-                "-tsf",
-                "nonexistent.ts",
+                "-m",
+                "invalid_model",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(result.returncode, 1)
+
+    def test_cli_check_command_with_nonexistent_backend_model_files(self):
+        """
+        When the model does not exist, CLI should print an informative message
+        and exit with code 0.
+        """
+        result = subprocess.run(
+            [
+                sys.executable,
+                "src/ts_backend_check/cli/main.py",
+                "-m",
+                "invalid_backend_model_path",
             ],
             capture_output=True,
             text=True,
         )
 
         stdout_flat = result.stdout.strip().replace("\n", "")
-        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.returncode, 1)
         self.assertEqual(
             stdout_flat,
-            "nonexistent.py that should contain the backend models does not exist. Please check and try again.",
+            "❌ invalid_path_to_models.py that should contain the 'invalid_backend_model_path' backend models does not exist. Please check the ts-backend-check configuration file and try again.",
         )
 
     def test_cli_check_command_with_nonexistent_ts_files(self):
         """
         When TypeScript file does not exist, CLI should print an informative message
-        and exit with code 0 per original behavior.
+        and exit with code 0.
         """
-        model_content = """from django.db import models
-
-class TestModel(models.Model):
-    name = models.CharField(max_length=100)
-    age = models.IntegerField()
-"""
-        with tempfile.TemporaryDirectory() as td:
-            model_file = Path(td) / "test_model.py"
-            model_file.write_text(model_content)
-
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "src/ts_backend_check/cli/main.py",
-                    "-bmf",
-                    str(model_file),
-                    "-tsf",
-                    "nonexistent.ts",
-                ],
-                capture_output=True,
-                text=True,
-            )
+        result = subprocess.run(
+            [
+                sys.executable,
+                "src/ts_backend_check/cli/main.py",
+                "-m",
+                "invalid_typescript_interface_path",
+            ],
+            capture_output=True,
+            text=True,
+        )
 
         stdout_flat = result.stdout.strip().replace("\n", "")
-        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.returncode, 1)
         self.assertEqual(
             stdout_flat,
-            "nonexistent.ts file that should contain the TypeScript types does not exist. Please check and try again.",
+            "❌ invalid_path_to_interfaces.ts that should contain the 'invalid_typescript_interface_path' TypeScript types does not exist. Please check the ts-backend-check configuration file and try again.",
         )
 
     def test_version_flag_exits_with_zero(self):
@@ -202,57 +200,44 @@ class TestModel(models.Model):
                     main()
         self.assertEqual(cm.exception.code, 0)
 
-    def test_check_blank_invokes_check_blank(self):
+    def test_model_invokes_check_files_and_print_results(self):
         """
-        Providing --check-blank should call the check_blank helper with the provided arg.
+        Providing --model should call the check_files_and_print_results function with the provided arg.
         """
-        with patch("ts_backend_check.cli.main.check_blank") as mock_check_blank:
-            with patch("sys.argv", ["ts-backend-check", "--check-blank", "models.py"]):
+        with patch(
+            "ts_backend_check.cli.main.check_files_and_print_results"
+        ) as check_files_and_print_results_model:
+            with patch("sys.argv", ["ts-backend-check", "--model", "valid_model"]):
                 main()
-        mock_check_blank.assert_called_once_with("models.py")
+        check_files_and_print_results_model.assert_called_once_with(
+            model="valid_model",
+            backend_model_file_path=Path(config["valid_model"]["backend_model_path"]),
+            ts_interface_file_path=Path(config["valid_model"]["ts_interface_path"]),
+            check_blank=False,
+        )
 
     def test_typechecker_no_missing_fields_prints_success(self):
         """
         When TypeChecker.check() returns an empty list, the CLI should print the success message.
         """
-        model_content = """from django.db import models
-class TestModel(models.Model):
-    name = models.CharField(max_length=100)
-    age = models.IntegerField()
-"""
-        ts_content = """export interface TestModel {
-    name: string;
-    age: number;
-}
-"""
+        with patch("ts_backend_check.cli.main.TypeChecker") as MockTypeChecker:
+            MockTypeChecker.return_value.check.return_value = []
 
-        with tempfile.TemporaryDirectory() as td:
-            model_file = Path(td) / "test_model.py"
-            ts_file = Path(td) / "test_model.ts"
-            model_file.write_text(model_content)
-            ts_file.write_text(ts_content)
-
-            # Patch TypeChecker so its .check() returns an empty list (no missing fields).
-            with patch("ts_backend_check.cli.main.TypeChecker") as MockTypeChecker:
-                MockTypeChecker.return_value.check.return_value = []
-
-                with patch("ts_backend_check.cli.main.rprint") as mock_rprint:
-                    with patch(
-                        "sys.argv",
-                        [
-                            "ts-backend-check",
-                            "-bmf",
-                            str(model_file),
-                            "-tsf",
-                            str(ts_file),
-                        ],
-                    ):
-                        main()
+            with patch("ts_backend_check.cli.main.rprint") as mock_rprint:
+                with patch(
+                    "sys.argv",
+                    [
+                        "ts-backend-check",
+                        "-m",
+                        "valid_model",
+                    ],
+                ):
+                    main()
 
             # The success message is printed once with the exact green-markup string.
             expected = (
                 "[green]✅ Success: All backend models are synced with their corresponding "
-                "TypeScript interfaces for the provided files.[/green]"
+                "TypeScript interfaces for the provided 'valid_model' files.[/green]"
             )
             # Ensure rprint was called and the final call contains the expected message.
             self.assertTrue(mock_rprint.called)
@@ -263,64 +248,47 @@ class TestModel(models.Model):
         When TypeChecker.check() returns missing fields, the CLI should print errors
         and exit with status code 1.
         """
-        model_content = """from django.db import models
-class TestModel(models.Model):
-    name = models.CharField(max_length=100)
-    age = models.IntegerField()
-"""
-        ts_content = """export interface TestModel {
-    name: string;
-}
-"""
+        # Patch TypeChecker so its .check() returns a list of missing-field messages.
+        with patch("ts_backend_check.cli.main.TypeChecker") as MockTypeChecker:
+            MockTypeChecker.return_value.check.return_value = [
+                "TestModel.age is missing in TypeScript type"
+            ]
 
-        with tempfile.TemporaryDirectory() as td:
-            model_file = Path(td) / "test_model.py"
-            ts_file = Path(td) / "test_type.ts"
-            model_file.write_text(model_content)
-            ts_file.write_text(ts_content)
+            # Make Text.from_markup return the raw string to simplify assertions.
+            with patch(
+                "ts_backend_check.cli.main.Text.from_markup",
+                side_effect=lambda s: s,
+            ):
+                with patch("ts_backend_check.cli.main.rprint") as mock_rprint:
+                    with patch(
+                        "sys.argv",
+                        [
+                            "ts-backend-check",
+                            "-m",
+                            "invalid_model",
+                        ],
+                    ):
+                        with self.assertRaises(SystemExit) as cm:
+                            main()
 
-            # Patch TypeChecker so its .check() returns a list of missing-field messages.
-            with patch("ts_backend_check.cli.main.TypeChecker") as MockTypeChecker:
-                MockTypeChecker.return_value.check.return_value = [
-                    "TestModel.age is missing in TypeScript type"
-                ]
+        # Check that the exit code is 1.
+        self.assertEqual(cm.exception.code, 1)
 
-                # Make Text.from_markup return the raw string to simplify assertions.
-                with patch(
-                    "ts_backend_check.cli.main.Text.from_markup",
-                    side_effect=lambda s: s,
-                ):
-                    with patch("ts_backend_check.cli.main.rprint") as mock_rprint:
-                        with patch(
-                            "sys.argv",
-                            [
-                                "ts-backend-check",
-                                "-bmf",
-                                str(model_file),
-                                "-tsf",
-                                str(ts_file),
-                            ],
-                        ):
-                            with self.assertRaises(SystemExit) as cm:
-                                main()
+        # Ensure rprint was called and that at least one call contains the error header text.
+        self.assertTrue(mock_rprint.called)
+        calls = [call_args[0][0] for call_args in mock_rprint.call_args_list]
 
-            # Check that the exit code is 1.
-            self.assertEqual(cm.exception.code, 1)
-
-            # Ensure rprint was called and that at least one call contains the error header text.
-            self.assertTrue(mock_rprint.called)
-            calls = [call_args[0][0] for call_args in mock_rprint.call_args_list]
-            # Convert all call args to strings for easier substring checks.
-            calls_str = [str(c) for c in calls]
-            self.assertTrue(
-                any(
-                    "There are inconsistencies between the provided backend models and TypeScript interfaces"
-                    in s
-                    or "ts-backend-check error" in s
-                    for s in calls_str
-                ),
-                msg=f"Expected error header in rprint calls, got: {calls_str}",
-            )
+        # Convert all call args to strings for easier substring checks.
+        calls_str = [str(c) for c in calls]
+        self.assertTrue(
+            any(
+                "There are inconsistencies between the provided backend models and TypeScript interfaces"
+                in s
+                or "ts-backend-check error" in s
+                for s in calls_str
+            ),
+            msg=f"Expected error header in rprint calls, got: {calls_str}",
+        )
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ def configure_paths() -> None:
         print("\n--- Adding new model/interface configuration ---")
 
         key = input(
-            "Enter the model-interface type (eg: 'auth', 'orgs', 'groups'): "
+            "Enter the model-interface type (eg: 'auth', 'user', 'event'): "
         ).strip()
         if not key:
             print("Key cannot be empty. Please try again.")
@@ -118,7 +118,6 @@ def write_config(config: dict[str, dict[str, str]]) -> None:
         options = f"""# Configuration file for ts-backend-check validation.
 # See https://github.com/activist-org/ts-backend-check for details.
 
-# Paths:
 {dump(config)}
 
 """
@@ -126,15 +125,16 @@ def write_config(config: dict[str, dict[str, str]]) -> None:
             file.write(options)
 
     except IOError as e:
-        print(f"Error while writing config file: {e}")
+        print(f"Error while writing configuration file: {e}")
 
 
-def create_config() -> None:
+def generate_config_file() -> None:
     """
     Main function to create or update configuration.
     """
-    print("ts-backend-check Configuration Setup")
-    print("=" * 40)
+    header = "ts-backend-check Configuration Setup"
+    print(header)
+    print("=" * len(header))
 
     if YAML_CONFIG_FILE_PATH.is_file():
         reconfig_choice = input(
@@ -161,4 +161,4 @@ def create_config() -> None:
 
 
 if __name__ == "__main__":
-    create_config()
+    generate_config_file()

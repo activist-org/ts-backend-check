@@ -8,16 +8,130 @@ import sys
 from argparse import ArgumentParser
 from pathlib import Path
 
+import yaml
 from rich import print as rprint
 from rich.text import Text
 
 from ts_backend_check.checker import TypeChecker
-from ts_backend_check.cli.check_blank import check_blank
-from ts_backend_check.cli.config import create_config
+from ts_backend_check.cli.generate_config_file import generate_config_file
+from ts_backend_check.cli.generate_test_project import generate_test_project
 from ts_backend_check.cli.upgrade import upgrade_cli
 from ts_backend_check.cli.version import get_version_message
 
-ROOT_DIR = Path.cwd()
+# MARK: Base Paths
+
+CWD_PATH = Path.cwd()
+
+
+def get_config_file_path() -> Path:
+    """
+    Get the path to the ts-backend-check configuration file.
+
+    Checks for both .yaml and .yml extensions, preferring .yaml if both exist.
+
+    Returns
+    -------
+    Path
+        The path to the configuration file (.yaml or .yml).
+    """
+    yaml_path = CWD_PATH / ".ts-backend-check.yaml"
+    yml_path = CWD_PATH / ".ts-backend-check.yml"
+
+    # Prefer .yaml if it exists, otherwise check for .yml.
+    if yaml_path.is_file():
+        return yaml_path
+
+    elif yml_path.is_file():
+        return yml_path
+
+    else:
+        # Default to .yaml for new files.
+        return yaml_path
+
+
+YAML_CONFIG_FILE_PATH = get_config_file_path()
+
+
+# MARK: CLI Vars
+
+if not Path(YAML_CONFIG_FILE_PATH).is_file():
+    generate_config_file()
+
+if not Path(YAML_CONFIG_FILE_PATH).is_file():
+    print(
+        "No configuration file. Please generate a configuration file (.ts-backend-check.yaml or .ts-backend-check.yml) with ts-backend-check -gcf."
+    )
+    exit(1)
+
+with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
+    config = yaml.safe_load(file)
+
+
+def check_files_and_print_results(
+    model: str,
+    backend_model_file_path: Path,
+    ts_interface_file_path: Path,
+    check_blank: bool = False,
+) -> bool:
+    """
+    Check the provided files for the given model and print the results.
+
+    Parameters
+    ----------
+    model : str
+        The model in the .ts-backend-check.yaml configuration file to check models and interfaces for.
+
+    backend_model_file_path : Path
+        The path to the backend models as defined in the .ts-backend-check.yaml configuration file .
+
+    ts_interface_file_path : Path
+        The path to the TypeScript interfaces as defined in the .ts-backend-check.yaml configuration file .
+
+    check_blank : bool
+        Whether to also check that fields marked blank=True within Django models are optional in the TypeScript interfaces.
+
+    Returns
+    -------
+    bool
+        Whether the checks passed (True) or not (False).
+    """
+    if not backend_model_file_path.is_file():
+        rprint(
+            f"[red]❌ {backend_model_file_path} that should contain the '{model}' backend models does not exist. Please check the ts-backend-check configuration file and try again.[/red]"
+        )
+
+    elif not ts_interface_file_path.is_file():
+        rprint(
+            f"[red]❌ {ts_interface_file_path} that should contain the '{model}' TypeScript types does not exist. Please check the ts-backend-check configuration file and try again.[/red]"
+        )
+
+    checker = TypeChecker(
+        models_file=str(backend_model_file_path),
+        types_file=str(ts_interface_file_path),
+        check_blank=check_blank,
+    )
+
+    if missing := checker.check():
+        rprint(
+            f"\n[red]❌ ts-backend-check error: There are inconsistencies between the provided {model} backend models and TypeScript interfaces. Please see the output below for details.[/red]"
+        )
+
+        for msg in missing:
+            rprint(Text.from_markup(f"[red]{msg}[/red]"))
+
+        field_or_fields = "fields" if len(missing) > 1 else "field"
+        rprint(
+            f"[red]\nPlease fix the {len(missing)} {field_or_fields} above to have the backend models of {backend_model_file_path} synced with the typescript interfaces of {ts_interface_file_path}.[/red]"
+        )
+
+        return False
+
+    else:
+        rprint(
+            f"[green]✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided '{model}' files.[/green]"
+        )
+
+        return True
 
 
 def main() -> None:
@@ -27,12 +141,21 @@ def main() -> None:
     Notes
     -----
     The available command line arguments are:
-    - --backend-model-file (-bmf): Path to the backend model file (e.g. Python class)
-    - --typescript-file (-tsf): Path to the TypeScript interface/type file
+    - --help (-h): Show this help message and exit.
+    - --version (-v): Show the version of the ts-backend-check CLI.
+    - --upgrade (-u): Upgrade the ts-backend-check CLI to the latest version.
+    - --generate-config-file (-gcf): Generate a configuration file for ts-backend-check.
+    - --generate-test-project (-gtp): Generate project to test ts-backend-check functionalities.
+    - --model (-m): The model in the .ts-backend-check.yaml configuration file to check.
+    - --all (-a): Run checks of all backend models against their corresponding TypeScript interfaces.
+    - --check-blank (-cb): Also check that fields marked blank=True within Django models are optional in the TypeScript interfaces.
 
     Examples
     --------
-    >>> ts-backend-check -bmf <backend-model-file> -tsf <typescript-file>
+    >>> ts-backend-check --generate-config-file  # -gcf
+    >>> ts-backend-check --model <ts-backend-check-config-file-model>  # -m
+    >>> ts-backend-check --all  # -a
+    >>> ts-backend-check --all --check-blank  # -a -cb
     """
     # MARK: CLI Base
 
@@ -61,28 +184,37 @@ def main() -> None:
     )
 
     parser.add_argument(
-        "-bmf",
-        "--backend-model-file",
-        help="Path to the backend model file (e.g. Python class).",
-    )
-
-    parser.add_argument(
-        "-tsf",
-        "--typescript-file",
-        help="Path to the TypeScript interface/type file.",
-    )
-
-    parser.add_argument(
-        "-c",
-        "--configure",
+        "-gcf",
+        "--generate-config-file",
         action="store_true",
-        help="Configure a YAML file to simplify your checks.",
+        help="Generate a configuration file for ts-backend-check.",
+    )
+
+    parser.add_argument(
+        "-gtp",
+        "--generate-test-project",
+        action="store_true",
+        help="Generate project to test ts-backend-check functionalities.",
+    )
+
+    parser.add_argument(
+        "-m",
+        "--model",
+        help="The model in the .ts-backend-check.yaml configuration file to check.",
+    )
+
+    parser.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="Run checks of all backend models against their corresponding TypeScript interfaces.",
     )
 
     parser.add_argument(
         "-cb",
         "--check-blank",
-        help="Check for fields marked blank=True within Django models.",
+        action="store_true",
+        help="Also check that fields marked blank=True within Django models are optional in the TypeScript interfaces.",
     )
 
     # MARK: Setup CLI
@@ -93,53 +225,59 @@ def main() -> None:
         upgrade_cli()
         return
 
-    if args.configure:
-        create_config()
+    if args.generate_config_file:
+        generate_config_file()
         return
 
-    if args.check_blank:
-        check_blank(args.check_blank)
+    if args.generate_test_project:
+        generate_test_project()
         return
 
-    # MARK: Run Check
+    # MARK: Run Checks
 
-    backend_model_file_path = ROOT_DIR / args.backend_model_file
-    ts_file_path = ROOT_DIR / args.typescript_file
+    checks_fail = []
 
-    if not backend_model_file_path.is_file():
-        rprint(
-            f"[red]{args.backend_model_file} that should contain the backend models does not exist. Please check and try again.[/red]"
+    if args.model:
+        if not config[args.model]:
+            rprint(
+                f"[red]{args.model} is not an index within the .ts-backend-check.yaml configuration file. Please check the defined models and try again.[/red]"
+            )
+            return
+
+        backend_model_file_path = Path(config[args.model]["backend_model_path"])
+        ts_interface_file_path = Path(config[args.model]["ts_interface_path"])
+
+        checks_fail.append(
+            check_files_and_print_results(
+                model=args.model,
+                backend_model_file_path=backend_model_file_path,
+                ts_interface_file_path=ts_interface_file_path,
+                check_blank=args.check_blank,
+            )
         )
 
-    elif not ts_file_path.is_file():
-        rprint(
-            f"[red]{args.typescript_file} file that should contain the TypeScript types does not exist. Please check and try again.[/red]"
-        )
+    if args.all:
+        for m in config.keys():
+            backend_model_file_path = Path(config[m]["backend_model_path"])
+            ts_interface_file_path = Path(config[m]["ts_interface_path"])
+
+            checks_fail.append(
+                check_files_and_print_results(
+                    model=m,
+                    backend_model_file_path=backend_model_file_path,
+                    ts_interface_file_path=ts_interface_file_path,
+                    check_blank=args.check_blank,
+                )
+            )
+
+    if (args.model or args.all) and not any(checks_fail):
+        sys.exit(1)
+
+    elif args.model or args.all:
+        return
 
     else:
-        checker = TypeChecker(
-            models_file=args.backend_model_file,
-            types_file=args.typescript_file,
-        )
-
-        if missing := checker.check():
-            rprint(
-                "\n[red]❌ ts-backend-check error: There are inconsistencies between the provided backend models and TypeScript interfaces. Please see the output below for details.[/red]"
-            )
-
-            # Print each error message in red.
-            for msg in missing:
-                rprint(Text.from_markup(f"[red]{msg}[/red]"))
-
-            field_or_fields = "fields" if len(missing) > 1 else "field"
-            rprint(
-                f"[red]\nPlease fix the {len(missing)} {field_or_fields} above to have the backend models of {args.backend_model_file} synced with the typescript interfaces of {(args.typescript_file)}.[/red]"
-            )
-            sys.exit(1)
-
-        rprint(
-            "[green]✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided files.[/green]"
-        )
+        parser.print_help()
 
 
 if __name__ == "__main__":

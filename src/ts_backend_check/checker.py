@@ -21,11 +21,17 @@ class TypeChecker:
 
     types_file : str
         The file path for the TypeScript file to check.
+
+    check_blank : bool
+        Whether to also check that fields marked blank=True within Django models are optional in the TypeScript interfaces.
     """
 
-    def __init__(self, models_file: str, types_file: str) -> None:
+    def __init__(
+        self, models_file: str, types_file: str, check_blank: bool = False
+    ) -> None:
         self.models_file = models_file
         self.types_file = types_file
+        self.check_blank = check_blank
         self.model_fields = extract_model_fields(models_file)
         self.ts_parser = TypeScriptParser(types_file)
         self.ts_interfaces = self.ts_parser.parse_interfaces()

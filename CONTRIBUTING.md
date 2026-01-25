@@ -116,24 +116,34 @@ git remote add upstream https://github.com/activist-org/ts-backend-check.git
   - `origin` (forked repository)
   - `upstream` (`ts-backend-check` repository)
 
-3. Create a virtual environment, activate it and install dependencies:
+3. Create a virtual environment for ts-backend-check (Python `>=3.12`), activate it and install dependencies:
+
+   > [!NOTE]
+   > First, install `uv` if you don't already have it by following the [official installation guide](https://docs.astral.sh/uv/getting-started/installation/).
 
    ```bash
-   # Unix or MacOS:
-   python3 -m venv venv
-   source venv/bin/activate
+   uv sync --all-extras  # create .venv and install all dependencies from uv.lock
+
+   # Unix or macOS:
+   source .venv/bin/activate
 
    # Windows:
-   python -m venv venv
-   venv\Scripts\activate.bat
-
-   # After activating venv:
-   pip install --upgrade pip
-   pip install -r requirements-dev.txt
-
-   # To install the CLI for local development:
-   pip install -e .
+   .venv\Scripts\activate.bat # .venv\Scripts\activate.ps1 (PowerShell)
    ```
+
+> [!NOTE]
+> If you change dependencies in `pyproject.toml`, regenerate the lock file with the following command:
+>
+> ```bash
+> uv lock  # refresh uv.lock for reproducible installs
+> ```
+
+After activating the virtual environment, set up [pre-commit](https://pre-commit.com/) by running:
+
+```bash
+pre-commit install
+# uv run pre-commit run --all-files  # lint and fix common problems in the codebase
+```
 
 You're now ready to work on `ts-backend-check`!
 

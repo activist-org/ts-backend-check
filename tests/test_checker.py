@@ -3,8 +3,10 @@
 from ts_backend_check.checker import TypeChecker
 
 
-def test_checker_finds_missing_fields(temp_django_model, temp_typescript_file):
-    checker = TypeChecker(temp_django_model, temp_typescript_file)
+def test_checker_finds_missing_fields(
+    return_invalid_django_models, return_invalid_ts_interfaces
+):
+    checker = TypeChecker(return_invalid_django_models, return_invalid_ts_interfaces)
     missing = checker.check()
 
     # We know 'date' and 'participants' are marked as backend-only.

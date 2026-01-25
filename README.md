@@ -22,6 +22,7 @@
 # **Contents**
 
 - [Usage](#usage-)
+- [Installation](#installation-)
 - [Contributing](#contributing-)
 - [Environment setup](#environment-setup-)
 - [Contributors](#contributors-)
@@ -29,12 +30,6 @@
 <a id="usage-"></a>
 
 ## Usage [`⇧`](#contents)
-
-### Installation
-
-```bash
-pip install ts-backend-check
-```
 
 ### Command Options
 
@@ -50,7 +45,8 @@ The CLI provides a simple interface to check TypeScript types against backend mo
 ts-backend-check --help
 
 # Check a TypeScript type against a backend model:
-ts-backend-check -bmf <backend-model-file> -tsf <typescript-file>
+ts-backend-check -m <model-identifier-from-config-file>
+ts-backend-check -a  # run all models
 ```
 
 Example success and error outputs for the CLI are:
@@ -70,6 +66,40 @@ Expected to find this field in the frontend interface: User
 To ignore this field, add the following comment to the TypeScript interface: '// ts-backend-check: ignore field userName'
 
 Please fix the 1 field above to have the backend models of backend/models/user.py synced with the typescript interfaces of frontend/types/user.ts.
+```
+
+<a id="installation-"></a>
+
+## Installation
+
+`ts-backend-check` is available for installation via [uv](https://docs.astral.sh/uv/) (recommended) or [pip](https://pypi.org/project/ts-backend-check/).
+
+### For Users
+
+```bash
+# Using uv (recommended - fast, Rust-based installer):
+uv pip install ts-backend-check
+
+# Or using pip:
+pip install ts-backend-check
+```
+
+### For Development Build
+
+```bash
+git clone https://github.com/activist-org/ts-backend-check.git  # or ideally your fork
+cd ts-backend-check
+
+# With uv (recommended):
+uv sync --all-extras  # install all dependencies
+source .venv/bin/activate  # activate venv (macOS/Linux)
+# .venv\Scripts\activate  # activate venv (Windows)
+
+# Or with pip:
+python -m venv .venv  # create virtual environment
+source .venv/bin/activate  # activate venv (macOS/Linux)
+# .venv\Scripts\activate  # activate venv (Windows)
+pip install -e .
 ```
 
 <a id="contributing-"></a>
@@ -151,24 +181,34 @@ git remote add upstream https://github.com/activist-org/ts-backend-check.git
   - `origin` (forked repository)
   - `upstream` (ts-backend-check repository)
 
-3. Create a virtual environment, activate it and install dependencies:
+3. Create a virtual environment for ts-backend-check (Python `>=3.12`), activate it and install dependencies:
+
+   > [!NOTE]
+   > First, install `uv` if you don't already have it by following the [official installation guide](https://docs.astral.sh/uv/getting-started/installation/).
 
    ```bash
-   # Unix or MacOS:
-   python3 -m venv venv
-   source venv/bin/activate
+   uv sync --all-extras  # create .venv and install all dependencies from uv.lock
+
+   # Unix or macOS:
+   source .venv/bin/activate
 
    # Windows:
-   python -m venv venv
-   venv\Scripts\activate.bat
-
-   # After activating venv:
-   pip install --upgrade pip
-   pip install -r requirements-dev.txt
-
-   # To install the CLI for local development:
-   pip install -e .
+   .venv\Scripts\activate.bat  # .venv\Scripts\activate.ps1 (PowerShell)
    ```
+
+> [!NOTE]
+> If you change dependencies in `pyproject.toml`, regenerate the lock file with the following command:
+>
+> ```bash
+> uv lock  # refresh uv.lock for reproducible installs
+> ```
+
+After activating the virtual environment, set up [pre-commit](https://pre-commit.com/) by running:
+
+```bash
+pre-commit install
+# uv run pre-commit run --all-files  # lint and fix common problems in the codebase
+```
 
 You're now ready to work on `ts-backend-check`!
 

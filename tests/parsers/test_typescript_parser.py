@@ -3,8 +3,8 @@
 from ts_backend_check.parsers.typescript_parser import TypeScriptParser
 
 
-def test_parse_interfaces(temp_typescript_file):
-    parser = TypeScriptParser(temp_typescript_file)
+def test_parse_interfaces(return_invalid_ts_interfaces):
+    parser = TypeScriptParser(return_invalid_ts_interfaces)
     interfaces = parser.parse_interfaces()
 
     # Check Event interface.
@@ -13,8 +13,8 @@ def test_parse_interfaces(temp_typescript_file):
     assert event.name == "Event"
     assert "title" in event.fields
     assert "description" in event.fields
-    assert "isActive" in event.fields
     assert "organizer" in event.fields
+    assert "isPrivate" in event.fields
 
     # Check User interface.
     assert "User" in interfaces
@@ -24,8 +24,8 @@ def test_parse_interfaces(temp_typescript_file):
     assert "name" in user.fields
 
 
-def test_get_ignored_fields(temp_typescript_file):
-    parser = TypeScriptParser(temp_typescript_file)
+def test_get_ignored_fields(return_invalid_ts_interfaces):
+    parser = TypeScriptParser(return_invalid_ts_interfaces)
     backend_only = parser.get_ignored_fields()
 
     assert "date" in backend_only

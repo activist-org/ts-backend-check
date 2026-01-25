@@ -7,5 +7,6 @@ cli/
     :maxdepth: 1
 
     main
-    upgrade
+    generate_config_file
+    generate_test_project
     version

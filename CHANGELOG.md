@@ -12,9 +12,12 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## [Upcoming] ts-backend-check 1.x
 
+## ts-backend-check 1.3.0
+
 ### ⬆️ Dependencies
 
 - Dependencies were updated given dependabot warnings.
+- Dependency management was switched over to using [uv](https://docs.astral.sh/uv/).
 
 ## ts-backend-check 1.2.2
 
