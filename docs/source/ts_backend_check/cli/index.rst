@@ -9,4 +9,5 @@ cli/
     main
     generate_config_file
     generate_test_project
+    upgrade
     version

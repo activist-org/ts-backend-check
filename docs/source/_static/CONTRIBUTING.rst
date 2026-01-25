@@ -29,7 +29,7 @@ Contents
 .. _first-steps:
 
 First steps as a contributor `⇧ <#contents>`_
---------------------------------------------
+---------------------------------------------
 
 Thank you for your interest in contributing to activist community projects! We look forward to welcoming you :) The following are some suggested steps for people interested in joining our community:
 
