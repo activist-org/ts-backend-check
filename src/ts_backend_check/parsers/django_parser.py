@@ -33,6 +33,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
     def __init__(self) -> None:
         self.models: Dict[str, Set[str]] = {}
         self.current_model: str | None = None
+        self.blank_models: Dict[str, Set[str]] = {}
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
@@ -78,6 +79,17 @@ class DjangoModelVisitor(ast.NodeVisitor):
                 for field_type in self.DJANGO_FIELD_TYPES
             ):
                 self.models[self.current_model].add(target.id)
+
+                if any(
+                    kw.arg == "blank"
+                    and isinstance(kw.value, ast.Constant)
+                    and kw.value.value is True
+                    for kw in node.value.keywords
+                ):
+                    if self.current_model not in self.blank_models:
+                        self.blank_models[self.current_model] = set()
+
+                    self.blank_models[self.current_model].add(target.id)
 
 
 def extract_model_fields(models_file: str) -> Dict[str, Set[str]]:
