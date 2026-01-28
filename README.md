@@ -17,12 +17,17 @@
 
 `ts-backend-check` is a Python package used to check TypeScript types against their corresponding backend models to assure that all fields have been accounted for.
 
+Developed by the [activist community](https://github.com/activist-org), this package is meant to help synchronize the work between frontend and backend development teams. Currently the process supports Django based backends.
+
 <a id="contents"></a>
 
 # **Contents**
 
 - [Usage](#usage-)
+  - [Command Options](#command-options-)
+  - [Outputs](#outputs-)
 - [Installation](#installation-)
+- [Configuration](#configuration-)
 - [Contributing](#contributing-)
 - [Environment setup](#environment-setup-)
 - [Contributors](#contributors-)
@@ -31,33 +36,36 @@
 
 ## Usage [`⇧`](#contents)
 
-### Command Options
+<a id="command-options-"></a>
 
-- `backend-model-file` (`bmf`): Path to the backend model file (e.g. Python class)
-- `typescript-file` (`tsf`): Path to the TypeScript interface/type file
-
-### Basic Usage
+### Command Options [`⇧`](#contents)
 
 The CLI provides a simple interface to check TypeScript types against backend models:
 
 ```bash
 # Show help and available commands:
 ts-backend-check --help
+ts-backend-check -gcf  # generate a configuration file
+ts-backend-check -gtp  # generate a test project for experimenting with the CLI
 
 # Check a TypeScript type against a backend model:
 ts-backend-check -m <model-identifier-from-config-file>
 ts-backend-check -a  # run all models
 ```
 
+<a id="outputs-"></a>
+
+### Outputs [`⇧`](#contents)
+
 Example success and error outputs for the CLI are:
 
 ```
-ts-backend-check -bmf backend/models/user.py -tsf frontend/types/user.ts
+ts-backend-check -m user
 ✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided files.
 ```
 
 ```
-ts-backend-check -bmf backend/models/user.py -tsf frontend/types/user.ts
+ts-backend-check -m user
 
 ❌ ts-backend-check error: There are inconsistencies between the provided backend models and TypeScript interfaces. Please see the output below for details.
 
@@ -100,6 +108,84 @@ python -m venv .venv  # create virtual environment
 source .venv/bin/activate  # activate venv (macOS/Linux)
 # .venv\Scripts\activate  # activate venv (Windows)
 pip install -e .
+```
+
+<a id="configuration-"></a>
+
+# Configuration [`⇧`](#contents)
+
+ts-backend-check is configured via a `.ts-backend.check.yaml` (or `.yml`) configuration file, with an example being the [configuration file for this repository](/.ts-backend-check.yaml) that we use in testing. The following describes the structure of an entry in this file:
+
+```yaml
+model_identifier: # an identifier you define that you want to pass to the CLI
+  backend_model_path: path/to/a/models.py
+  ts_interface_path: path/to/the/corresponding/model_interfaces.ts
+  check_blank_model_fields: true # whether to assert that fields that can be blank must also be optional
+  backend_to_ts_model_name_conversions: # used if the frontend name is not the backend name
+    EventModel: CommunityEvent
+```
+
+<a id="pre-commit-"></a>
+
+### pre-commit [`⇧`](#contents)
+
+The following is an example [pre-commit](https://github.com/pre-commit/pre-commit) hook:
+
+```yaml
+- repo: local
+  hooks:
+    - id: run-ts-backend-check
+      name: run ts-backend-check key-value checks
+      files: ^src-dir/
+      entry: ts-backend-check -a
+      language: python
+      pass_filenames: false
+      additional_dependencies:
+        - ts-backend-check
+```
+
+<a id="github-action-"></a>
+
+### GitHub Action [`⇧`](#contents)
+
+The following is an example YAML file for a GitHub Action to check your backend models and TypeScript interface files on PRs and commits:
+
+```yaml
+name: pr_ci_ts_backend_check
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+  push:
+    branches:
+      - main
+
+jobs:
+  ts_backend_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install Dependencies
+        run: uv sync --frozen --all-extras
+
+      - name: Execute All ts-backend-check Key-Value Checks
+        run: |
+          uv run ts-backend-check -a
 ```
 
 <a id="contributing-"></a>

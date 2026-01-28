@@ -68,45 +68,35 @@ The latest development version can further be installed the `source code on GitH
     # .venv\Scripts\activate  # activate venv (Windows)
     pip install -e .
 
-To utilize the ts-backend-check CLI, you can execute variations of the following command in your terminal:
-
-.. code-block:: shell
-
-    ts-backend-check -h  # view the cli options
-    ts-backend-check [command]
-
 Command Options
 ===============
-
-- ``backend-model-file`` (``bmf```): Path to the backend model file (e.g. Python class)
-- ``typescript-file`` (``tsf```): Path to the TypeScript interface/type file
-
-Commands
-========
 
 The CLI provides a simple interface to check TypeScript types against backend models:
 
 .. code-block:: shell
 
     # Show help and available commands:
-    ts-backend-check --help
+    ts-backend-check -h
+    ts-backend-check -gcf  # generate a configuration file
+    ts-backend-check -gtp  # generate a test project for experimenting with the CLI
 
     # Check a TypeScript type against a backend model:
-    ts-backend-check -bmf <backend-model-file> -tsf <typescript-file>
+    ts-backend-check -m <model-identifier-from-config-file>
+    ts-backend-check -a  # run all models
 
-    # Example command:
-    ts-backend-check -bmf src/models/user.py -tsf src/types/user.ts
+Outputs
+=======
 
 Example success and error outputs for the CLI are:
 
 .. code-block::
 
-    ts-backend-check -bmf backend/models/user.py -tsf frontend/types/user.ts
+    ts-backend-check -m user
     ✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided files.
 
 .. code-block::
 
-    ts-backend-check -bmf backend/models/user.py -tsf frontend/types/user.ts
+    ts-backend-check -m user
 
     ❌ ts-backend-check error: There are inconsistencies between the provided backend models and TypeScript interfaces. Please see the output below for details.
 

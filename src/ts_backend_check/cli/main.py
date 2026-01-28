@@ -144,18 +144,16 @@ def main() -> None:
     - --help (-h): Show this help message and exit.
     - --version (-v): Show the version of the ts-backend-check CLI.
     - --upgrade (-u): Upgrade the ts-backend-check CLI to the latest version.
-    - --generate-config-file (-gcf): Generate a configuration file for ts-backend-check.
+    - --generate-config-file (-gcf): Interactively generate a configuration file for ts-backend-check.
     - --generate-test-project (-gtp): Generate project to test ts-backend-check functionalities.
     - --model (-m): The model in the .ts-backend-check.yaml configuration file to check.
     - --all (-a): Run checks of all backend models against their corresponding TypeScript interfaces.
-    - --check-blank (-cb): Also check that fields marked blank=True within Django models are optional in the TypeScript interfaces.
 
     Examples
     --------
     >>> ts-backend-check --generate-config-file  # -gcf
     >>> ts-backend-check --model <ts-backend-check-config-file-model>  # -m
     >>> ts-backend-check --all  # -a
-    >>> ts-backend-check --all --check-blank  # -a -cb
     """
     # MARK: CLI Base
 
@@ -187,7 +185,7 @@ def main() -> None:
         "-gcf",
         "--generate-config-file",
         action="store_true",
-        help="Generate a configuration file for ts-backend-check.",
+        help="Interactively generate a configuration file for ts-backend-check.",
     )
 
     parser.add_argument(
@@ -208,13 +206,6 @@ def main() -> None:
         "--all",
         action="store_true",
         help="Run checks of all backend models against their corresponding TypeScript interfaces.",
-    )
-
-    parser.add_argument(
-        "-cb",
-        "--check-blank",
-        action="store_true",
-        help="Also check that fields marked blank=True within Django models are optional in the TypeScript interfaces.",
     )
 
     # MARK: Setup CLI
@@ -244,29 +235,31 @@ def main() -> None:
             )
             return
 
-        backend_model_file_path = Path(config[args.model]["backend_model_path"])
-        ts_interface_file_path = Path(config[args.model]["ts_interface_path"])
+        config_backend_model_file_path = Path(config[args.model]["backend_model_path"])
+        config_ts_interface_file_path = Path(config[args.model]["ts_interface_path"])
+        config_check_blank = config[args.model]["check_blank"]
 
         checks_fail.append(
             check_files_and_print_results(
                 model=args.model,
-                backend_model_file_path=backend_model_file_path,
-                ts_interface_file_path=ts_interface_file_path,
-                check_blank=args.check_blank,
+                backend_model_file_path=config_backend_model_file_path,
+                ts_interface_file_path=config_ts_interface_file_path,
+                check_blank=config_check_blank,
             )
         )
 
     if args.all:
         for m in config.keys():
-            backend_model_file_path = Path(config[m]["backend_model_path"])
-            ts_interface_file_path = Path(config[m]["ts_interface_path"])
+            config_backend_model_file_path = Path(config[m]["backend_model_path"])
+            config_ts_interface_file_path = Path(config[m]["ts_interface_path"])
+            config_check_blank = config[args.model]["check_blank"]
 
             checks_fail.append(
                 check_files_and_print_results(
                     model=m,
-                    backend_model_file_path=backend_model_file_path,
-                    ts_interface_file_path=ts_interface_file_path,
-                    check_blank=args.check_blank,
+                    backend_model_file_path=config_backend_model_file_path,
+                    ts_interface_file_path=config_ts_interface_file_path,
+                    check_blank=config_check_blank,
                 )
             )
 
