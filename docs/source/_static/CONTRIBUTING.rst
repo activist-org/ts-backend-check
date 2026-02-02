@@ -6,32 +6,29 @@ Thank you for contributing to ``ts-backend-check``!
 
 Please take a moment to review this document in order to make the contribution process easy and effective for everyone involved.
 
-Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open-source project. In return, and in accordance with this project's `code of conduct <https://github.com/activist-org/ts-backend-check/tree/main/.github/CODE_OF_CONDUCT.md>`_, other contributors will reciprocate that respect in addressing your issue or assessing patches and features.
+Following this guide helps to communicate that you respect the time of the developers managing and developing this open-source project. In return, and in accordance with this project's `code of conduct <https://github.com/activist-org/ts-backend-check/tree/main/.github/CODE_OF_CONDUCT.md>`_, other contributors will reciprocate that respect in addressing your issue or assessing patches and features.
 
 If you have questions or would like to communicate with the team, please `join us in our public Matrix chat rooms <https://matrix.to/#/#activist_community:matrix.org>`_. We'd be happy to hear from you!
-
-.. _contents:
 
 **Contents**
 ------------
 
-* :ref:`first-steps`
-* :ref:`learning-the-tech-stack`
-* :ref:`dev-env`
-* :ref:`linting`
-* :ref:`testing`
-* :ref:`issues-projects`
-* :ref:`bug-reports`
-* :ref:`feature-requests`
-* :ref:`pull-requests`
-* :ref:`documentation`
+* `First steps as a contributor`_
+* `Mentorship and growth`_
+* `Learning the tech stack`_
+* `Development environment`_
+* `Linting`_
+* `Testing`_
+* `Issues and projects`_
+* `Bug reports`_
+* `Feature requests`_
+* `Pull requests`_
+* `Documentation`_
 
 ---
 
-.. _first-steps:
-
-First steps as a contributor `⇧ <#contents>`_
---------------------------------------------
+First steps as a contributor
+----------------------------
 
 Thank you for your interest in contributing to activist community projects! We look forward to welcoming you :) The following are some suggested steps for people interested in joining our community:
 
@@ -42,10 +39,15 @@ Thank you for your interest in contributing to activist community projects! We l
     * Feel free to introduce yourself and tell us what your interests are if you're comfortable :)
 * Consider joining our `bi-weekly developer sync <https://etherpad.wikimedia.org/p/activist-dev-sync>`_!
 
-.. _learning-the-tech-stack:
+Mentorship and growth
+---------------------
 
-Learning the tech stack `⇧ <#contents>`_
-----------------------------------------
+Onboarding and mentoring new members are integral parts of any healthy open-source community. We need those who are onboarded to gain new skills and take on greater roles of triaging issues, reviewing contributions and maintaining the project. We also need them to help those who follow do the same. Please let us know if you have such goals and we'll work with you to achieve them.
+
+The above includes expectations on the behavior of those who want to grow with us. Mentorship is earned, not given. Very bluntly, if all you want to do is send AI generated contributions, then you are not demonstrating an interest in growing your skills and it doesn't make sense for us to invest into your development. Continued constructive contributions, new open issues and communication that provides context for maintainers help us do our work immensely. We would be happy to help such community members expand their skills and take on further responsibilities!
+
+Learning the tech stack
+-----------------------
 
 ``ts-backend-check`` is very open to contributions from people in the early stages of their coding journey! The following is a select list of documentation pages to help you understand the technologies we use.
 
@@ -57,10 +59,8 @@ Learning the tech stack `⇧ <#contents>`_
     * `Python getting started guide <https://docs.python.org/3/tutorial/introduction.html>`_
     * `Python getting started resources <https://www.python.org/about/gettingstarted/>`_
 
-.. _dev-env:
-
-Development environment `⇧ <#contents>`_
-----------------------------------------
+Development environment
+-----------------------
 
 1. First and foremost, please see the suggested IDE setup below to make sure that your editor is ready for development.
 
@@ -122,17 +122,13 @@ After activating the virtual environment, set up `pre-commit <https://pre-commit
 .. note::
    Feel free to contact the team in the `Development room on Matrix <https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz>`_ if you're having problems!
 
-.. _linting:
-
-Linting `⇧ <#contents>`_
-------------------------
+Linting
+-------
 
 `Ruff <https://github.com/astral-sh/ruff>`_ is installed via the required packages to assure that errors are reported correctly.
 
-.. _testing:
-
-Testing `⇧ <#contents>`_
-------------------------
+Testing
+-------
 
 Please run the following commands from the project root to test:
 
@@ -149,17 +145,13 @@ Please run the following commands from the project root to test:
     # Run with a coverage report:
     pytest . --cov=src --cov-report=term-missing --cov-config=./pyproject.toml
 
-.. _issues-projects:
-
-Issues and projects `⇧ <#contents>`_
-------------------------------------
+Issues and projects
+-------------------
 
 The `issue tracker for ts-backend-check <https://github.com/activist-org/ts-backend-check/issues>`_ is the preferred channel for bug reports and feature requests.
 
-.. _bug-reports:
-
-Bug reports `⇧ <#contents>`_
-----------------------------
+Bug reports
+-----------
 
 A bug is a *demonstrable problem* caused by the code.
 
@@ -169,17 +161,13 @@ A bug is a *demonstrable problem* caused by the code.
 
 Please report bugs using the `bug report template <https://github.com/activist-org/ts-backend-check/issues/new?assignees=&labels=bug&projects=activist-org%2F1&template=bug_report.yml>`_.
 
-.. _feature-requests:
-
-Feature requests `⇧ <#contents>`_
----------------------------------
+Feature requests
+----------------
 
 Feature requests are more than welcome! Provide as much detail and context as possible.
 
-.. _pull-requests:
-
-Pull requests `⇧ <#contents>`_
-------------------------------
+Pull requests
+-------------
 
 Good pull requests should remain focused in scope. All contributions are made under the project's license.
 
@@ -220,10 +208,8 @@ Good pull requests should remain focused in scope. All contributions are made un
 
 6. **Push and Open a Pull Request**.
 
-.. _documentation:
-
-Documentation `⇧ <#contents>`_
-------------------------------
+Documentation
+-------------
 
 Documentation for ``ts-backend-check`` is hosted at `ts-backend-check.readthedocs.io <https://ts-backend-check.readthedocs.io/en/latest/>`_.
 
