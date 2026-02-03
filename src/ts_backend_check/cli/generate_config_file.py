@@ -46,9 +46,8 @@ def write_config(config: dict[str, dict[str, object]]) -> None:
         options = f"""# Configuration file for ts-backend-check validation.
 # See https://github.com/activist-org/ts-backend-check for details.
 
-{dump(config)}
+{dump(config, sort_keys=False)}"""
 
-"""
         with open(YAML_CONFIG_FILE_PATH, "w") as file:
             file.write(options)
 
@@ -166,9 +165,7 @@ def configure_model_interface_arguments() -> None:
                 )
 
                 further_name_conversions_needed = (
-                    input("Would you like to add more model name conversions: (y/[n])")
-                    .strip()
-                    .lower()
+                    input("Add more model name conversions (y/[n]): ").strip().lower()
                 )
                 if further_name_conversions_needed in ["n", ""]:
                     break
@@ -177,7 +174,7 @@ def configure_model_interface_arguments() -> None:
 
         config_options[key] = {
             "backend_model_path": backend_path,
-            "frontend_interface_path": frontend_path,
+            "ts_interface_path": frontend_path,
             "check_blank_model_fields": check_blank_model_fields,
         }
 
