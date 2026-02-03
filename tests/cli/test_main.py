@@ -142,6 +142,29 @@ class TestCliMain(unittest.TestCase):
 
         self.assertEqual(result.returncode, 1)
 
+    def test_cli_check_command_with_invalid_identifier(self):
+        """
+        When the model does not exist, CLI should print an informative message
+        and exit with code 1.
+        """
+        result = subprocess.run(
+            [
+                sys.executable,
+                "src/ts_backend_check/cli/main.py",
+                "-m",
+                "invalid_identifier",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        stdout_flat = result.stdout.strip().replace("\n", "")
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(
+            stdout_flat,
+            "invalid_identifier is not an index within the .ts-backend-check.yaml configuration file. Please check the defined models and try again.",
+        )
+
     def test_cli_check_command_with_nonexistent_backend_model_files(self):
         """
         When the model does not exist, CLI should print an informative message

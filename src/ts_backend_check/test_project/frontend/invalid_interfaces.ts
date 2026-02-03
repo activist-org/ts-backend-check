@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 export interface Event {
   title: string;
-  description: string;
+  // description: string; // missing without being ignored
   organizer: User;
-  // ts-backend-check: ignore field participants
+  participants: User[]; // not optional
   isPrivate: boolean;
   // ts-backend-check: ignore field date
 }

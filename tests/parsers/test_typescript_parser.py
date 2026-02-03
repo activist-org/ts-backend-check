@@ -12,7 +12,6 @@ def test_parse_interfaces(return_invalid_ts_interfaces):
     event = interfaces["Event"]
     assert event.name == "Event"
     assert "title" in event.fields
-    assert "description" in event.fields
     assert "organizer" in event.fields
     assert "isPrivate" in event.fields
 
@@ -28,8 +27,7 @@ def test_get_ignored_fields(return_invalid_ts_interfaces):
     parser = TypeScriptParser(return_invalid_ts_interfaces)
     backend_only = parser.get_ignored_fields()
 
-    assert "date" in backend_only
-    assert "participants" in backend_only
+    assert "date" in backend_only  # date is ignored
 
 
 def test_parse_interfaces_with_extends(tmp_path):

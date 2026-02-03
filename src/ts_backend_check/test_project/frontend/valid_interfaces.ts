@@ -3,7 +3,7 @@ export interface Event {
   title: string;
   description: string;
   organizer: User;
-  // ts-backend-check: ignore field participants
+  participants?: User[];
   isPrivate: boolean;
   // ts-backend-check: ignore field date
 }
