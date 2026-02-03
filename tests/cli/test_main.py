@@ -145,7 +145,7 @@ class TestCliMain(unittest.TestCase):
     def test_cli_check_command_with_nonexistent_backend_model_files(self):
         """
         When the model does not exist, CLI should print an informative message
-        and exit with code 0.
+        and exit with code 1.
         """
         result = subprocess.run(
             [
@@ -168,7 +168,7 @@ class TestCliMain(unittest.TestCase):
     def test_cli_check_command_with_nonexistent_ts_files(self):
         """
         When TypeScript file does not exist, CLI should print an informative message
-        and exit with code 0.
+        and exit with code 1.
         """
         result = subprocess.run(
             [
@@ -210,10 +210,10 @@ class TestCliMain(unittest.TestCase):
             with patch("sys.argv", ["ts-backend-check", "--model", "valid_model"]):
                 main()
         check_files_and_print_results_model.assert_called_once_with(
-            model="valid_model",
+            identifier="valid_model",
             backend_model_file_path=Path(config["valid_model"]["backend_model_path"]),
             ts_interface_file_path=Path(config["valid_model"]["ts_interface_path"]),
-            check_blank=False,
+            check_blank=True,
         )
 
     def test_typechecker_no_missing_fields_prints_success(self):

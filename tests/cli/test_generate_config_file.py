@@ -6,7 +6,7 @@ Tests for the CLI configuration file generation functionality.
 from unittest.mock import patch
 
 from ts_backend_check.cli.generate_config_file import (
-    configure_paths,
+    configure_model_interface_arguments,
     generate_config_file,
     path_exists,
     write_config,
@@ -56,7 +56,9 @@ def test_write_config_creates_yaml(tmp_path, monkeypatch):
 
 
 @patch("ts_backend_check.cli.generate_config_file.path_exists", return_value=True)
-def test_configure_paths_auth_empty_first(mock_path, tmp_path, monkeypatch, capsys):
+def test_configure_model_interface_arguments_identifier_empty_first(
+    mock_path, tmp_path, monkeypatch, capsys
+):
     yaml_file = tmp_path / ".ts-backend-check.yaml"
     monkeypatch.setattr(
         "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", yaml_file
@@ -68,22 +70,29 @@ def test_configure_paths_auth_empty_first(mock_path, tmp_path, monkeypatch, caps
 
     inputs = iter(
         [
-            "",  # key
-            "auth",
-            "backend/models.py",  # backend path
-            "frontend/auth.ts",  # frontend path
-            "n",  # finish
+            "",  # empty identifier
+            "valid_model",  # identifier
+            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
+            "",  # check blank
+            "",  # no conversions
+            "",  # finish
         ]
     )
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-    configure_paths()
+    configure_model_interface_arguments()
     captured = capsys.readouterr()
-    assert "Key cannot be empty. Please try again." in captured.out
+    assert (
+        "The model-interface identifier cannot be empty. Please try again."
+        in captured.out
+    )
 
 
 @patch("ts_backend_check.cli.generate_config_file.path_exists", return_value=True)
-def test_configure_paths_empty_backend_path(mock_path, tmp_path, monkeypatch, capsys):
+def test_configure_model_interface_arguments_empty_backend_path(
+    mock_path, tmp_path, monkeypatch, capsys
+):
     yaml_file = tmp_path / ".ts-backend-check.yaml"
     monkeypatch.setattr(
         "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", yaml_file
@@ -95,23 +104,29 @@ def test_configure_paths_empty_backend_path(mock_path, tmp_path, monkeypatch, ca
 
     inputs = iter(
         [
-            "",  # key
-            "auth",
-            "",
-            "backend/models.py",  # backend path
-            "frontend/auth.ts",  # frontend path
-            "n",  # finish
+            "valid_model",  # identifier
+            "",  # empty backend path
+            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
+            "",  # check blank
+            "",  # no conversions
+            "",  # finish
         ]
     )
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-    configure_paths()
+    configure_model_interface_arguments()
     captured = capsys.readouterr()
-    assert "Path cannot be empty." in captured.out
+    assert (
+        "The path for the Django models.py file cannot be empty. Please try again."
+        in captured.out
+    )
 
 
 @patch("ts_backend_check.cli.generate_config_file.path_exists", return_value=True)
-def test_configure_paths_empty_frontend_path(mock_path, tmp_path, monkeypatch, capsys):
+def test_configure_model_interface_arguments_empty_typescript_path(
+    mock_path, tmp_path, monkeypatch, capsys
+):
     yaml_file = tmp_path / ".ts-backend-check.yaml"
     monkeypatch.setattr(
         "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", yaml_file
@@ -123,23 +138,32 @@ def test_configure_paths_empty_frontend_path(mock_path, tmp_path, monkeypatch, c
 
     inputs = iter(
         [
-            "",  # key
-            "auth",
-            "backend/models.py",  # backend path
-            "",
-            "frontend/auth.ts",  # frontend path
-            "n",  # finish
+            "valid_model",  # identifier
+            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "",  # empty ts path
+            "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
+            "",  # check blank
+            "",  # no conversions
+            "",  # finish
         ]
     )
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-    configure_paths()
+    configure_model_interface_arguments()
     captured = capsys.readouterr()
-    assert "Path cannot be empty." in captured.out
+    assert (
+        "The path for the TypeScript interface file cannot be empty. Please try again."
+        in captured.out
+    )
 
 
 @patch("ts_backend_check.cli.generate_config_file.path_exists", return_value=True)
-def test_configure_paths_valid_flow(mock_path, tmp_path, monkeypatch):
+def test_configure_model_interface_arguments_valid_flow(
+    mock_path, tmp_path, monkeypatch
+):
+    """
+    Test a valid generation of a configuration file including model-interface name conversions.
+    """
     yaml_file = tmp_path / ".ts-backend-check.yaml"
     monkeypatch.setattr(
         "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", yaml_file
@@ -151,28 +175,43 @@ def test_configure_paths_valid_flow(mock_path, tmp_path, monkeypatch):
 
     inputs = iter(
         [
-            "auth",  # key
-            "backend/models.py",  # backend path
-            "frontend/auth.ts",  # frontend path
-            "n",  # finish
+            "valid_model",  # identifier
+            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
+            "y",  # check blank
+            "y",  # include conversions
+            "UserModel",
+            "User",
+            "",  # only one conversion
+            "",  # finish
         ]
     )
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-    configure_paths()
+    configure_model_interface_arguments()
 
     assert yaml_file.exists()
     content = yaml_file.read_text()
-    assert "auth:" in content
-    assert "backend/models.py" in content
-    assert "frontend/auth.ts" in content
+
+    assert "valid_model:" in content
+    assert "src/ts_backend_check/test_project/backend/valid_models.py" in content
+    assert "src/ts_backend_check/test_project/frontend/valid_interfaces.ts" in content
+    assert "check_blank_model_fields: true" in content
+    assert "UserModel: User" in content
 
 
 @patch(
     "ts_backend_check.cli.generate_config_file.path_exists",
-    side_effect=[False, True, False, True],
+    side_effect=[
+        False,
+        True,
+        False,
+        True,
+    ],  # 1st fail, 2nd pass, 3rd fail, 4th pass
 )
-def test_configure_paths_invalid_then_valid(mock_path, tmp_path, monkeypatch):
+def test_configure_model_interface_arguments_invalid_then_valid(
+    mock_path, tmp_path, monkeypatch
+):
     yaml_file = tmp_path / ".ts-backend-check.yaml"
     monkeypatch.setattr(
         "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", yaml_file
@@ -184,26 +223,29 @@ def test_configure_paths_invalid_then_valid(mock_path, tmp_path, monkeypatch):
 
     inputs = iter(
         [
-            "auth",  # key
-            "invalid/backend.py",  # backend invalid
-            "valid/backend.py",  # backend valid
-            "invalid/frontend.ts",  # frontend invalid
-            "valid/frontend.ts",  # frontend valid
-            "n",  # done
+            "valid_model",  # identifier
+            "invalid_path_to_models_path.py",
+            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "invalid_path_to_interfaces_path.ts",
+            "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
+            "",  # check blank
+            "",  # no conversions
+            "",  # finish
         ]
     )
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-    configure_paths()
+    configure_model_interface_arguments()
 
     assert yaml_file.exists()
-
     content = yaml_file.read_text()
-    assert "valid/backend.py" in content
-    assert "valid/frontend.ts" in content
+
+    assert "valid_model:" in content
+    assert "src/ts_backend_check/test_project/backend/valid_models.py" in content
+    assert "src/ts_backend_check/test_project/frontend/valid_interfaces.ts" in content
 
 
-@patch("ts_backend_check.cli.generate_config_file.configure_paths")
+@patch("ts_backend_check.cli.generate_config_file.configure_model_interface_arguments")
 def test_generate_config_file_creates_new(mock_configure, tmp_path, monkeypatch):
     config_path = tmp_path / ".ts-backend-check.yaml"
     monkeypatch.setattr(
@@ -222,7 +264,7 @@ def test_generate_config_file_creates_new(mock_configure, tmp_path, monkeypatch)
     mock_configure.assert_called_once()
 
 
-@patch("ts_backend_check.cli.generate_config_file.configure_paths")
+@patch("ts_backend_check.cli.generate_config_file.configure_model_interface_arguments")
 def test_generate_config_file_existing_user_skips(
     mock_configure, tmp_path, monkeypatch
 ):

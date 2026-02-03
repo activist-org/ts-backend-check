@@ -68,7 +68,7 @@ with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
 
 
 def check_files_and_print_results(
-    model: str,
+    identifier: str,
     backend_model_file_path: Path,
     ts_interface_file_path: Path,
     check_blank: bool = False,
@@ -78,7 +78,7 @@ def check_files_and_print_results(
 
     Parameters
     ----------
-    model : str
+    identifier : str
         The model in the .ts-backend-check.yaml configuration file to check models and interfaces for.
 
     backend_model_file_path : Path
@@ -97,13 +97,15 @@ def check_files_and_print_results(
     """
     if not backend_model_file_path.is_file():
         rprint(
-            f"[red]❌ {backend_model_file_path} that should contain the '{model}' backend models does not exist. Please check the ts-backend-check configuration file and try again.[/red]"
+            f"[red]❌ {backend_model_file_path} that should contain the '{identifier}' backend models does not exist. Please check the ts-backend-check configuration file and try again.[/red]"
         )
+        return False
 
     elif not ts_interface_file_path.is_file():
         rprint(
-            f"[red]❌ {ts_interface_file_path} that should contain the '{model}' TypeScript types does not exist. Please check the ts-backend-check configuration file and try again.[/red]"
+            f"[red]❌ {ts_interface_file_path} that should contain the '{identifier}' TypeScript types does not exist. Please check the ts-backend-check configuration file and try again.[/red]"
         )
+        return False
 
     checker = TypeChecker(
         models_file=str(backend_model_file_path),
@@ -113,7 +115,7 @@ def check_files_and_print_results(
 
     if missing := checker.check():
         rprint(
-            f"\n[red]❌ ts-backend-check error: There are inconsistencies between the provided {model} backend models and TypeScript interfaces. Please see the output below for details.[/red]"
+            f"\n[red]❌ ts-backend-check error: There are inconsistencies between the provided {identifier} backend models and TypeScript interfaces. Please see the output below for details.[/red]"
         )
 
         for msg in missing:
@@ -128,7 +130,7 @@ def check_files_and_print_results(
 
     else:
         rprint(
-            f"[green]✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided '{model}' files.[/green]"
+            f"[green]✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided '{identifier}' files.[/green]"
         )
 
         return True
@@ -226,48 +228,63 @@ def main() -> None:
 
     # MARK: Run Checks
 
-    checks_fail = []
+    results = []
 
     if args.model:
-        if not config[args.model]:
+        model_config = config.get(args.model)
+
+        if not model_config:
             rprint(
                 f"[red]{args.model} is not an index within the .ts-backend-check.yaml configuration file. Please check the defined models and try again.[/red]"
             )
-            return
+            sys.exit(1)
 
-        config_backend_model_file_path = Path(config[args.model]["backend_model_path"])
-        config_ts_interface_file_path = Path(config[args.model]["ts_interface_path"])
-        config_check_blank = config[args.model]["check_blank"]
+        config_backend_model_file_path = Path(model_config["backend_model_path"])
+        config_ts_interface_file_path = Path(model_config["ts_interface_path"])
+        config_check_blank = (
+            model_config["check_blank_model_fields"]
+            if "check_blank_model_fields" in model_config
+            else False
+        )
 
-        checks_fail.append(
-            check_files_and_print_results(
-                model=args.model,
+        r = check_files_and_print_results(
+            identifier=args.model,
+            backend_model_file_path=config_backend_model_file_path,
+            ts_interface_file_path=config_ts_interface_file_path,
+            check_blank=config_check_blank,
+        )
+        results.append(r)
+
+    if args.all:
+        for i in config.keys():
+            model_config = config.get(i)
+
+            config_backend_model_file_path = Path(model_config["backend_model_path"])
+            config_ts_interface_file_path = Path(model_config["ts_interface_path"])
+            config_check_blank = (
+                model_config["check_blank_model_fields"]
+                if "check_blank_model_fields" in model_config
+                else False
+            )
+
+            r = check_files_and_print_results(
+                identifier=i,
                 backend_model_file_path=config_backend_model_file_path,
                 ts_interface_file_path=config_ts_interface_file_path,
                 check_blank=config_check_blank,
             )
-        )
+            results.append(r)
 
-    if args.all:
-        for m in config.keys():
-            config_backend_model_file_path = Path(config[m]["backend_model_path"])
-            config_ts_interface_file_path = Path(config[m]["ts_interface_path"])
-            config_check_blank = config[args.model]["check_blank"]
+    if args.model or args.all:
+        if not all(results):
+            sys.exit(1)
 
-            checks_fail.append(
-                check_files_and_print_results(
-                    model=m,
-                    backend_model_file_path=config_backend_model_file_path,
-                    ts_interface_file_path=config_ts_interface_file_path,
-                    check_blank=config_check_blank,
-                )
-            )
-
-    if (args.model or args.all) and not any(checks_fail):
-        sys.exit(1)
-
-    elif args.model or args.all:
-        return
+        else:
+            return  # exit 0
 
     else:
         parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
