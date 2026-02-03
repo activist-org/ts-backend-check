@@ -180,7 +180,9 @@ def test_configure_model_interface_arguments_valid_flow(
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "y",  # check blank
             "y",  # include conversions
+            "",  # invalid
             "UserModel",
+            "",  # invalid
             "User",
             "",  # only one conversion
             "",  # finish
@@ -228,7 +230,8 @@ def test_configure_model_interface_arguments_invalid_then_valid(
             "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
             "invalid_path_to_interfaces_path.ts",
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
-            "",  # check blank
+            "not_y_or_n_or_blank",  # check blank
+            "n",  # check blank
             "",  # no conversions
             "",  # finish
         ]
