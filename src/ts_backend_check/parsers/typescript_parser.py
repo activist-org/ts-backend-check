@@ -15,7 +15,7 @@ class TypeScriptInterface:
     """
 
     name: str
-    fields: Set[str]
+    fields: List[str]
     parents: List[str]
 
 
@@ -73,9 +73,9 @@ class TypeScriptParser:
         return set(re.findall(ignore_pattern, self.content))
 
     @staticmethod
-    def _extract_fields(interface_body: str) -> Set[str]:
+    def _extract_fields(interface_body: str) -> List[str]:
         """
-        Extract field names from interface body.
+        Extract both real fields and 'ignored' comment fields from interface bodies.
 
         Parameters
         ----------
@@ -84,15 +84,19 @@ class TypeScriptParser:
 
         Returns
         -------
-        Set[str]
+        List[str]
             The field names from the model interface body.
         """
-        fields = set()
+        combined_pattern = (
+            r"(?:(?:readonly\s+)?(\w+)\s*\??\s*:|"  # standard/readonly fields
+            r"//.*?ts-backend-check:\s*ignore\s+field\s+(\w+))"  # ts-backend-check ignore comment fields
+        )
 
-        # Regular fields
-        fields.update(re.findall(r"(?://[^\n]*\n)*\s*(\w+)\s*[?]?\s*:", interface_body))
+        fields = []
 
-        # Readonly fields
-        fields.update(re.findall(r"readonly\s+(\w+)\s*[?]?\s*:", interface_body))
+        # finditer preserves the top-to-bottom order of the file.
+        for match in re.finditer(combined_pattern, interface_body):
+            if field_name := match.group(1) or match.group(2):
+                fields.append(field_name)
 
         return fields

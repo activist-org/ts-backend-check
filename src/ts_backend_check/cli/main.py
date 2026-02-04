@@ -126,9 +126,9 @@ def check_files_and_print_results(
         for msg in missing:
             rprint(Text.from_markup(f"[red]{msg}[/red]"))
 
-        field_or_fields = "fields" if len(missing) > 1 else "field"
+        error_or_errors = "errors" if len(missing) > 1 else "error"
         rprint(
-            f"[red]\nPlease fix the {len(missing)} {field_or_fields} above to continue the sync of the backend models of {backend_model_file_path} and the TypeScript interfaces of {ts_interface_file_path}.[/red]"
+            f"[red]\nPlease fix the {len(missing)} {error_or_errors} above to continue the sync of the backend models of {backend_model_file_path} and the TypeScript interfaces of {ts_interface_file_path}.[/red]"
         )
 
         return False

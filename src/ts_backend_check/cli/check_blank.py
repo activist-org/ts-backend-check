@@ -5,7 +5,7 @@ Functionality to check TypeScript interfaces for fields that should be optional 
 
 import ast
 from pathlib import Path
-from typing import Dict, Set
+from typing import Dict, List
 
 from rich.console import Console
 
@@ -15,7 +15,7 @@ ROOT_DIR = Path.cwd()
 console = Console()
 
 
-def check_blank(file_path: str) -> Dict[str, Set[str]]:
+def check_blank(file_path: str) -> Dict[str, List[str]]:
     """
     Function to extract fields from Django models file which accepts blank values.
 
@@ -26,7 +26,7 @@ def check_blank(file_path: str) -> Dict[str, Set[str]]:
 
     Returns
     -------
-    Dict[str, Set[str]]
+    Dict[str, List[str]]
         The fields from the models file extracted into a dictionary for future processing.
     """
     model_path = ROOT_DIR / file_path

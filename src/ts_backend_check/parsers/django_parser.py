@@ -4,7 +4,7 @@ Module for parsing Django models and extracting field information.
 """
 
 import ast
-from typing import Dict, Set
+from typing import Dict, List
 
 
 class DjangoModelVisitor(ast.NodeVisitor):
@@ -31,9 +31,9 @@ class DjangoModelVisitor(ast.NodeVisitor):
     }
 
     def __init__(self) -> None:
-        self.models: Dict[str, Set[str]] = {}
+        self.models: Dict[str, List[str]] = {}
         self.current_model: str | None = None
-        self.blank_models: Dict[str, Set[str]] = {}
+        self.blank_models: Dict[str, List[str]] = {}
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
@@ -49,7 +49,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
         if node.bases:
             self.current_model = node.name
             if self.current_model not in self.models:
-                self.models[self.current_model] = set()
+                self.models[self.current_model] = []
 
             self.generic_visit(node)
 
@@ -78,7 +78,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
                 field_type in node.value.func.attr
                 for field_type in self.DJANGO_FIELD_TYPES
             ):
-                self.models[self.current_model].add(target.id)
+                self.models[self.current_model].append(target.id)
 
                 if any(
                     kw.arg == "blank"
@@ -87,12 +87,12 @@ class DjangoModelVisitor(ast.NodeVisitor):
                     for kw in node.value.keywords
                 ):
                     if self.current_model not in self.blank_models:
-                        self.blank_models[self.current_model] = set()
+                        self.blank_models[self.current_model] = []
 
-                    self.blank_models[self.current_model].add(target.id)
+                    self.blank_models[self.current_model].append(target.id)
 
 
-def extract_model_fields(models_file: str) -> Dict[str, Set[str]]:
+def extract_model_fields(models_file: str) -> Dict[str, List[str]]:
     """
     Extract fields from Django models file.
 
@@ -103,7 +103,7 @@ def extract_model_fields(models_file: str) -> Dict[str, Set[str]]:
 
     Returns
     -------
-    Dict[str, Set[str]]
+    Dict[str, List[str]]
         The fields from the models file extracted into a dictionary for future processing.
     """
     with open(models_file, "r", encoding="utf-8") as f:
@@ -114,6 +114,7 @@ def extract_model_fields(models_file: str) -> Dict[str, Set[str]]:
 
     try:
         tree = ast.parse(content)
+
     except SyntaxError as e:
         raise SyntaxError(
             f"Failed to parse {models_file}. Make sure it's a valid Python file. Error: {str(e)}"
