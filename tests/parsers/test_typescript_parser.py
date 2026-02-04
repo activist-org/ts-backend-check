@@ -8,9 +8,9 @@ def test_parse_interfaces(return_invalid_ts_interfaces):
     interfaces = parser.parse_interfaces()
 
     # Check Event interface.
-    assert "Event" in interfaces
-    event = interfaces["Event"]
-    assert event.name == "Event"
+    assert "EventModel" in interfaces
+    event = interfaces["EventModel"]
+    assert event.name == "EventModel"
     assert "title" in event.fields
     assert "organizer" in event.fields
     assert "isPrivate" in event.fields
