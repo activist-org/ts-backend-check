@@ -104,7 +104,7 @@ Example success and error outputs for the CLI are:
     Expected to find this field in the frontend interface: User
     To ignore this field, add the following comment to the TypeScript interface: '// ts-backend-check: ignore field userName'
 
-    Please fix the 1 field above to have the backend models of backend/models/user.py synced with the typescript interfaces of frontend/types/user.ts.
+    Please fix the 1 field above to have the backend models of backend/models/user.py synced with the TypeScript interfaces of frontend/types/user.ts.
 
 Contents
 ========

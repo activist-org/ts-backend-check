@@ -22,16 +22,24 @@ class TypeChecker:
     types_file : str
         The file path for the TypeScript file to check.
 
-    check_blank : bool
+    check_blank : bool, default=False
         Whether to also check that fields marked blank=True within Django models are optional in the TypeScript interfaces.
+
+    model_name_conversions : dict[str: list[str]], default={}
+        A dictionary containing conversions of model names to their corresponding TypeScript interfaces.
     """
 
     def __init__(
-        self, models_file: str, types_file: str, check_blank: bool = False
+        self,
+        models_file: str,
+        types_file: str,
+        check_blank: bool = False,
+        model_name_conversions: dict[str, list[str]] = {},
     ) -> None:
         self.models_file = models_file
         self.types_file = types_file
         self.check_blank = check_blank
+        self.model_name_conversions = model_name_conversions
         self.model_fields = extract_model_fields(models_file)
         self.ts_parser = TypeScriptParser(types_file)
         self.ts_interfaces = self.ts_parser.parse_interfaces()
@@ -79,38 +87,17 @@ class TypeChecker:
         Dict[str, Set[str]]
             Interfaces that match a model name.
         """
-        potential_names = self._generate_potential_names(model_name)
+        if self.model_name_conversions and model_name in self.model_name_conversions:
+            potential_names = self.model_name_conversions[model_name]
+
+        else:
+            potential_names = [model_name]
+
         return {
             name: interface.fields
             for name, interface in self.ts_interfaces.items()
             if any(potential == name for potential in potential_names)
         }
-
-    @staticmethod
-    def _generate_potential_names(model_name: str) -> List[str]:
-        """
-        Generate potential TypeScript interface names for a model.
-
-        Parameters
-        ----------
-        model_name : str
-            The name of the model to check the frontend TypeScript file for.
-
-        Returns
-        -------
-        List[str]
-            Possible names for the model to check for.
-        """
-        base_names = [
-            model_name,
-            model_name.replace("Model", ""),
-        ]
-
-        if "_" in model_name:
-            base_names.append(snake_to_camel(input_str=model_name))
-
-        suffixes = ["", "Base", "Response", "Type"]
-        return [f"{base}{suffix}" for base in base_names for suffix in suffixes]
 
     def _is_field_accounted_for(
         self, field: str, interfaces: Dict[str, Set[str]]
@@ -153,10 +140,12 @@ class TypeChecker:
         str
             The message displayed to the user when missing interfaces are found.
         """
-        potential_names = TypeChecker._generate_potential_names(model_name)
         return (
             f"\nNo matching TypeScript interface found for model: {model_name}"
-            f"\nSearched for interfaces: {', '.join(potential_names)}"
+            "\nPlease name your TypeScript interfaces the same as the corresponding backend models."
+            "\nYou can also use the 'backend_to_ts_model_name_conversions' option within the configuration file."
+            "\nThe key is the backend model name and the value is a list of the corresponding interfaces."
+            "\nThis option is also how you can break larger backend models into multiple interfaces that extend one another."
         )
 
     @staticmethod

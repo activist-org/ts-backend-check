@@ -232,11 +232,13 @@ class TestCliMain(unittest.TestCase):
         ) as check_files_and_print_results_model:
             with patch("sys.argv", ["ts-backend-check", "--model", "valid_model"]):
                 main()
+
         check_files_and_print_results_model.assert_called_once_with(
             identifier="valid_model",
             backend_model_file_path=Path(config["valid_model"]["backend_model_path"]),
             ts_interface_file_path=Path(config["valid_model"]["ts_interface_path"]),
             check_blank=True,
+            model_name_conversions={"EventModel": ["Event"]},
         )
 
     def test_typechecker_no_missing_fields_prints_success(self):

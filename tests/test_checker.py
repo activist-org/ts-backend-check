@@ -6,16 +6,27 @@ from ts_backend_check.checker import TypeChecker
 def test_checker_invalid_missing_fields(
     return_invalid_django_models, return_invalid_ts_interfaces
 ):
-    checker = TypeChecker(return_invalid_django_models, return_invalid_ts_interfaces)
+    checker = TypeChecker(
+        models_file=return_invalid_django_models,
+        types_file=return_invalid_ts_interfaces,
+    )
     missing = checker.check()
 
     assert len(missing) == 1
 
 
 def test_checker_ignored_missing_fields(
-    return_valid_django_models, return_valid_ts_interfaces
+    return_valid_django_models,
+    return_valid_ts_interfaces,
+    return_valid_check_blank_models,
+    return_valid_backend_to_ts_conversions,
 ):
-    checker = TypeChecker(return_valid_django_models, return_valid_ts_interfaces)
+    checker = TypeChecker(
+        models_file=return_valid_django_models,
+        types_file=return_valid_ts_interfaces,
+        check_blank=return_valid_check_blank_models,
+        model_name_conversions=return_valid_backend_to_ts_conversions,
+    )
     missing = checker.check()
 
     # We know 'date' and 'participants' are marked as backend-only.
@@ -36,7 +47,7 @@ class TestModel(models.Model):
     model_file.write_text(model_content)
 
     # Create a type with missing field.
-    type_content = """export interface Test {
+    type_content = """export interface TestModel {
     name: string;
 }
 """
@@ -44,7 +55,7 @@ class TestModel(models.Model):
     type_file = tmp_path / "test_type.ts"
     type_file.write_text(type_content)
 
-    checker = TypeChecker(str(model_file), str(type_file))
+    checker = TypeChecker(models_file=str(model_file), types_file=str(type_file))
     missing = checker.check()
 
     assert len(missing) == 1
@@ -71,7 +82,7 @@ class UnmatchedModel(models.Model):
     type_file = tmp_path / "unmatched_type.ts"
     type_file.write_text(type_content)
 
-    checker = TypeChecker(str(model_file), str(type_file))
+    checker = TypeChecker(models_file=str(model_file), types_file=str(type_file))
     missing = checker.check()
 
     assert len(missing) == 1

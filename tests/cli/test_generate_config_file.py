@@ -72,7 +72,7 @@ def test_configure_model_interface_arguments_identifier_empty_first(
         [
             "",  # empty identifier
             "valid_model",  # identifier
-            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "",  # check blank
             "",  # no conversions
@@ -106,7 +106,7 @@ def test_configure_model_interface_arguments_empty_backend_path(
         [
             "valid_model",  # identifier
             "",  # empty backend path
-            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "",  # check blank
             "",  # no conversions
@@ -139,7 +139,7 @@ def test_configure_model_interface_arguments_empty_typescript_path(
     inputs = iter(
         [
             "valid_model",  # identifier
-            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "",  # empty ts path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "",  # check blank
@@ -176,7 +176,7 @@ def test_configure_model_interface_arguments_valid_flow(
     inputs = iter(
         [
             "valid_model",  # identifier
-            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "y",  # check blank
             "y",  # include conversions
@@ -196,7 +196,7 @@ def test_configure_model_interface_arguments_valid_flow(
     content = yaml_file.read_text()
 
     assert "valid_model:" in content
-    assert "src/ts_backend_check/test_project/backend/valid_models.py" in content
+    assert "src/ts_backend_check/test_project/backend/models.py" in content
     assert "src/ts_backend_check/test_project/frontend/valid_interfaces.ts" in content
     assert "check_blank_model_fields: true" in content
     assert "UserModel: User" in content
@@ -227,7 +227,7 @@ def test_configure_model_interface_arguments_invalid_then_valid(
         [
             "valid_model",  # identifier
             "invalid_path_to_models_path.py",
-            "src/ts_backend_check/test_project/backend/valid_models.py",  # backend path
+            "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "invalid_path_to_interfaces_path.ts",
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "not_y_or_n_or_blank",  # check blank
@@ -244,7 +244,7 @@ def test_configure_model_interface_arguments_invalid_then_valid(
     content = yaml_file.read_text()
 
     assert "valid_model:" in content
-    assert "src/ts_backend_check/test_project/backend/valid_models.py" in content
+    assert "src/ts_backend_check/test_project/backend/models.py" in content
     assert "src/ts_backend_check/test_project/frontend/valid_interfaces.ts" in content
 
 

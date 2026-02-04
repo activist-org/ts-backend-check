@@ -20,7 +20,8 @@ def snake_to_camel(input_str: str) -> str:
 
     Examples
     --------
-    hello_world -> helloWorld, alreadyCamelCase -> alreadyCamelCase
+    hello_world -> helloWorld
+    alreadyCamelCase -> alreadyCamelCase
     """
     if not input_str or input_str.startswith("_"):
         return input_str

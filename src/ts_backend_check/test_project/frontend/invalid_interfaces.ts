@@ -3,8 +3,8 @@ export interface EventModel {
   title: string;
   // description: string; // missing without being ignored
   organizer: User;
+  isPrivate: boolean; // unordered based on the backend
   participants: User[]; // not optional
-  isPrivate: boolean;
   // ts-backend-check: ignore field date
 }
 

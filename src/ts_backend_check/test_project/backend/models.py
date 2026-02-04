@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """
-Example backend model file that has an invalid TS interface file in test_project/frontend.
+Example backend model file that has both valid and invalid TS interface files in test_project/frontend.
 """
 
 from django.db import models
@@ -10,7 +10,7 @@ from django.db import models
 
 class EventModel(models.Model):
     """
-    Model for events that has an invalid corresponding TS interface file.
+    Model for events that has both valid and invalid corresponding TS interface files.
     """
 
     title = models.CharField(max_length=200)

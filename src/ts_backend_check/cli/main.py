@@ -72,6 +72,7 @@ def check_files_and_print_results(
     backend_model_file_path: Path,
     ts_interface_file_path: Path,
     check_blank: bool = False,
+    model_name_conversions: dict[str, list[str]] = {},
 ) -> bool:
     """
     Check the provided files for the given model and print the results.
@@ -82,13 +83,16 @@ def check_files_and_print_results(
         The model in the .ts-backend-check.yaml configuration file to check models and interfaces for.
 
     backend_model_file_path : Path
-        The path to the backend models as defined in the .ts-backend-check.yaml configuration file .
+        The path to the backend models as defined in the .ts-backend-check.yaml configuration file.
 
     ts_interface_file_path : Path
-        The path to the TypeScript interfaces as defined in the .ts-backend-check.yaml configuration file .
+        The path to the TypeScript interfaces as defined in the .ts-backend-check.yaml configuration file.
 
-    check_blank : bool
+    check_blank : bool, default=False
         Whether to also check that fields marked blank=True within Django models are optional in the TypeScript interfaces.
+
+    model_name_conversions : dict[str, list[str]], default={}
+        A dictionary of backend model names to their corresponding TypeScript interfaces when snake to camel case isn't valid.
 
     Returns
     -------
@@ -110,6 +114,7 @@ def check_files_and_print_results(
     checker = TypeChecker(
         models_file=str(backend_model_file_path),
         types_file=str(ts_interface_file_path),
+        model_name_conversions=model_name_conversions,
         check_blank=check_blank,
     )
 
@@ -123,7 +128,7 @@ def check_files_and_print_results(
 
         field_or_fields = "fields" if len(missing) > 1 else "field"
         rprint(
-            f"[red]\nPlease fix the {len(missing)} {field_or_fields} above to have the backend models of {backend_model_file_path} synced with the typescript interfaces of {ts_interface_file_path}.[/red]"
+            f"[red]\nPlease fix the {len(missing)} {field_or_fields} above to continue the sync of the backend models of {backend_model_file_path} and the TypeScript interfaces of {ts_interface_file_path}.[/red]"
         )
 
         return False
@@ -246,12 +251,18 @@ def main() -> None:
             if "check_blank_model_fields" in model_config
             else False
         )
+        config_model_name_conversions = (
+            model_config["backend_to_ts_model_name_conversions"]
+            if "backend_to_ts_model_name_conversions" in model_config
+            else {}
+        )
 
         r = check_files_and_print_results(
             identifier=args.model,
             backend_model_file_path=config_backend_model_file_path,
             ts_interface_file_path=config_ts_interface_file_path,
             check_blank=config_check_blank,
+            model_name_conversions=config_model_name_conversions,
         )
         results.append(r)
 
@@ -266,12 +277,18 @@ def main() -> None:
                 if "check_blank_model_fields" in model_config
                 else False
             )
+            config_model_name_conversions = (
+                model_config["backend_to_ts_model_name_conversions"]
+                if "backend_to_ts_model_name_conversions" in model_config
+                else {}
+            )
 
             r = check_files_and_print_results(
                 identifier=i,
                 backend_model_file_path=config_backend_model_file_path,
                 ts_interface_file_path=config_ts_interface_file_path,
                 check_blank=config_check_blank,
+                model_name_conversions=config_model_name_conversions,
             )
             results.append(r)
 

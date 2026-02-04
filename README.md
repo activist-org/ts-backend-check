@@ -73,7 +73,7 @@ Field 'user_name' (camelCase: 'userName') from model 'UserModel' is missing in t
 Expected to find this field in the frontend interface: User
 To ignore this field, add the following comment to the TypeScript interface: '// ts-backend-check: ignore field userName'
 
-Please fix the 1 field above to have the backend models of backend/models/user.py synced with the typescript interfaces of frontend/types/user.ts.
+Please fix the 1 field above to have the backend models of backend/models/user.py synced with the TypeScript interfaces of frontend/types/user.ts.
 ```
 
 <a id="installation-"></a>
@@ -267,10 +267,9 @@ git remote add upstream https://github.com/activist-org/ts-backend-check.git
   - `origin` (forked repository)
   - `upstream` (ts-backend-check repository)
 
-3. Create a virtual environment for ts-backend-check (Python `>=3.12`), activate it and install dependencies:
+3. Install `uv` if you don't already have it by following the [official installation guide](https://docs.astral.sh/uv/getting-started/installation/).
 
-   > [!NOTE]
-   > First, install `uv` if you don't already have it by following the [official installation guide](https://docs.astral.sh/uv/getting-started/installation/).
+4. Create a virtual environment for ts-backend-check (Python `>=3.12`), activate it and install dependencies:
 
    ```bash
    uv sync --all-extras  # create .venv and install all dependencies from uv.lock
