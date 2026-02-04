@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-export interface Event {
+export interface EventModel {
   title: string;
   // description: string; // missing without being ignored
   organizer: User;
