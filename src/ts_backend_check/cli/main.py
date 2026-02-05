@@ -89,7 +89,7 @@ def check_files_and_print_results(
         The path to the TypeScript interfaces as defined in the .ts-backend-check.yaml configuration file.
 
     check_blank : bool, default=False
-        Whether to also check that fields marked blank=True within Django models are optional in the TypeScript interfaces.
+        Whether to also check that fields marked 'blank=True' within Django models are optional (?) in the TypeScript interfaces.
 
     model_name_conversions : dict[str, list[str]], default={}
         A dictionary of backend model names to their corresponding TypeScript interfaces when snake to camel case isn't valid.
@@ -120,7 +120,7 @@ def check_files_and_print_results(
 
     if missing := checker.check():
         rprint(
-            f"\n[red]❌ ts-backend-check error: There are inconsistencies between the provided {identifier} backend models and TypeScript interfaces. Please see the output below for details.[/red]"
+            f"\n[red]❌ ts-backend-check error: There are inconsistencies between the provided '{identifier}' backend models and TypeScript interfaces. Please see the output below for details.[/red]"
         )
 
         for msg in missing:

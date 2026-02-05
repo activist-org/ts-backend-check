@@ -11,16 +11,16 @@ def test_parse_interfaces(return_invalid_ts_interfaces):
     assert "EventModel" in interfaces
     event = interfaces["EventModel"]
     assert event.name == "EventModel"
-    assert "title" in event.fields
-    assert "organizer" in event.fields
-    assert "isPrivate" in event.fields
+    assert "title" in event.properties
+    assert "organizer" in event.properties
+    assert "isPrivate" in event.properties
 
     # Check User interface.
     assert "UserModel" in interfaces
     user = interfaces["UserModel"]
     assert user.name == "UserModel"
-    assert "id" in user.fields
-    assert "name" in user.fields
+    assert "id" in user.properties
+    assert "name" in user.properties
 
 
 def test_get_ignored_fields(return_invalid_ts_interfaces):
@@ -51,4 +51,4 @@ def test_parse_interfaces_with_extends(tmp_path):
     assert "ExtendedEvent" in interfaces
     extended = interfaces["ExtendedEvent"]
     assert extended.parents == ["BaseEvent"]
-    assert "description" in extended.fields
+    assert "description" in extended.properties

@@ -4,7 +4,7 @@ Module for parsing Django models and extracting field information.
 """
 
 import ast
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 
 class DjangoModelVisitor(ast.NodeVisitor):
@@ -33,7 +33,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
     def __init__(self) -> None:
         self.models: Dict[str, List[str]] = {}
         self.current_model: str | None = None
-        self.blank_models: Dict[str, List[str]] = {}
+        self.models_and_blank_fields: Dict[str, List[str]] = {}
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
@@ -86,13 +86,15 @@ class DjangoModelVisitor(ast.NodeVisitor):
                     and kw.value.value is True
                     for kw in node.value.keywords
                 ):
-                    if self.current_model not in self.blank_models:
-                        self.blank_models[self.current_model] = []
+                    if self.current_model not in self.models_and_blank_fields:
+                        self.models_and_blank_fields[self.current_model] = []
 
-                    self.blank_models[self.current_model].append(target.id)
+                    self.models_and_blank_fields[self.current_model].append(target.id)
 
 
-def extract_model_fields(models_file: str) -> Dict[str, List[str]]:
+def extract_model_fields(
+    models_file: str,
+) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
     """
     Extract fields from Django models file.
 
@@ -103,7 +105,7 @@ def extract_model_fields(models_file: str) -> Dict[str, List[str]]:
 
     Returns
     -------
-    Dict[str, List[str]]
+    Tuple(Dict[str, List[str]], Dict[str, List[str]])
         The fields from the models file extracted into a dictionary for future processing.
     """
     with open(models_file, "r", encoding="utf-8") as f:
@@ -123,4 +125,4 @@ def extract_model_fields(models_file: str) -> Dict[str, List[str]]:
     visitor = DjangoModelVisitor()
     visitor.visit(tree)
 
-    return visitor.models
+    return visitor.models, visitor.models_and_blank_fields

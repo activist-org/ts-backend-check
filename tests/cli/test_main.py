@@ -310,8 +310,8 @@ class TestCliMain(unittest.TestCase):
         calls_str = [str(c) for c in calls]
         self.assertTrue(
             any(
-                "There are inconsistencies between the provided backend models and TypeScript interfaces"
-                in s
+                "There are inconsistencies between the provided" in s
+                or "backend models and TypeScript interfaces" in s
                 or "ts-backend-check error" in s
                 for s in calls_str
             ),

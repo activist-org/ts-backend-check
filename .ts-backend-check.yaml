@@ -5,6 +5,7 @@
 invalid_model:
   backend_model_path: src/ts_backend_check/test_project/backend/models.py
   ts_interface_path: src/ts_backend_check/test_project/frontend/invalid_interfaces.ts
+  check_blank_model_fields: true
 
 invalid_backend_model_path:
   backend_model_path: invalid_path_to_models.py

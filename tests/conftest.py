@@ -8,6 +8,7 @@ from ts_backend_check.cli.main import config
 
 invalid_django_models = config["invalid_model"]["backend_model_path"]
 invalid_ts_interfaces = config["invalid_model"]["ts_interface_path"]
+invalid_check_blank_models = config["invalid_model"]["check_blank_model_fields"]
 
 
 @pytest.fixture
@@ -18,6 +19,11 @@ def return_invalid_django_models():
 @pytest.fixture
 def return_invalid_ts_interfaces():
     return str(invalid_ts_interfaces)
+
+
+@pytest.fixture
+def return_invalid_check_blank_models():
+    return invalid_check_blank_models
 
 
 # MARK: Valid

@@ -4,15 +4,18 @@ from ts_backend_check.checker import TypeChecker
 
 
 def test_checker_invalid_missing_fields(
-    return_invalid_django_models, return_invalid_ts_interfaces
+    return_invalid_django_models,
+    return_invalid_ts_interfaces,
+    return_invalid_check_blank_models,
 ):
     checker = TypeChecker(
         models_file=return_invalid_django_models,
         types_file=return_invalid_ts_interfaces,
+        check_blank=return_invalid_check_blank_models,
     )
     missing = checker.check()
 
-    assert len(missing) == 2  # missing and unordered
+    assert len(missing) == 3  # missing, optional and unordered
 
 
 def test_checker_ignored_missing_fields(

@@ -122,7 +122,7 @@ model_identifier: # an identifier you define that you want to pass to the CLI
   ts_interface_path: path/to/the/corresponding/model_interfaces.ts
   check_blank_model_fields: true # whether to assert that fields that can be blank must also be optional
   backend_to_ts_model_name_conversions: # used if the frontend name is not the backend name
-    EventModel: CommunityEvent
+    EventModel: [CommunityEvent]
 ```
 
 <a id="pre-commit-"></a>

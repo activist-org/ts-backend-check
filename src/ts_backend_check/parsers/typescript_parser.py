@@ -11,11 +11,12 @@ from typing import Dict, List, Set
 @dataclass
 class TypeScriptInterface:
     """
-    Represents a TypeScript interface with its fields and parent interfaces.
+    Represents a TypeScript interface with its properties and parent interfaces.
     """
 
     name: str
-    fields: List[str]
+    properties: List[str]
+    optional_properties: List[str]
     parents: List[str]
 
 
@@ -54,9 +55,12 @@ class TypeScriptParser:
             parents = (
                 [p.strip() for p in match.group(2).split(",")] if match.group(2) else []
             )
-            fields = self._extract_fields(match.group(3))
+            properties = self._extract_properties(match.group(3))
+            optional_properties = self._extract_optional_properties(match.group(3))
 
-            interfaces[name] = TypeScriptInterface(name, fields, parents)
+            interfaces[name] = TypeScriptInterface(
+                name, properties, optional_properties, parents
+            )
 
         return interfaces
 
@@ -73,9 +77,9 @@ class TypeScriptParser:
         return set(re.findall(ignore_pattern, self.content))
 
     @staticmethod
-    def _extract_fields(interface_body: str) -> List[str]:
+    def _extract_properties(interface_body: str) -> List[str]:
         """
-        Extract both real fields and 'ignored' comment fields from interface bodies.
+        Extract both real properties and 'ignored' comment backend fields from interface bodies.
 
         Parameters
         ----------
@@ -85,18 +89,40 @@ class TypeScriptParser:
         Returns
         -------
         List[str]
-            The field names from the model interface body.
+            The property names from the model interface body.
         """
         combined_pattern = (
-            r"(?:(?:readonly\s+)?(\w+)\s*\??\s*:|"  # standard/readonly fields
-            r"//.*?ts-backend-check:\s*ignore\s+field\s+(\w+))"  # ts-backend-check ignore comment fields
+            r"(?:(?:readonly\s+)?(\w+)\s*\??\s*:|"  # standard/readonly properties
+            r"//.*?ts-backend-check:\s*ignore\s+field\s+(\w+))"  # ts-backend-check ignore comment properties
         )
 
-        fields = []
-
-        # finditer preserves the top-to-bottom order of the file.
+        properties = []
         for match in re.finditer(combined_pattern, interface_body):
             if field_name := match.group(1) or match.group(2):
-                fields.append(field_name)
+                properties.append(field_name)
 
-        return fields
+        return properties
+
+    @staticmethod
+    def _extract_optional_properties(interface_body: str) -> List[str]:
+        """
+        Extract all optional properties from interface bodies.
+
+        Parameters
+        ----------
+        interface_body : str
+            A string representation of the interface body of the model.
+
+        Returns
+        -------
+        List[str]
+            The optional property names from the model interface body.
+        """
+        pattern = r"^\s*(?:readonly\s+)?(\w+)\s*\?:"  # optional properties
+
+        optional_properties = []
+        for match in re.finditer(pattern, interface_body, flags=re.MULTILINE):
+            if field_name := match.group(1):
+                optional_properties.append(field_name)
+
+        return optional_properties
