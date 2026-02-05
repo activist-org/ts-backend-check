@@ -92,12 +92,14 @@ class TypeScriptParser:
             The property names from the model interface body.
         """
         combined_pattern = (
-            r"(?:(?:readonly\s+)?(\w+)\s*\??\s*:|"  # standard/readonly properties
-            r"//.*?ts-backend-check:\s*ignore\s+field\s+(\w+))"  # ts-backend-check ignore comment properties
+            r"^\s*(?:"
+            r"(?:readonly\s+)?(\w+)\s*\??\s*:|"  # standard/readonly properties
+            r"//\s*ts-backend-check:\s*ignore\s+field\s+(\w+)"  # ts-backend-check ignore comment properties
+            r")"
         )
 
         properties = []
-        for match in re.finditer(combined_pattern, interface_body):
+        for match in re.finditer(combined_pattern, interface_body, flags=re.MULTILINE):
             if field_name := match.group(1) or match.group(2):
                 properties.append(field_name)
 

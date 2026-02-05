@@ -8,17 +8,29 @@ def test_parse_interfaces(return_invalid_ts_interfaces):
     interfaces = parser.parse_interfaces()
 
     # Check Event interface.
-    assert "EventModel" in interfaces
-    event = interfaces["EventModel"]
-    assert event.name == "EventModel"
+    assert "Event" in interfaces
+
+    event = interfaces["Event"]
+    assert event.name == "Event"
     assert "title" in event.properties
     assert "organizer" in event.properties
-    assert "isPrivate" in event.properties
+    assert "participants" in event.properties
+
+    assert "Note" not in event.properties  # don't pick up other comments
+    assert "Attn" not in event.properties  # don't pick up other comments
+
+    assert "EventExtended" in interfaces
+
+    event_extended = interfaces["EventExtended"]
+    assert "date" in event_extended.properties
+    assert "isPrivate" in event_extended.properties
+
+    assert "Attn" not in event_extended.properties  # don't pick up other comments
 
     # Check User interface.
-    assert "UserModel" in interfaces
-    user = interfaces["UserModel"]
-    assert user.name == "UserModel"
+    assert "User" in interfaces
+    user = interfaces["User"]
+    assert user.name == "User"
     assert "id" in user.properties
     assert "name" in user.properties
 

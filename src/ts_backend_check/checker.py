@@ -60,28 +60,29 @@ class TypeChecker:
         list
             A list of fields missing from the TypeScript file.
         """
-        missing_fields: list[str] = []
+        error_fields: list[str] = []
 
         for model_name, fields in self.model_fields.items():
-            original_len_missing_fields = len(missing_fields)
+            missing_fields_exist = False
             interfaces, _ = self._find_matching_interfaces(model_name=model_name)
 
             if not interfaces:
-                missing_fields.append(
+                error_fields.append(
                     self._format_missing_interface_message(model_name=model_name)
                 )
                 continue
 
-            missing_fields.extend(
-                self._format_missing_field_message(
-                    field=field, model_name=model_name, interfaces=interfaces
-                )
-                for field in fields
-                if not self._field_is_accounted_for(field=field, interfaces=interfaces)
-            )
+            for field in fields:
+                if not self._field_is_accounted_for(field=field, interfaces=interfaces):
+                    error_fields.append(
+                        self._format_missing_field_message(
+                            field=field, model_name=model_name, interfaces=interfaces
+                        )
+                    )
+                    missing_fields_exist = True
 
             if self.check_blank and model_name in self.models_and_blank_fields:
-                missing_fields.extend(
+                error_fields.extend(
                     self._format_optional_properties_message(
                         field=field,
                         model_name=model_name,
@@ -95,19 +96,16 @@ class TypeChecker:
                     )
                 )
 
-            if (
-                len(missing_fields) == original_len_missing_fields
-                and not self._ts_interface_properties_ordered(
-                    model_name=model_name, fields=fields
-                )
+            if not missing_fields_exist and not self._ts_interface_properties_ordered(
+                model_name=model_name, fields=fields
             ):
-                missing_fields.append(
+                error_fields.append(
                     self._format_unordered_interface_properties_message(
                         models_file=self.models_file, types_file=self.types_file
                     )
                 )
 
-        return missing_fields
+        return error_fields
 
     def _find_matching_interfaces(
         self, model_name: str
@@ -219,7 +217,6 @@ class TypeChecker:
             Whether the order of the properties of the TypeScript interface file match that of the backend model fields.
         """
         camel_fields = [snake_to_camel(input_str=f) for f in fields]
-
         interfaces, _ = self._find_matching_interfaces(model_name)
 
         return all(
@@ -245,7 +242,7 @@ class TypeChecker:
             The message displayed to the user when missing interfaces are found.
         """
         return (
-            f"\nNo matching TypeScript interface found for model: {model_name}"
+            f"\nNo matching TypeScript interface found for the model '{model_name}'."
             "\nPlease name your TypeScript interfaces the same as the corresponding backend models."
             "\nYou can also use the 'backend_to_ts_model_name_conversions' option within the configuration file."
             "\nThe key is the backend model name and the value is a list of the corresponding interfaces."
@@ -283,7 +280,7 @@ class TypeChecker:
         return (
             f"\nField '{field}' (camelCase: '{camel_field}') from model '{model_name}' is missing in the TypeScript interfaces."
             f"\nExpected to find this field in the frontend {interface_of_interfaces}: {', '.join(interfaces.keys())}"
-            f"\nTo ignore this field, add the following comment to the TypeScript file in order based on the model fields: '// ts-backend-check: ignore field {camel_field}'"
+            f"\nTo ignore this field, add the following comment to the TypeScript file (in order based on the model fields): '// ts-backend-check: ignore field {camel_field}'"
         )
 
     @staticmethod

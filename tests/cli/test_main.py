@@ -239,7 +239,7 @@ class TestCliMain(unittest.TestCase):
             ts_interface_file_path=Path(config["valid_model"]["ts_interface_path"]),
             check_blank=True,
             model_name_conversions={
-                "EventModel": ["Event", "PrivateEvent"],
+                "EventModel": ["Event", "EventExtended"],
                 "UserModel": ["User"],
             },
         )
