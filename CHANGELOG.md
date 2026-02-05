@@ -38,6 +38,8 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## ts-backend-check 1.2.2
 
+### ✨ Features
+
 - Updated the spacing of the CLI outputs to improve readability.
 
 ## ts-backend-check 1.2.1
