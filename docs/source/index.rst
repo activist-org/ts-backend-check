@@ -35,7 +35,7 @@
 .. |matrix| image:: https://img.shields.io/badge/Matrix-000000.svg?logo=matrix&logoColor=ffffff
     :target: https://matrix.to/#/#activist_community:matrix.org
 
-**Check TypeScript types against backend models**
+**Check TypeScript interfaces against backend models**
 
 Installation
 ============

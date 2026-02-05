@@ -13,7 +13,7 @@
 [![coc](https://img.shields.io/badge/Contributor%20Covenant-ff69b4.svg)](https://github.com/activist-org/ts-backend-check/blob/main/.github/CODE_OF_CONDUCT.md)
 [![matrix](https://img.shields.io/badge/Matrix-000000.svg?logo=matrix&logoColor=ffffff)](https://matrix.to/#/#activist_community:matrix.org)
 
-### Check TypeScript types against backend models
+### Check TypeScript interfaces against backend models
 
 `ts-backend-check` is a Python package used to check TypeScript types against their corresponding backend models to assure that all fields have been accounted for.
 

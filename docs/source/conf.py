@@ -166,7 +166,7 @@ texinfo_documents = [
         "ts-backend-check Documentation",
         author,
         "ts-backend-check",
-        "Check TypeScript types against backend models",
+        "Check TypeScript interfaces against backend models",
         "Miscellaneous",
     )
 ]
