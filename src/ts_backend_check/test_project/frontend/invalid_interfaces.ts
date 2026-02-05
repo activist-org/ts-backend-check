@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+// Note: EventModel is missing a field from models.py.
 export interface EventModel {
   title: string;
-  // description: string; // missing without being ignored
-  organizer: User;
-  isPrivate: boolean; // unordered based on the backend
-  participants: User[]; // not optional
+  organizer: UserModel;
+  participants: UserModel[]; // not optional
+  isPrivate: boolean;
   // ts-backend-check: ignore field date
 }
 
-export interface User {
+export interface UserModel {
+  name: string; // unordered based on the backend
   id: string;
-  name: string;
 }

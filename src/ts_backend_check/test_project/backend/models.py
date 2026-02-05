@@ -20,3 +20,12 @@ class EventModel(models.Model):
     is_private = models.BooleanField(default=True)
     date = models.DateTimeField()
     _private_field = models.CharField(max_length=100)  # should be ignored
+
+
+class UserModel(models.Model):
+    """
+    Model for users that has both valid and invalid corresponding TS interface files.
+    """
+
+    id = models.CharField(max_length=32)
+    name = models.CharField(max_length=50)

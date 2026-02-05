@@ -16,9 +16,9 @@ def test_parse_interfaces(return_invalid_ts_interfaces):
     assert "isPrivate" in event.fields
 
     # Check User interface.
-    assert "User" in interfaces
-    user = interfaces["User"]
-    assert user.name == "User"
+    assert "UserModel" in interfaces
+    user = interfaces["UserModel"]
+    assert user.name == "UserModel"
     assert "id" in user.fields
     assert "name" in user.fields
 

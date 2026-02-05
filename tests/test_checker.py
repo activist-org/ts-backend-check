@@ -12,7 +12,7 @@ def test_checker_invalid_missing_fields(
     )
     missing = checker.check()
 
-    assert len(missing) == 1
+    assert len(missing) == 2  # missing and unordered
 
 
 def test_checker_ignored_missing_fields(

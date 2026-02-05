@@ -7,7 +7,7 @@ from typing import Dict, List
 
 from ts_backend_check.parsers.django_parser import extract_model_fields
 from ts_backend_check.parsers.typescript_parser import TypeScriptParser
-from ts_backend_check.utils import snake_to_camel
+from ts_backend_check.utils import is_ordered_subset, snake_to_camel
 
 
 class TypeChecker:
@@ -80,7 +80,7 @@ class TypeChecker:
             ):
                 missing_fields.append(
                     self._format_unordered_interface_properties_message(
-                        types_file=self.types_file
+                        models_file=self.models_file, types_file=self.types_file
                     )
                 )
 
@@ -161,14 +161,12 @@ class TypeChecker:
 
         interfaces = self._find_matching_interfaces(model_name)
 
-        # Use for loops and if conditionals to only add missing properties.
-        interfaces_properties = []
-        for i in interfaces:
-            for p in interfaces[i]:
-                if p not in interfaces_properties:
-                    interfaces_properties.append(p)
-
-        return camel_fields == interfaces_properties
+        return all(
+            is_ordered_subset(
+                reference_list=camel_fields, candidate_sub_list=interfaces[i]
+            )
+            for i in interfaces
+        )
 
     @staticmethod
     def _format_missing_interface_message(model_name: str) -> str:
@@ -228,12 +226,17 @@ class TypeChecker:
         )
 
     @staticmethod
-    def _format_unordered_interface_properties_message(types_file: str) -> str:
+    def _format_unordered_interface_properties_message(
+        models_file: str, types_file: str
+    ) -> str:
         """
         Format message for unordered interface properties.
 
         Parameters
         ----------
+        models_file : str
+            The file path for the models file to check.
+
         types_file : str
             The file path for the TypeScript interfaces file to check.
 
@@ -244,6 +247,6 @@ class TypeChecker:
         """
         return (
             f"\nThe properties of the interface file {types_file} are unordered."
-            "\nAll interface properties should exactly match the order of the corresponding fields in the backend model."
-            "\nIf the model is synced with multiple interfaces, then their properties should follow the order of the model fields."
+            f"\nAll interface properties should exactly match the order of the corresponding fields in the {models_file} backend model."
+            "\nIf the model is synced with multiple interfaces, then their properties should follow the order prescribed by the model fields."
         )

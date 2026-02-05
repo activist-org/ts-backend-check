@@ -238,7 +238,10 @@ class TestCliMain(unittest.TestCase):
             backend_model_file_path=Path(config["valid_model"]["backend_model_path"]),
             ts_interface_file_path=Path(config["valid_model"]["ts_interface_path"]),
             check_blank=True,
-            model_name_conversions={"EventModel": ["Event"]},
+            model_name_conversions={
+                "EventModel": ["Event", "PrivateEvent"],
+                "UserModel": ["User"],
+            },
         )
 
     def test_typechecker_no_missing_fields_prints_success(self):

@@ -4,8 +4,11 @@ export interface Event {
   description: string;
   organizer: User;
   participants?: User[];
-  isPrivate: boolean;
   // ts-backend-check: ignore field date
+}
+
+export interface PrivateEvent extends Event {
+  isPrivate: boolean;
 }
 
 export interface User {
