@@ -1,7 +1,27 @@
 # Configuration file for ts-backend-check validation.
 # See https://github.com/activist-org/ts-backend-check for details.
 
-# Paths:
-auth:
-  backend_model_path: backend/auth/models.py
-  frontend_interface_path: frontend/auth/auth.d.ts
+# Note: You can also switch slashes for backslashes to test how Windows paths will be handled.
+invalid_model:
+  backend_model_path: src/ts_backend_check/test_project/backend/models.py
+  ts_interface_path: src/ts_backend_check/test_project/frontend/invalid_interfaces.ts
+  check_blank_model_fields: true
+  backend_to_ts_model_name_conversions:
+    EventModel: [Event, EventExtended]
+    # UserModel: [User]
+
+invalid_backend_model_path:
+  backend_model_path: invalid_path_to_models.py
+  ts_interface_path: src/ts_backend_check/test_project/frontend/valid_interfaces.ts
+
+invalid_typescript_interface_path:
+  backend_model_path: src/ts_backend_check/test_project/backend/models.py
+  ts_interface_path: invalid_path_to_interfaces.ts
+
+valid_model:
+  backend_model_path: src/ts_backend_check/test_project/backend/models.py
+  ts_interface_path: src/ts_backend_check/test_project/frontend/valid_interfaces.ts
+  check_blank_model_fields: true
+  backend_to_ts_model_name_conversions:
+    EventModel: [Event, EventExtended]
+    UserModel: [User]

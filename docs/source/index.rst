@@ -40,10 +40,14 @@
 Installation
 ============
 
-``ts-backend-check`` is available for installation via `pip <https://pypi.org/project/ts-backend-check/>`_:
+``ts-backend-check`` is available for installation via `uv <https://docs.astral.sh/uv/>`_ or `pip <https://pypi.org/project/ts-backend-check/>`_:
 
 .. code-block:: shell
 
+    # Using uv (recommended - fast, Rust-based installer):
+    uv pip install ts-backend-check
+
+    # Or using pip:
     pip install ts-backend-check
 
 The latest development version can further be installed the `source code on GitHub <https://github.com/activist-org/ts-backend-check>`_:
@@ -52,47 +56,47 @@ The latest development version can further be installed the `source code on GitH
 
     git clone https://github.com/activist-org/ts-backend-check.git
     cd ts-backend-check
+
+    # With uv (recommended):
+    uv sync --all-extras  # install all dependencies
+    source .venv/bin/activate  # activate venv (macOS/Linux)
+    # .venv\Scripts\activate  # activate venv (Windows)
+
+    # Or with pip:
+    python -m venv .venv  # create virtual environment
+    source .venv/bin/activate  # activate venv (macOS/Linux)
+    # .venv\Scripts\activate  # activate venv (Windows)
     pip install -e .
-
-To utilize the ts-backend-check CLI, you can execute variations of the following command in your terminal:
-
-.. code-block:: shell
-
-    ts-backend-check -h  # view the cli options
-    ts-backend-check [command]
 
 Command Options
 ===============
-
-- ``backend-model-file`` (``bmf```): Path to the backend model file (e.g. Python class)
-- ``typescript-file`` (``tsf```): Path to the TypeScript interface/type file
-
-Commands
-========
 
 The CLI provides a simple interface to check TypeScript types against backend models:
 
 .. code-block:: shell
 
     # Show help and available commands:
-    ts-backend-check --help
+    ts-backend-check -h
+    ts-backend-check -gcf  # generate a configuration file
+    ts-backend-check -gtp  # generate a test project for experimenting with the CLI
 
     # Check a TypeScript type against a backend model:
-    ts-backend-check -bmf <backend-model-file> -tsf <typescript-file>
+    ts-backend-check -m <model-identifier-from-config-file>
+    ts-backend-check -a  # run all models
 
-    # Example command:
-    ts-backend-check -bmf src/models/user.py -tsf src/types/user.ts
+Outputs
+=======
 
 Example success and error outputs for the CLI are:
 
 .. code-block::
 
-    ts-backend-check -bmf backend/models/user.py -tsf frontend/types/user.ts
+    ts-backend-check -m user
     ✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided files.
 
 .. code-block::
 
-    ts-backend-check -bmf backend/models/user.py -tsf frontend/types/user.ts
+    ts-backend-check -m user
 
     ❌ ts-backend-check error: There are inconsistencies between the provided backend models and TypeScript interfaces. Please see the output below for details.
 
@@ -100,7 +104,7 @@ Example success and error outputs for the CLI are:
     Expected to find this field in the frontend interface: User
     To ignore this field, add the following comment to the TypeScript interface: '// ts-backend-check: ignore field userName'
 
-    Please fix the 1 field above to have the backend models of backend/models/user.py synced with the typescript interfaces of frontend/types/user.ts.
+    Please fix the 1 error above to have the backend models of backend/models/user.py synced with the TypeScript interfaces of frontend/types/user.ts.
 
 Contents
 ========

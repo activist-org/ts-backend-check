@@ -3,67 +3,124 @@
 from ts_backend_check.checker import TypeChecker
 
 
-def test_checker_finds_missing_fields(temp_django_model, temp_typescript_file):
-    checker = TypeChecker(temp_django_model, temp_typescript_file)
-    missing = checker.check()
+def test_checker_invalid_checks_fail(
+    return_invalid_django_models,
+    return_invalid_ts_interfaces,
+    return_invalid_check_blank_models,
+    return_invalid_backend_to_ts_conversions,
+):
+    """
+    Test that those checks that should fail in the invalid files do.
+    """
+    checker = TypeChecker(
+        models_file=return_invalid_django_models,
+        types_file=return_invalid_ts_interfaces,
+        check_blank=return_invalid_check_blank_models,
+        model_name_conversions=return_invalid_backend_to_ts_conversions,
+    )
+    errors = checker.check()
 
-    # We know 'date' and 'participants' are marked as backend-only.
-    # So they shouldn't be reported as missing.
-    assert len(missing) == 0
+    assert len(errors) == 3  # missing, optional and no matching interface
 
 
-def test_checker_with_actual_missing_fields(tmp_path):
-    # Create a model with an extra field.
+def test_checker_ignored_missing_fields(
+    return_valid_django_models,
+    return_valid_ts_interfaces,
+    return_valid_check_blank_models,
+    return_valid_backend_to_ts_conversions,
+):
+    """
+    Test that the ignore fields comment functions properly.
+    """
+    checker = TypeChecker(
+        models_file=return_valid_django_models,
+        types_file=return_valid_ts_interfaces,
+        check_blank=return_valid_check_blank_models,
+        model_name_conversions=return_valid_backend_to_ts_conversions,
+    )
+    errors = checker.check()
+
+    # The field 'date' is marked as ignored by ts-backend-check.
+    assert len(errors) == 0
+
+
+def test_checker_with_actual_missing_fields(
+    return_invalid_django_models,
+    return_invalid_ts_interfaces,
+    return_invalid_check_blank_models,
+    return_invalid_backend_to_ts_conversions,
+):
+    """
+    Check that missing fields are reported in invalid files.
+    """
+    checker = TypeChecker(
+        models_file=return_invalid_django_models,
+        types_file=return_invalid_ts_interfaces,
+        check_blank=return_invalid_check_blank_models,
+        model_name_conversions=return_invalid_backend_to_ts_conversions,
+    )
+    errors = checker.check()
+
+    assert len(errors) == 3
+    assert "description" in errors[0]
+
+
+def test_checker_with_no_matching_interface(
+    return_invalid_django_models,
+    return_invalid_ts_interfaces,
+    return_invalid_check_blank_models,
+    return_invalid_backend_to_ts_conversions,
+):
+    """
+    Check that missing interfaces will be reported.
+    """
+    checker = TypeChecker(
+        models_file=return_invalid_django_models,
+        types_file=return_invalid_ts_interfaces,
+        check_blank=return_invalid_check_blank_models,
+        model_name_conversions=return_invalid_backend_to_ts_conversions,
+    )
+    errors = checker.check()
+
+    assert len(errors) == 3
+    assert (
+        "No matching TypeScript interface found for the model 'UserModel'." in errors[2]
+    )
+
+
+def test_checker_with_unordered_interface(tmp_path):
+    """
+    Test that the checker will report an unordered interface (isn't reported in the test project check).
+    """
     model_content = """from django.db import models
 
-class TestModel(models.Model):
+class ModelWithOrder(models.Model):
     name = models.CharField(max_length=100)
-    extra_field = models.IntegerField()
+    description = models.CharField(max_length=100)
 """
-
-    model_file = tmp_path / "test_model.py"
+    model_file = tmp_path / "ordered_model.py"
     model_file.write_text(model_content)
 
-    # Create a type with missing field.
-    type_content = """export interface Test {
+    # Create a type file with no the properties unordered.
+    type_content = """export interface ModelWithOrder {
+    description: string;
     name: string;
 }
 """
-
-    type_file = tmp_path / "test_type.ts"
+    type_file = tmp_path / "unordered_interface_type.ts"
     type_file.write_text(type_content)
 
-    checker = TypeChecker(str(model_file), str(type_file))
-    missing = checker.check()
+    checker = TypeChecker(models_file=str(model_file), types_file=str(type_file))
+    errors = checker.check()
 
-    assert len(missing) == 1
-    assert "extra_field" in missing[0]
-
-
-def test_checker_with_no_matching_interface(tmp_path):
-    # Create a model.
-    model_content = """from django.db import models
-
-class UnmatchedModel(models.Model):
-    name = models.CharField(max_length=100)
-"""
-
-    model_file = tmp_path / "unmatched_model.py"
-    model_file.write_text(model_content)
-
-    # Create a type file with no matching interface.
-    type_content = """export interface DifferentInterface {
-    something: string;
-}
-"""
-
-    type_file = tmp_path / "unmatched_type.ts"
-    type_file.write_text(type_content)
-
-    checker = TypeChecker(str(model_file), str(type_file))
-    missing = checker.check()
-
-    assert len(missing) == 1
+    assert len(errors) == 1
+    assert "The properties of the interface file" in errors[0]
+    assert "are unordered" in errors[0]
     assert (
-        "No matching TypeScript interface found for model: UnmatchedModel" in missing[0]
+        "All interface properties should exactly match the order of the corresponding fields"
+        in errors[0]
+    )
+    assert (
+        "If the model is synced with multiple interfaces, then their properties should follow the order prescribed by the model fields."
+        in errors[0]
     )

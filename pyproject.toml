@@ -1,3 +1,68 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ts-backend-check"
+version = "1.3.0"
+description = "Check TypeScript types against backend models"
+readme = "README.md"
+requires-python = ">=3.12"
+keywords = ["backend", "typescript", "validation", "ci", "cli"]
+authors = [
+    { name = "ts-backend-check developers", email = "engineering@activist.org" },
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "packaging>=26.0",
+    "pyyaml>=6.0.3",
+    "requests>=2.32.5",
+    "rich>=14.3.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.19.1",
+    "pre-commit>=4.5.1",
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.14",
+    "setuptools>=80.10.1",
+    "types-PyYAML>=6.0.12.20250915",
+    "types-requests>=2.32.4.20260107",
+]
+docs = [
+    # Keep docs dependencies formatted in this way with ruff to allow for upgrades via VS Code extension.
+    "m2r2>=0.3.0",
+    "numpydoc>=1.10.0",
+    "sphinx-rtd-theme>=3.1.0",
+]
+
+[project.scripts]
+ts-backend-check = "ts_backend_check.cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/activist-org/ts-backend-check"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 exclude = [
@@ -22,7 +87,6 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-
 select = [
     "E", # pycodestyle errors
     "F", # pyflakes
@@ -43,16 +107,13 @@ max-complexity = 10
 [tool.isort]
 line_length = 88
 
-[tool.pytest.ini_options]
-pythonpath = "src"
-
 [tool.coverage.run]
 omit = ["*/tests/*", "*/__init__.py"]
 
 [tool.mypy]
 mypy_path = "src"
 strict = true
-exclude = ["setup.py", "^tests/.*\\.py$"]
+exclude = ["^tests/.*\\.py$", "docs"]
 
 [tool.numpydoc_validation]
 checks = [

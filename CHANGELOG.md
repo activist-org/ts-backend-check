@@ -12,9 +12,18 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## [Upcoming] ts-backend-check 1.x
 
+## ts-backend-check 1.3.0
+
+### ✨ Features
+
+- The package was converted over to require a configuration file for its functionality ([#27](https://github.com/activist-org/ts-backend-check/issues/27)).
+- Fields that are able to be blank within backend models can be asserted as being optional within TypeScript interfaces ([#23](https://github.com/activist-org/ts-backend-check/issues/23)).
+- Backend model field names can be converted in TypeScript interface checks if they're not the same.
+
 ### ⬆️ Dependencies
 
 - Dependencies were updated given dependabot warnings.
+- Dependency management was switched over to using [uv](https://docs.astral.sh/uv/).
 
 ## ts-backend-check 1.2.2
 
