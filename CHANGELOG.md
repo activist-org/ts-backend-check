@@ -17,13 +17,24 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 ### ✨ Features
 
 - The package was converted over to require a configuration file for its functionality ([#27](https://github.com/activist-org/ts-backend-check/issues/27)).
+  - The configuration file was expanded to include fields for all functionality of the CLI that was previously covered by arguments.
 - Fields that are able to be blank within backend models can be asserted as being optional within TypeScript interfaces ([#23](https://github.com/activist-org/ts-backend-check/issues/23)).
-- Backend model field names can be converted in TypeScript interface checks if they're not the same.
+- Backend model names can be converted to TypeScript interface names if they're not the same.
+- The user can generate a test project for experimenting with the CLI.
+- Django and TypeScript parsers as well as the main checker were expanded to allow for new functionality.
 
 ### ⬆️ Dependencies
 
-- Dependencies were updated given dependabot warnings.
 - Dependency management was switched over to using [uv](https://docs.astral.sh/uv/).
+- Dependencies were updated given dependabot warnings.
+
+### ✅ Tests
+
+- A test project was added, with tests now being ran against it.
+
+### ♻️ Code Refactoring
+
+- Unneeded files were removed and the general structure of the project was improved.
 
 ## ts-backend-check 1.2.2
 
