@@ -2,6 +2,14 @@
 # See https://github.com/activist-org/ts-backend-check for details.
 
 # Note: You can also switch slashes for backslashes to test how Windows paths will be handled.
+valid_model:
+  backend_model_path: src/ts_backend_check/test_project/backend/models.py
+  ts_interface_path: src/ts_backend_check/test_project/frontend/valid_interfaces.ts
+  check_blank_model_fields: true
+  backend_to_ts_model_name_conversions:
+    EventModel: [Event, EventExtended]
+    UserModel: [User]
+
 invalid_model:
   backend_model_path: src/ts_backend_check/test_project/backend/models.py
   ts_interface_path: src/ts_backend_check/test_project/frontend/invalid_interfaces.ts
@@ -17,11 +25,3 @@ invalid_backend_model_path:
 invalid_typescript_interface_path:
   backend_model_path: src/ts_backend_check/test_project/backend/models.py
   ts_interface_path: invalid_path_to_interfaces.ts
-
-valid_model:
-  backend_model_path: src/ts_backend_check/test_project/backend/models.py
-  ts_interface_path: src/ts_backend_check/test_project/frontend/valid_interfaces.ts
-  check_blank_model_fields: true
-  backend_to_ts_model_name_conversions:
-    EventModel: [Event, EventExtended]
-    UserModel: [User]
