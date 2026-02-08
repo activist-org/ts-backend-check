@@ -10,7 +10,7 @@ export interface Event {
 
 export interface EventExtended extends Event {
   // Attn: date is out of order below, but this won't be reported as we have missing fields.
-  // ts-backend-check: ignore field date
+  // ts-backend-check: ignore date
   isPrivate: boolean;
 }
 

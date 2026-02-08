@@ -102,7 +102,7 @@ Example success and error outputs for the CLI are:
 
     Field 'user_name' (camelCase: 'userName') from model 'UserModel' is missing in the TypeScript interfaces.
     Expected to find this field in the frontend interface: User
-    To ignore this field, add the following comment to the TypeScript interface: '// ts-backend-check: ignore field userName'
+    To ignore this field, add the following comment to the TypeScript interface: '// ts-backend-check: ignore userName'
 
     Please fix the 1 error above to have the backend models of backend/models/user.py synced with the TypeScript interfaces of frontend/types/user.ts.
 

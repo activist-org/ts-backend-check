@@ -280,7 +280,7 @@ class TypeChecker:
         return (
             f"\nField '{field}' (camelCase: '{camel_field}') from model '{model_name}' is missing in the TypeScript interfaces."
             f"\nExpected to find this field in the frontend {interface_of_interfaces}: {', '.join(interfaces.keys())}"
-            f"\nTo ignore this field, add the following comment to the TypeScript file (in order based on the model fields): '// ts-backend-check: ignore field {camel_field}'"
+            f"\nTo ignore this field, add the following comment to the TypeScript file (in order based on the model fields): '// ts-backend-check: ignore {camel_field}'"
         )
 
     @staticmethod
