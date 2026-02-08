@@ -12,6 +12,14 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## [Upcoming] ts-backend-check 1.x
 
+### ✅ Tests
+
+- Local pre-commit hooks are now ran with [prek](https://prek.j178.dev/) instead of `pre-commit`.
+
+### 📝 Documentation
+
+- All documentation for the package was updated to improve clarity ([#26](https://github.com/activist-org/ts-backend-check/issues/26)).
+
 ## ts-backend-check 1.3.0
 
 ### ✨ Features
