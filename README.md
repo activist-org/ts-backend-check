@@ -13,108 +13,165 @@
 [![coc](https://img.shields.io/badge/Contributor%20Covenant-ff69b4.svg)](https://github.com/activist-org/ts-backend-check/blob/main/.github/CODE_OF_CONDUCT.md)
 [![matrix](https://img.shields.io/badge/Matrix-000000.svg?logo=matrix&logoColor=ffffff)](https://matrix.to/#/#activist_community:matrix.org)
 
-### Check TypeScript interfaces against backend models
+# Contents
 
-`ts-backend-check` is a Python package used to check TypeScript types against their corresponding backend models to assure that all fields have been accounted for.
+- [About ts-backend-check](#about-ts-backend-check)
+- [Installation](#installation)
+  - [Users](#users)
+  - [Development Build](#development-build)
+- [How It Works](#how-it-works)
+  - [Commands](#commands)
+  - [Example Outputs](#example-outputs)
+- [Configuration](#configuration)
+  - [YAML File](#yaml-file)
+  - [pre-commit](#pre-commit)
+  - [GitHub Action](#github-action)
+- [Contributing](#contributing)
+  - [Contact the Team](#contact-the-team)
+  - [Contributors](#contributors)
 
-Developed by the [activist community](https://github.com/activist-org), this package is meant to help synchronize the work between frontend and backend development teams. Currently the process supports Django based backends.
+# About ts-backend-check
 
-<a id="contents"></a>
+`ts-backend-check` is a Python package for checking TypeScript types against their corresponding backend models to assure that all fields have been accounted for.
 
-# **Contents**
+Developed by the [activist community](https://github.com/activist-org), this package helps keep frontend and backend development teams in sync.
 
-- [Usage](#usage-)
-  - [Command Options](#command-options-)
-  - [Outputs](#outputs-)
-- [Installation](#installation-)
-- [Configuration](#configuration-)
-- [Contributing](#contributing-)
-- [Environment setup](#environment-setup-)
-- [Contributors](#contributors-)
+The package supports Django-based backends.
 
-<a id="usage-"></a>
+# Installation
 
-## Usage [`⇧`](#contents)
+## Users
 
-<a id="command-options-"></a>
+You can install `ts-backend-check` using [uv](https://docs.astral.sh/uv/) (recommended) or [pip](https://pypi.org/project/ts-backend-check/).
 
-### Command Options [`⇧`](#contents)
+### uv
 
-The CLI provides a simple interface to check TypeScript types against backend models:
-
-```bash
-# Show help and available commands:
-ts-backend-check --help
-ts-backend-check -gcf  # generate a configuration file
-ts-backend-check -gtp  # generate a test project for experimenting with the CLI
-
-# Check a TypeScript type against a backend model:
-ts-backend-check -m <model-identifier-from-config-file>
-ts-backend-check -a  # run all models
-```
-
-<a id="outputs-"></a>
-
-### Outputs [`⇧`](#contents)
-
-Example success and error outputs for the CLI are:
-
-```
-ts-backend-check -m user
-✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided files.
-```
-
-```
-ts-backend-check -m user
-
-❌ ts-backend-check error: There are inconsistencies between the provided backend models and TypeScript interfaces. Please see the output below for details.
-
-Field 'user_name' (camelCase: 'userName') from model 'UserModel' is missing in the TypeScript interfaces.
-Expected to find this field in the frontend interface: User
-To ignore this field, add the following comment to the TypeScript interface: '// ts-backend-check: ignore userName'
-
-Please fix the 1 error above to have the backend models of backend/models/user.py synced with the TypeScript interfaces of frontend/types/user.ts.
-```
-
-<a id="installation-"></a>
-
-## Installation
-
-`ts-backend-check` is available for installation via [uv](https://docs.astral.sh/uv/) (recommended) or [pip](https://pypi.org/project/ts-backend-check/).
-
-### For Users
+(Recommended - fast, Rust-based installer)
 
 ```bash
-# Using uv (recommended - fast, Rust-based installer):
 uv pip install ts-backend-check
+```
 
-# Or using pip:
+### pip
+
+```bash
 pip install ts-backend-check
 ```
 
-### For Development Build
+## Development Build
+
+You can install the latest development build using uv, pip, or by cloning the repository.
+
+### Clone the Repository (Development Build)
 
 ```bash
 git clone https://github.com/activist-org/ts-backend-check.git  # or ideally your fork
 cd ts-backend-check
+```
 
-# With uv (recommended):
+### uv (Development Build)
+
+```bash
 uv sync --all-extras  # install all dependencies
 source .venv/bin/activate  # activate venv (macOS/Linux)
 # .venv\Scripts\activate  # activate venv (Windows)
+```
 
-# Or with pip:
+### pip (Development Build)
+
+```bash
 python -m venv .venv  # create virtual environment
 source .venv/bin/activate  # activate venv (macOS/Linux)
 # .venv\Scripts\activate  # activate venv (Windows)
 pip install -e .
 ```
 
-<a id="configuration-"></a>
+<sub><a href="#top">Back to top.</a></sub>
 
-# Configuration [`⇧`](#contents)
+# How It Works
 
-ts-backend-check is configured via a `.ts-backend.check.yaml` (or `.yml`) configuration file, with an example being the [configuration file for this repository](/.ts-backend-check.yaml) that we use in testing. The following describes the structure of an entry in this file:
+## Commands
+
+These are some example commands:
+
+**Show Help and Available Commands**
+
+```bash
+ts-backend-check --help
+```
+
+**Generate a Configuration File**
+
+```bash
+ts-backend-check -gcf
+```
+
+**Generate a Test Project**
+
+```bash
+ts-backend-check -gtp
+```
+
+**Check a TypeScript Type Against a Backend Model**
+
+```bash
+ts-backend-check -m <model-identifier-from-config-file>
+```
+
+**Run All Models**
+
+```bash
+ts-backend-check -a
+```
+
+## Example Outputs
+
+These are some example outputs for passed and failed checks.
+
+### Passed Check
+
+```
+ts-backend-check -m valid_model
+✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided 'valid_model' files.
+```
+
+### Failed Check
+
+```
+ts-backend-check -m invalid_model
+
+❌ ts-backend-check error: There are inconsistencies between the provided 'invalid_model' backend models and TypeScript interfaces. Please see the output below for
+details.
+
+Field 'description' (camelCase: 'description') from model 'EventModel' is missing in the TypeScript interfaces.
+Expected to find this field in the frontend interfaces: Event, EventExtended
+To ignore this field, add the following comment to the TypeScript file (in order based on the model fields): '// ts-backend-check: ignore description'
+
+Field 'participants' (camelCase: 'participants') from model 'EventModel' doesn't match the TypeScript interfaces based on blank to optional agreement.
+Please check 'src/ts_backend_check/test_project/backend/models.py' and 'src/ts_backend_check/test_project/frontend/invalid_interfaces.ts' to make sure that all
+'blank=True' fields are optional (?) in the TypeScript interfaces file.
+
+No matching TypeScript interface found for the model 'UserModel'.
+Please name your TypeScript interfaces the same as the corresponding backend models.
+You can also use the 'backend_to_ts_model_name_conversions' option within the configuration file.
+The key is the backend model name and the value is a list of the corresponding interfaces.
+This option is also how you can break larger backend models into multiple interfaces that extend one another.
+
+Please fix the 3 errors above to continue the sync of the backend models of src/ts_backend_check/test_project/backend/models.py and the TypeScript interfaces of
+src/ts_backend_check/test_project/frontend/invalid_interfaces.ts.
+```
+
+<sub><a href="#top">Back to top.</a></sub>
+
+# Configuration
+
+## YAML File
+
+You can configure `ts-backend-check` using the `.ts-backend.check.yaml` (or `.yml`) configuration file.
+
+For an example, see the [configuration file for this repository](/.ts-backend-check.yaml) that we use in testing.
+
+This example describes the structure of an entry in this file:
 
 ```yaml
 model_identifier: # an identifier you define that you want to pass to the CLI
@@ -122,14 +179,12 @@ model_identifier: # an identifier you define that you want to pass to the CLI
   ts_interface_path: path/to/the/corresponding/model_interfaces.ts
   check_blank_model_fields: true # whether to assert that fields that can be blank must also be optional
   backend_to_ts_model_name_conversions: # used if the frontend name is not the backend name
-    EventModel: [CommunityEvent]
+    BackendModel: [Interface, InterfaceExtended]
 ```
 
-<a id="pre-commit-"></a>
+## pre-commit
 
-### pre-commit [`⇧`](#contents)
-
-The following is an example of a [prek](https://prek.j178.dev/) or [pre-commit](https://github.com/pre-commit/pre-commit) hook:
+This is an exaple of a [prek](https://prek.j178.dev/) or [pre-commit](https://github.com/pre-commit/pre-commit) hook:
 
 ```yaml
 - repo: local
@@ -144,11 +199,9 @@ The following is an example of a [prek](https://prek.j178.dev/) or [pre-commit](
         - ts-backend-check
 ```
 
-<a id="github-action-"></a>
+## GitHub Action
 
-### GitHub Action [`⇧`](#contents)
-
-The following is an example YAML file for a GitHub Action to check your backend models and TypeScript interface files on PRs and commits:
+This is an example YAML file for a GitHub Action to check your backend models and TypeScript interface files on pull requests and commits:
 
 ```yaml
 name: pr_ci_ts_backend_check
@@ -188,15 +241,17 @@ jobs:
           uv run ts-backend-check -a
 ```
 
-<a id="contributing-"></a>
+<sub><a href="#top">Back to top.</a></sub>
 
-# Contributing [`⇧`](#contents)
+# Contributing
 
-<a href="https://matrix.to/#/#activist_community:matrix.org"><img src="https://raw.githubusercontent.com/activist-org/Organization/main/resources/images/logos/MatrixLogoGrey.png" width="175" alt="Public Matrix Chat" align="right"></a>
+See the [contribution guidelines](CONTRIBUTING.md) before contributing. You can help by:
 
-activist uses [Matrix](https://matrix.org/) for internal communication. You're more than welcome to [join us in our public chat rooms](https://matrix.to/#/#activist_community:matrix.org) to share ideas, ask questions or just say hi to the team :) We'd suggest that you use the [Element](https://element.io/) client and [Element X](https://element.io/app) for a mobile app.
+- 🐞 Reporting bugs.
+- ✨ Working with us on new features.
+- 📝 Improving the documentation.
 
-Please see the [contribution guide](CONTRIBUTING.md) if you are interested in contributing. Work that is in progress or could be implemented is tracked in the [issues](https://github.com/activist-org/ts-backend-check/issues) and [projects](https://github.com/activist-org/ts-backend-check/projects).
+Work that is in progress or could be implemented is tracked in the [issues](https://github.com/activist-org/ts-backend-check/issues) and [projects](https://github.com/activist-org/ts-backend-check/projects).
 
 > [!NOTE]
 > Just because an issue is assigned on GitHub doesn't mean the team isn't open to your contribution! Feel free to write [in the issues](https://github.com/activist-org/ts-backend-check/issues) and we can potentially reassign it to you.
@@ -205,107 +260,20 @@ Also check the [`-next release-`](https://github.com/activist-org/ts-backend-che
 
 We would be happy to discuss granting you further rights as a contributor after your first pull requests, with a maintainer role then being possible after continued interest in the project. activist seeks to be an inclusive, diverse and supportive organization. We'd love to have you on the team! Please see the [mentorship and growth section of the contribution guide](CONTRIBUTING.md#mentorship-and-growth-) for further information.
 
-<a id="how-you-can-help-"></a>
+## Contact the Team
 
-## How you can help [`⇧`](#contents)
+<a href="https://matrix.to/#/#activist_community:matrix.org"><img src="https://raw.githubusercontent.com/activist-org/Organization/main/resources/images/logos/MatrixLogoGrey.png" width="175" alt="Public Matrix Chat" align="right"></a>
 
-- [Reporting bugs](https://github.com/activist-org/ts-backend-check/issues/new?assignees=&labels=bug&template=bug_report.yml) as they're found 🐞
-- Working with us on [new features](https://github.com/activist-org/ts-backend-check/issues?q=is%3Aissue+is%3Aopen+label%3Afeature) ✨
-- [Documentation](https://github.com/activist-org/ts-backend-check/issues?q=is%3Aissue+is%3Aopen+label%3Adocumentation) for onboarding and project cohesion 📝
+activist uses [Matrix](https://matrix.org/) for team communication. [Join us in our public chat rooms](https://matrix.to/#/#activist_community:matrix.org) to share ideas, ask questions or just say hi to the team.
 
-<a id="environment-setup-"></a>
+We recommend using the [Element](https://element.io/) client and [Element X](https://element.io/app) for a mobile app.
 
-# Environment setup [`⇧`](#contents)
-
-1. First and foremost, please see the suggested IDE setup in the dropdown below to make sure that your editor is ready for development.
-
-> [!IMPORTANT]
->
-> <details><summary>Suggested IDE setup</summary>
->
-> <p>
->
-> VS Code
->
-> Install the following extensions:
->
-> - [charliermarsh.ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
-> - [streetsidesoftware.code-spell-checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
->
-> </p>
-> </details>
-
-2. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the [ts-backend-check repo](https://github.com/activist-org/ts-backend-check), clone your fork, and configure the remotes:
-
-> [!NOTE]
->
-> <details><summary>Consider using SSH</summary>
->
-> <p>
->
-> Alternatively to using HTTPS as in the instructions below, consider SSH to interact with GitHub from the terminal. SSH allows you to connect without a user-pass authentication flow.
->
-> To run git commands with SSH, remember then to substitute the HTTPS URL, `https://github.com/...`, with the SSH one, `git@github.com:...`.
->
-> - e.g. Cloning now becomes `git clone git@github.com:<your-username>/ts-backend-check.git`
->
-> GitHub also has their documentation on how to [Generate a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) 🔑
->
-> </p>
-> </details>
-
-```bash
-# Clone your fork of the repo into the current directory.
-git clone https://github.com/<your-username>/ts-backend-check.git
-# Navigate to the newly cloned directory.
-cd ts-backend-check
-# Assign the original repo to a remote called "upstream".
-git remote add upstream https://github.com/activist-org/ts-backend-check.git
-```
-
-- Now, if you run `git remote -v` you should see two remote repositories named:
-  - `origin` (forked repository)
-  - `upstream` (ts-backend-check repository)
-
-3. Install `uv` if you don't already have it by following the [official installation guide](https://docs.astral.sh/uv/getting-started/installation/).
-
-4. Create a virtual environment for ts-backend-check (Python `>=3.12`), activate it and install dependencies:
-
-   ```bash
-   uv sync --all-extras  # create .venv and install all dependencies from uv.lock
-
-   # Unix or macOS:
-   source .venv/bin/activate
-
-   # Windows:
-   .venv\Scripts\activate.bat  # .venv\Scripts\activate.ps1 (PowerShell)
-   ```
-
-> [!NOTE]
-> If you change dependencies in `pyproject.toml`, regenerate the lock file with the following command:
->
-> ```bash
-> uv lock  # refresh uv.lock for reproducible installs
-> ```
-
-5. After activating the virtual environment, set up [prek](https://prek.j178.dev/) by running:
-
-```bash
-prek install
-# uv run prek run --all-files  # lint and fix common problems in the codebase
-```
-
-You're now ready to work on `ts-backend-check`!
-
-> [!NOTE]
-> Feel free to contact the team in the [Development room on Matrix](https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz) if you're having problems getting your environment setup!
-
-<a id="contributors"></a>
-
-# Contributors [`⇧`](#contents)
+## Contributors
 
 Thanks to all our amazing [contributors](https://github.com/activist-org/ts-backend-check/graphs/contributors)! ❤️
 
 <a href="https://github.com/activist-org/ts-backend-check/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=activist-org/ts-backend-check" />
 </a>
+
+<sub><a href="#top">Back to top.</a></sub>
