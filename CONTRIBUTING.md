@@ -114,7 +114,7 @@ This is a select list of documentation to help you understand the technologies w
 
 2. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the [ts-backend-check repo](https://github.com/activist-org/ts-backend-check), clone your fork, and configure the remotes:
 
-> [!NOTE]
+> [!TIP]
 >
 > <details><summary>Consider using SSH</summary>
 >
@@ -165,17 +165,17 @@ git remote add upstream https://github.com/activist-org/ts-backend-check.git
 > uv lock  # refresh uv.lock for reproducible installs
 > ```
 
-After activating the virtual environment, set up [pre-commit](https://pre-commit.com/) by running:
+After activating the virtual environment, set up [prek](https://prek.j178.dev/) for pre-commit hooks by running:
 
 ```bash
-pre-commit install
-# uv run pre-commit run --all-files  # lint and fix common problems in the codebase
+prek install
+# uv run prek run --all-files  # lint and fix common problems in the codebase
 ```
 
 You're now ready to work on `ts-backend-check`!
 
-> [!NOTE]
-> Feel free to contact the team in the [Development room on Matrix](https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz) if you're having problems getting your environment setup!
+> [!TIP]
+> Contact the team in the [Development room on Matrix](https://matrix.to/#/!CRgLpGeOBNwxYCtqmK:matrix.org?via=matrix.org&via=acter.global&via=chat.0x7cd.xyz) if you need help setting up your environment.
 
 ## Linting and Testing
 
