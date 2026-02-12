@@ -12,6 +12,8 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## [Upcoming] ts-backend-check 1.x
 
+## ts-backend-check 1.3.2
+
 ### 📝 Documentation
 
 - All documentation for the package was updated to improve clarity ([#26](https://github.com/activist-org/ts-backend-check/issues/26)).

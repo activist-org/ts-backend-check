@@ -14,8 +14,23 @@ Emojis for the following are chosen based on `gitmoji <https://gitmoji.dev/>`_.
 
 -------------------------------
 
-[Upcoming] ts-backend-check 1.x
-===============================
+ts-backend-check 1.3.2
+======================
+
+- All documentation for the package was updated to improve clarity (`#26 <https://github.com/activist-org/ts-backend-check/issues/26>`_).
+
+ts-backend-check 1.3.1
+======================
+
+♻️ Code Refactoring
+-------------------
+
+- The skip comment for the CLI is now ``// ts-backend-check: ignore {fieldName}`` to shorten it.
+
+✅ Tests
+--------
+
+- Local pre-commit hooks are now ran with `prek <https://prek.j178.dev/>`_ instead of ``pre-commit``.
 
 ts-backend-check 1.3.0
 ======================
