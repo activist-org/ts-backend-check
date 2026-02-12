@@ -251,14 +251,7 @@ See the [contribution guidelines](CONTRIBUTING.md) before contributing. You can 
 - ✨ Working with us on new features.
 - 📝 Improving the documentation.
 
-Work that is in progress or could be implemented is tracked in the [issues](https://github.com/activist-org/ts-backend-check/issues) and [projects](https://github.com/activist-org/ts-backend-check/projects).
-
-> [!NOTE]
-> Just because an issue is assigned on GitHub doesn't mean the team isn't open to your contribution! Feel free to write [in the issues](https://github.com/activist-org/ts-backend-check/issues) and we can potentially reassign it to you.
-
-Also check the [`-next release-`](https://github.com/activist-org/ts-backend-check/labels/-next%20release-) and [`-priority-`](https://github.com/activist-org/ts-backend-check/labels/-priority-) labels in the [issues](https://github.com/activist-org/ts-backend-check/issues) for those that are most important, as well as those marked [`good first issue`](https://github.com/activist-org/ts-backend-check/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) that are tailored for first-time contributors. For those new to coding or our tech stack, we've collected [links to helpful documentation pages](CONTRIBUTING.md#learning-the-tech-stack-) in the [contribution guide](CONTRIBUTING.md).
-
-We would be happy to discuss granting you further rights as a contributor after your first pull requests, with a maintainer role then being possible after continued interest in the project. activist seeks to be an inclusive, diverse and supportive organization. We'd love to have you on the team! Please see the [mentorship and growth section of the contribution guide](CONTRIBUTING.md#mentorship-and-growth-) for further information.
+We track work that is in progress or may be implemented in the the [issues](https://github.com/activist-org/ts-backend-check/issues) and [projects](https://github.com/activist-org/ts-backend-check/projects).
 
 ## Contact the Team
 
