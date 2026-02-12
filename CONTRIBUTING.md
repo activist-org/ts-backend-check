@@ -92,7 +92,7 @@ This is a select list of documentation to help you understand the technologies w
 
 <sub><a href="#top">Back to top.</a></sub>
 
-## Development Environment
+# Development Environment
 
 1. First and foremost, please see the suggested IDE setup in the dropdown below to make sure that your editor is ready for development.
 
