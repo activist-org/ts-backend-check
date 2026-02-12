@@ -155,7 +155,7 @@ git remote add upstream https://github.com/activist-org/ts-backend-check.git
    source .venv/bin/activate
 
    # Windows:
-   .venv\Scripts\activate.bat # .venv\Scripts\activate.ps1 (PowerShell)
+   .venv\Scripts\activate.bat  # .venv\Scripts\activate.ps1 (PowerShell)
    ```
 
 > [!NOTE]
