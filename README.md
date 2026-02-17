@@ -32,6 +32,9 @@
 
 # About ts-backend-check
 
+> [!IMPORTANT]
+> Before you contribute, read the [contributing guide](CONTRIBUTING.md).
+
 `ts-backend-check` is a Python package for checking TypeScript types against their corresponding backend models to assure that all fields have been accounted for.
 
 Developed by the [activist community](https://github.com/activist-org), this package helps keep frontend and backend development teams in sync.
