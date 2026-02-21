@@ -1,3 +1,5 @@
+<a id="top"></a>
+
 # Contributing to ts-backend-check
 
 > [!IMPORTANT]
