@@ -44,7 +44,7 @@ class TypeScriptParser:
         Dict[str, TypeScriptInterface]
             The interface parsed into a dictionary for future processing.
         """
-        interfaces = {}
+        interfaces: Dict[str, TypeScriptInterface] = {}
         interface_pattern = (
             r"(?:export\s+|declare\s+)?interface\s+(\w+)"
             r"(?:\s+extends\s+([^{]+))?\s*{([\s\S]*?)}"
@@ -98,7 +98,7 @@ class TypeScriptParser:
             r")"
         )
 
-        properties = []
+        properties: list[str] = []
         for match in re.finditer(combined_pattern, interface_body, flags=re.MULTILINE):
             if field_name := match.group(1) or match.group(2):
                 properties.append(field_name)
@@ -122,7 +122,7 @@ class TypeScriptParser:
         """
         pattern = r"^\s*(?:readonly\s+)?(\w+)\s*\?:"  # optional properties
 
-        optional_properties = []
+        optional_properties: list[str] = []
         for match in re.finditer(pattern, interface_body, flags=re.MULTILINE):
             if field_name := match.group(1):
                 optional_properties.append(field_name)

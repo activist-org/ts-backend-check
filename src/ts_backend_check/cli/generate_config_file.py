@@ -4,7 +4,7 @@ Configure cli to run based on a YAML configuration file.
 """
 
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict
 
 from rich import print as rprint
 from yaml import dump
@@ -60,7 +60,7 @@ def configure_model_interface_arguments() -> None:
     """
     Function to receive paths from user.
     """
-    config_options = {}
+    config_options: Dict[str, Any] = {}
     while True:
         print(
             "\nAdding new model-interface configuration. Please provide the information as directed:"
