@@ -12,6 +12,12 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## [Upcoming] ts-backend-check 1.x
 
+## ts-backend-check 1.4.1
+
+### 🐞 Bug Fixes
+
+- The file paths were not being picked up when generating a configuration file ([#33](https://github.com/activist-org/ts-backend-check/issues/33)).
+
 ## ts-backend-check 1.4.0
 
 ### ✨ Features

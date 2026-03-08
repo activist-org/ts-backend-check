@@ -30,7 +30,7 @@ def path_exists(path: str) -> bool:
     bool
         Return true or false based on if path exists.
     """
-    full_path = Path(__file__).parent.parent.parent.parent / path
+    full_path = Path.cwd() / path
     return bool(Path(full_path).is_file())
 
 
