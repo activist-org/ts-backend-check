@@ -150,13 +150,12 @@ def configure_model_interface_arguments() -> None:
                         rprint("[red]Invalid response. Please try again.[/red]")
 
                 while True:
-                    if (
-                        ts_interface_name := input(
+                    if ts_interface_name := [
+                        name.strip()
+                        for name in input(
                             "Enter the TypeScript interface name (if multiple separate it with a comma): "
-                        )
-                        .strip()
-                        .split(",")
-                    ):
+                        ).split(",")
+                    ]:
                         break
 
                     else:
@@ -231,7 +230,3 @@ def generate_config_file() -> None:
     except Exception as e:
         print(f"\nError during configuration: {e}")
         print("Configuration cancelled.")
-
-
-if __name__ == "__main__":
-    generate_config_file()

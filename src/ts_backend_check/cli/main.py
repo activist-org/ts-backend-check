@@ -208,8 +208,9 @@ def main() -> None:
 
     # MARK: CLI Vars
 
-    if not Path(YAML_CONFIG_FILE_PATH).is_file():
+    if not Path(YAML_CONFIG_FILE_PATH).is_file() and args.generate_config_file:
         generate_config_file()
+        return
 
     if not Path(YAML_CONFIG_FILE_PATH).is_file():
         print(
