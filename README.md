@@ -35,7 +35,7 @@
 > [!IMPORTANT]
 > Before you contribute, read the [contributing guide](CONTRIBUTING.md).
 
-`ts-backend-check` is a Python package for checking TypeScript types against their corresponding backend models to assure that all fields have been accounted for.
+`ts-backend-check` (`tsbc`) is a Python package for checking TypeScript types against their corresponding backend models to assure that all fields have been accounted for.
 
 Developed by the [activist community](https://github.com/activist-org), this package helps keep frontend and backend development teams in sync.
 
@@ -100,31 +100,37 @@ These are some example commands:
 **Show Help and Available Commands**
 
 ```bash
-ts-backend-check --help
+# You can use either ts-backend-check or tsbc to access the CLI.
+# ts-backend-check --help
+tsbc --help
 ```
 
 **Generate a Configuration File**
 
 ```bash
-ts-backend-check -gcf
+# ts-backend-check -gcf
+tsbc -gcf
 ```
 
 **Generate a Test Project**
 
 ```bash
-ts-backend-check -gtp
+# ts-backend-check -gtp
+tsbc -gtp
 ```
 
 **Check a TypeScript Type Against a Backend Model**
 
 ```bash
-ts-backend-check -m <model-identifier-from-config-file>
+# ts-backend-check -m <model-identifier-from-config-file>
+tsbc -m <model-identifier-from-config-file>
 ```
 
 **Run All Models**
 
 ```bash
-ts-backend-check -a
+# ts-backend-check -a
+tsbc -a
 ```
 
 ## Example Outputs

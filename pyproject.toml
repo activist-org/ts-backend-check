@@ -50,6 +50,7 @@ docs = [
 
 [project.scripts]
 ts-backend-check = "ts_backend_check.cli.main:main"
+tsbc = "ts_backend_check.cli.main:main"
 
 [project.urls]
 Homepage = "https://github.com/activist-org/ts-backend-check"

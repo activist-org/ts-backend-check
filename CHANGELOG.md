@@ -10,7 +10,11 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
-## [Upcoming] ts-backend-check 1.x
+## ts-backend-check 1.4.0
+
+### ✨ Features
+
+- The user is now able to access the CLI via `tsbc` for quicker commands.
 
 ## ts-backend-check 1.3.2
 
