@@ -1,8 +1,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import pytest
+import yaml
 
-from ts_backend_check.cli.main import config
+from ts_backend_check.cli.main import get_config_file_path
+
+YAML_CONFIG_FILE_PATH = get_config_file_path()
+with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
+    config = yaml.safe_load(file)
 
 # MARK: Valid
 

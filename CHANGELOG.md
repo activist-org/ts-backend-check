@@ -16,6 +16,10 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 - The user is now able to access the CLI via `tsbc` for quicker commands.
 
+### 🐞 Bug Fixes
+
+- The CLI wasn't printing help when the user entered no arguments without a configuration file.
+
 ## ts-backend-check 1.3.2
 
 ### 📝 Documentation

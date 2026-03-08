@@ -10,7 +10,13 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from ts_backend_check.cli.main import config, get_config_file_path, main
+import yaml
+
+from ts_backend_check.cli.main import get_config_file_path, main
+
+YAML_CONFIG_FILE_PATH = get_config_file_path()
+with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
+    config = yaml.safe_load(file)
 
 
 class TestCliMain(unittest.TestCase):

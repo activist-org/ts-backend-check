@@ -49,24 +49,6 @@ def get_config_file_path() -> Path:
         return yaml_path
 
 
-YAML_CONFIG_FILE_PATH = get_config_file_path()
-
-
-# MARK: CLI Vars
-
-if not Path(YAML_CONFIG_FILE_PATH).is_file():
-    generate_config_file()
-
-if not Path(YAML_CONFIG_FILE_PATH).is_file():
-    print(
-        "No configuration file. Please generate a configuration file (.ts-backend-check.yaml or .ts-backend-check.yml) with ts-backend-check -gcf."
-    )
-    exit(1)
-
-with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
-    config = yaml.safe_load(file)
-
-
 def check_files_and_print_results(
     identifier: str,
     backend_model_file_path: Path,
@@ -219,6 +201,25 @@ def main() -> None:
 
     args = parser.parse_args(args=None if sys.argv[1:] else ["--help"])
 
+    if args == ["--help"]:
+        parser.print_help()
+
+    YAML_CONFIG_FILE_PATH = get_config_file_path()
+
+    # MARK: CLI Vars
+
+    if not Path(YAML_CONFIG_FILE_PATH).is_file():
+        generate_config_file()
+
+    if not Path(YAML_CONFIG_FILE_PATH).is_file():
+        print(
+            "No configuration file. Please generate a configuration file (.ts-backend-check.yaml or .ts-backend-check.yml) with ts-backend-check -gcf."
+        )
+        exit(1)
+
+    with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
+        config = yaml.safe_load(file)
+
     if args.upgrade:
         upgrade_cli()
         return
@@ -300,6 +301,9 @@ def main() -> None:
             return  # exit 0
 
     else:
+        rprint(
+            "[red]CLI options not recognized. Please see the help directions below.[/red]"
+        )
         parser.print_help()
 
 
