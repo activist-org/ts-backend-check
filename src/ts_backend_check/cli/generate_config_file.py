@@ -12,7 +12,7 @@ YAML_CONFIG_FILE_PATH = (
     Path(__file__).parent.parent.parent.parent / ".ts-backend-check.yaml"
 )
 
-PROJECT_ROOT_PATH = Path(__file__).parent.parent.parent.parent
+CWD_PATH = Path.cwd()
 
 
 def path_exists(path: str) -> bool:
@@ -86,7 +86,7 @@ def configure_model_interface_arguments() -> None:
             if path_exists(backend_path):
                 break
 
-            rprint(f"[red]File not found: {PROJECT_ROOT_PATH / backend_path}[/red]")
+            rprint(f"[red]File not found: {CWD_PATH / backend_path}[/red]")
             rprint("[yellow]Please check the path and try again.[/yellow]")
 
         # Get frontend path.
@@ -103,7 +103,7 @@ def configure_model_interface_arguments() -> None:
             if path_exists(frontend_path):
                 break
 
-            rprint(f"[red]File not found: {PROJECT_ROOT_PATH / frontend_path}[/red]")
+            rprint(f"[red]File not found: {CWD_PATH / frontend_path}[/red]")
             rprint("[yellow]Please check the path and try again.[/yellow]")
 
         # Get whether to check blank model fields.
