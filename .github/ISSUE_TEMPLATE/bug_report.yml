@@ -1,6 +1,6 @@
 name: 🐞 Bug report
 description: Report a bug to help us improve ts-backend-check.
-type: "task"
+type: "bug"
 projects: ["activist-org/1"]
 body:
   - type: checkboxes
