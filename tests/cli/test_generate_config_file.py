@@ -180,12 +180,10 @@ def test_configure_model_interface_arguments_valid_flow(
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "y",  # check blank
             "y",  # include conversions
-            "",  # invalid
             "UserModel",
-            "",  # invalid
             "User",
-            "",  # only one conversion
-            "",  # finish
+            "n",  # only one conversion
+            "n",  # finish
         ]
     )
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
@@ -199,7 +197,7 @@ def test_configure_model_interface_arguments_valid_flow(
     assert "src/ts_backend_check/test_project/backend/models.py" in content
     assert "src/ts_backend_check/test_project/frontend/valid_interfaces.ts" in content
     assert "check_blank_model_fields: true" in content
-    assert "UserModel: User" in content
+    assert "UserModel:" and "- User" in content
 
 
 @patch(

@@ -234,7 +234,7 @@ def main() -> None:
 
     # MARK: Run Checks
 
-    results = []
+    results: list[bool] = []
 
     if args.model:
         model_config = config.get(args.model)

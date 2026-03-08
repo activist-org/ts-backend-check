@@ -4,6 +4,7 @@ Configure cli to run based on a YAML configuration file.
 """
 
 from pathlib import Path
+from typing import Any, Dict
 
 from rich import print as rprint
 from yaml import dump
@@ -59,7 +60,7 @@ def configure_model_interface_arguments() -> None:
     """
     Function to receive paths from user.
     """
-    config_options = {}
+    config_options: Dict[str, Any] = {}
     while True:
         print(
             "\nAdding new model-interface configuration. Please provide the information as directed:"
@@ -132,7 +133,7 @@ def configure_model_interface_arguments() -> None:
             "[yellow]💡 Note: You need model name conversions if your TypeScript interfaces are not named exactly the same as the corresponding models (i.e. UserModel in Django and User in TS).[/yellow]"
         )
 
-        backend_to_ts_model_name_conversions = {}
+        backend_to_ts_model_name_conversions: Dict[str, list[str]] = {}
         while True:
             name_conversions_needed = (
                 input("Model name conversions are needed (y/[n]): ").strip().lower()
@@ -152,9 +153,13 @@ def configure_model_interface_arguments() -> None:
                         rprint("[red]Invalid response. Please try again.[/red]")
 
                 while True:
-                    if ts_interface_name := input(
-                        "Enter the TypeScript interface name: "
-                    ).strip():
+                    if (
+                        ts_interface_name := input(
+                            "Enter the TypeScript interface name (if multiple separate it with a comma): "
+                        )
+                        .strip()
+                        .split(",")
+                    ):
                         break
 
                     else:
