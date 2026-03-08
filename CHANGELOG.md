@@ -10,6 +10,8 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
+## [Upcoming] ts-backend-check 1.x
+
 ## ts-backend-check 1.4.0
 
 ### ✨ Features
@@ -19,6 +21,8 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 ### 🐞 Bug Fixes
 
 - The CLI wasn't printing help when the user entered no arguments without a configuration file.
+- The values in `backend_to_ts_model_name_conversions` dictionaries were being saved as strings instead of lists ([#34](https://github.com/activist-org/ts-backend-check/issues/34)).
+- Type definitions were added to empty variables to assure that they're use appropriately.
 
 ## ts-backend-check 1.3.2
 
