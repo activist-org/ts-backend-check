@@ -16,7 +16,7 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### 🐞 Bug Fixes
 
-- The configuration setup was being ran again after a successful creation of a config file.
+- The configuration setup was being ran again after a successful creation of a config file ([#36](https://github.com/activist-org/ts-backend-check/issues/36)).
 
 ## ts-backend-check 1.4.2
 
