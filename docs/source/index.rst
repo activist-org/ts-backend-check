@@ -3,16 +3,16 @@
     :align: center
     :target: https://github.com/activist-org/ts-backend-check
 
-|rtd| |pr_ci| |python_package_ci| |issues| |language| |pypi| |pypistatus| |license| |coc| |matrix|
+|rtd| |ci_static_analysis| |ci_pytest| |issues| |language| |pypi| |pypistatus| |license| |coc| |matrix|
 
 .. |rtd| image:: https://img.shields.io/readthedocs/ts-backend-check.svg?label=%20&logo=read-the-docs&logoColor=ffffff
     :target: http://ts-backend-check.readthedocs.io/en/latest/
 
-.. |pr_ci| image:: https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/pr_ci.yaml?branch=main&label=%20&logo=ruff&logoColor=ffffff
-    :target: https://github.com/activist-org/ts-backend-check/actions/workflows/pr_ci.yaml
+.. |ci_static_analysis| image:: https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/ci_static_analysis.yaml?branch=main&label=%20&logo=ruff&logoColor=ffffff
+    :target: https://github.com/activist-org/ts-backend-check/actions/workflows/ci_static_analysis.yaml
 
-.. |python_package_ci| image:: https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/python_package_ci.yaml?branch=main&label=%20&logo=pytest&logoColor=ffffff
-    :target: https://github.com/activist-org/ts-backend-check/actions/workflows/python_package_ci.yaml
+.. |ci_pytest| image:: https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/ci_pytest.yaml?branch=main&label=%20&logo=pytest&logoColor=ffffff
+    :target: https://github.com/activist-org/ts-backend-check/actions/workflows/ci_pytest.yaml
 
 .. |issues| image:: https://img.shields.io/github/issues/activist-org/ts-backend-check?label=%20&logo=github
     :target: https://github.com/activist-org/ts-backend-check/issues
@@ -250,7 +250,7 @@ This is an example YAML file for a GitHub Action to check your backend models an
 
 .. code-block:: yaml
 
-   name: pr_ci_ts_backend_check
+   name: ci_ts_backend_check
    on:
      workflow_dispatch:
      pull_request:

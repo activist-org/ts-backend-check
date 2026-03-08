@@ -3,8 +3,8 @@
 </div>
 
 [![rtd](https://img.shields.io/readthedocs/ts-backend-check.svg?label=%20&logo=read-the-docs&logoColor=ffffff)](http://ts-backend-check.readthedocs.io/en/latest/)
-[![pr_ci](https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/pr_ci.yaml?branch=main&label=%20&logo=ruff&logoColor=ffffff)](https://github.com/activist-org/ts-backend-check/actions/workflows/pr_ci.yaml)
-[![python_package_ci](https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/python_package_ci.yaml?branch=main&label=%20&logo=pytest&logoColor=ffffff)](https://github.com/activist-org/ts-backend-check/actions/workflows/python_package_ci.yaml)
+[![ci_static_analysis](https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/ci_static_analysis.yaml?branch=main&label=%20&logo=ruff&logoColor=ffffff)](https://github.com/activist-org/ts-backend-check/actions/workflows/ci_static_analysis.yaml)
+[![ci_pytest](https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/ci_pytest.yaml?branch=main&label=%20&logo=pytest&logoColor=ffffff)](https://github.com/activist-org/ts-backend-check/actions/workflows/ci_pytest.yaml)
 [![issues](https://img.shields.io/github/issues/activist-org/ts-backend-check?label=%20&logo=github)](https://github.com/activist-org/ts-backend-check/issues)
 [![python](https://img.shields.io/badge/Python-4B8BBE.svg?logo=python&logoColor=ffffff)](https://github.com/activist-org/ts-backend-check/blob/main/CONTRIBUTING.md)
 [![pypi](https://img.shields.io/pypi/v/ts-backend-check.svg?label=%20&color=4B8BBE)](https://pypi.org/project/ts-backend-check/)
@@ -215,7 +215,7 @@ This is an exaple of a [prek](https://prek.j178.dev/) or [pre-commit](https://gi
 This is an example YAML file for a GitHub Action to check your backend models and TypeScript interface files on pull requests and commits:
 
 ```yaml
-name: pr_ci_ts_backend_check
+name: ci_ts_backend_check
 on:
   workflow_dispatch:
   pull_request:
