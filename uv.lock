@@ -755,7 +755,7 @@ wheels = [
 
 [[package]]
 name = "ts-backend-check"
-version = "1.3.2"
+version = "1.4.2"
 source = { editable = "." }
 dependencies = [
     { name = "packaging" },
