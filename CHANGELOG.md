@@ -12,6 +12,12 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ## [Upcoming] ts-backend-check 1.x
 
+## ts-backend-check 1.4.4
+
+### ⬆️ Dependencies
+
+- Update all dev and production dependencies.
+
 ## ts-backend-check 1.4.3
 
 ### 🐞 Bug Fixes

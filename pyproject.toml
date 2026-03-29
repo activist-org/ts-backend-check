@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ts-backend-check"
-version = "1.4.3"
+version = "1.4.4"
 description = "Check TypeScript interfaces against backend models"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -39,7 +39,7 @@ dev = [
     "ruff>=0.15.8",
     "setuptools>=82.0.1",
     "types-PyYAML>=6.0.12.20250915",
-    "types-requests>=2.32.4.20260324",
+    "types-requests>=2.33.0.20260327",
 ]
 docs = [
     # Keep docs dependencies formatted in this way with ruff to allow for upgrades via VS Code extension.
