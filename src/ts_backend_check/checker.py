@@ -309,7 +309,7 @@ class TypeChecker:
 
         return (
             f"\nField '{field}' (camelCase: '{camel_field}') from model '{model_name}' doesn't match the TypeScript interfaces based on blank to optional agreement."
-            f"\nPlease check '{models_file}' and files in 'ts_interface_paths' to make sure that all 'blank=True' fields are optional (?) in the TypeScript interfaces file."
+            f"\nPlease check '{models_file}' and the corresponding files in 'ts_interface_paths' to make sure that all 'blank=True' fields are optional (?) in the TypeScript interfaces file."
         )
 
     @staticmethod

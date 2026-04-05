@@ -158,8 +158,7 @@ Expected to find this field in the frontend interfaces: Event, EventExtended
 To ignore this field, add the following comment to the TypeScript file (in order based on the model fields): '// ts-backend-check: ignore description'
 
 Field 'participants' (camelCase: 'participants') from model 'EventModel' doesn't match the TypeScript interfaces based on blank to optional agreement.
-Please check 'src/ts_backend_check/test_project/backend/models.py' and 'src/ts_backend_check/test_project/frontend/invalid_interfaces.ts' to make sure that all
-'blank=True' fields are optional (?) in the TypeScript interfaces file.
+Please check 'src/ts_backend_check/test_project/backend/models.py' and the corresponding files in 'ts_interface_paths' to make sure that all 'blank=True' fields are optional (?) in the TypeScript interfaces file.
 
 No matching TypeScript interface found for the model 'UserModel'.
 Please name your TypeScript interfaces the same as the corresponding backend models.
@@ -167,8 +166,7 @@ You can also use the 'backend_to_ts_model_name_conversions' option within the co
 The key is the backend model name and the value is a list of the corresponding interfaces.
 This option is also how you can break larger backend models into multiple interfaces that extend one another.
 
-Please fix the 3 errors above to continue the sync of the backend models of src/ts_backend_check/test_project/backend/models.py and the TypeScript interfaces of
-src/ts_backend_check/test_project/frontend/invalid_interfaces.ts.
+Please fix the 3 errors above to continue the sync of the backend models of src/ts_backend_check/test_project/backend/models.py and the corresponding TypeScript interfaces.
 ```
 
 <sub><a href="#top">Back to top.</a></sub>
