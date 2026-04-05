@@ -153,7 +153,7 @@ def configure_model_interface_arguments() -> None:
                     if ts_interface_name := [
                         name.strip()
                         for name in input(
-                            "Enter the TypeScript interface name (if multiple separate it with a comma): "
+                            "Enter the TypeScript interface name (if multiple separate them with commas): "
                         ).split(",")
                     ]:
                         break
@@ -175,7 +175,7 @@ def configure_model_interface_arguments() -> None:
 
         config_options[key] = {
             "backend_model_path": backend_path,
-            "ts_interface_path": frontend_path,
+            "ts_interface_paths": frontend_path,
             "check_blank_model_fields": check_blank_model_fields,
         }
 
@@ -185,7 +185,7 @@ def configure_model_interface_arguments() -> None:
             )
 
         write_config(config_options)
-        rprint(f"[green]✅ Added configuration for '{key}' check.[/green]")
+        rprint(f"[green]✅ Added configuration for the '{key}' check.[/green]")
 
         continue_config = input(
             "Add another model-interface configuration (y/[n]): "

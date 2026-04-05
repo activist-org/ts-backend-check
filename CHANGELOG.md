@@ -10,7 +10,22 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
-## [Upcoming] ts-backend-check 1.x
+## [Upcoming] ts-backend-check 1.5.0
+
+### ✨ Features
+
+- Interface file paths can now be broken up over multiple files in the `.ts-backend-check.yaml` configuration file.
+- Backend models can be ignored in the `.ts-backend-check.yaml` configuration file.
+- The user is prompted to regenerate their `.ts-backend-check.yaml` if the file is found to be empty.
+
+### ♻️ Code Refactoring
+
+- The `--identifier` (`-i`) flag was renamed `--identifier` (`-i`) for clarity as we're passing a model-interface identifier to the CLI.
+- Messages to the user we improved and refactored given the changes above.
+
+### ✅ Tests
+
+- Tests were refactored given the changes above.
 
 ## ts-backend-check 1.4.4
 

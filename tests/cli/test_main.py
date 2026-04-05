@@ -115,7 +115,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-m",
+                "-i",
                 model_name,
             ],
             capture_output=True,
@@ -139,7 +139,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-m",
+                "-i",
                 "invalid_model",
             ],
             capture_output=True,
@@ -157,7 +157,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-m",
+                "-i",
                 "invalid_identifier",
             ],
             capture_output=True,
@@ -180,7 +180,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-m",
+                "-i",
                 "invalid_backend_model_path",
             ],
             capture_output=True,
@@ -189,9 +189,25 @@ class TestCliMain(unittest.TestCase):
 
         stdout_flat = result.stdout.strip().replace("\n", "")
         self.assertEqual(result.returncode, 1)
-        self.assertEqual(
+        self.assertIn(
+            "❌ The 'backend_model_file_path' argument, invalid_path_to_models.py, is not a valid file.",
             stdout_flat,
-            "❌ invalid_path_to_models.py that should contain the 'invalid_backend_model_path' backend models does not exist. Please check the ts-backend-check configuration file and try again.",
+        )
+        self.assertIn(
+            "This should be a file that contains the",
+            stdout_flat,
+        )
+        self.assertIn(
+            "'invalid_backend_model_path'",
+            stdout_flat,
+        )
+        self.assertIn(
+            "backend models.",
+            stdout_flat,
+        )
+        self.assertIn(
+            "Please check the .ts-backend-check.yaml configuration file and try again.",
+            stdout_flat,
         )
 
     def test_cli_check_command_with_nonexistent_ts_files(self):
@@ -203,7 +219,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-m",
+                "-i",
                 "invalid_typescript_interface_path",
             ],
             capture_output=True,
@@ -212,9 +228,33 @@ class TestCliMain(unittest.TestCase):
 
         stdout_flat = result.stdout.strip().replace("\n", "")
         self.assertEqual(result.returncode, 1)
-        self.assertEqual(
+        self.assertIn(
+            "❌ The 'ts_interface_file_paths' argument should contain paths to the ",
             stdout_flat,
-            "❌ invalid_path_to_interfaces.ts that should contain the 'invalid_typescript_interface_path' TypeScript types does not exist. Please check the ts-backend-check configuration file and try again.",
+        )
+        self.assertIn(
+            "'invalid_typescript_interface_path'",
+            stdout_flat,
+        )
+        self.assertIn(
+            "TypeScript types",
+            stdout_flat,
+        )
+        self.assertIn(
+            "The following paths",
+            stdout_flat,
+        )
+        self.assertIn(
+            "valid files:",
+            stdout_flat,
+        )
+        self.assertIn(
+            "- invalid_path_to_interfaces.ts",
+            stdout_flat,
+        )
+        self.assertIn(
+            "Please check the .ts-backend-check.yaml configuration file and try again.",
+            stdout_flat,
         )
 
     def test_version_flag_exits_with_zero(self):
@@ -229,20 +269,22 @@ class TestCliMain(unittest.TestCase):
                     main()
         self.assertEqual(cm.exception.code, 0)
 
-    def test_model_invokes_check_files_and_print_results(self):
+    def test_identifier_invokes_check_files_and_print_results(self):
         """
-        Providing --model should call the check_files_and_print_results function with the provided arg.
+        Providing --identifier should call the check_files_and_print_results function with the provided arg.
         """
         with patch(
             "ts_backend_check.cli.main.check_files_and_print_results"
         ) as check_files_and_print_results_model:
-            with patch("sys.argv", ["ts-backend-check", "--model", "valid_model"]):
+            with patch("sys.argv", ["ts-backend-check", "--identifier", "valid_model"]):
                 main()
 
         check_files_and_print_results_model.assert_called_once_with(
             identifier="valid_model",
             backend_model_file_path=Path(config["valid_model"]["backend_model_path"]),
-            ts_interface_file_path=Path(config["valid_model"]["ts_interface_path"]),
+            ts_interface_file_paths=[
+                Path(p) for p in config["valid_model"]["ts_interface_paths"]
+            ],
             check_blank=True,
             model_name_conversions={
                 "EventModel": ["Event", "EventExtended"],
@@ -262,7 +304,7 @@ class TestCliMain(unittest.TestCase):
                     "sys.argv",
                     [
                         "ts-backend-check",
-                        "-m",
+                        "-i",
                         "valid_model",
                     ],
                 ):
@@ -298,7 +340,7 @@ class TestCliMain(unittest.TestCase):
                         "sys.argv",
                         [
                             "ts-backend-check",
-                            "-m",
+                            "-i",
                             "invalid_model",
                         ],
                     ):

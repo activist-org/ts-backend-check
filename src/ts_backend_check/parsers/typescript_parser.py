@@ -26,14 +26,12 @@ class TypeScriptParser:
 
     Parameters
     ----------
-    file_path : str
+    concatenated_types_file : str
         The file path for the TypeScript file to parse.
     """
 
-    def __init__(self, file_path: str) -> None:
-        self.file_path = file_path
-        with open(file_path, "r", encoding="utf-8") as f:
-            self.content = f.read()
+    def __init__(self, concatenated_types_file: str) -> None:
+        self.content = concatenated_types_file
 
     def parse_interfaces(self) -> Dict[str, TypeScriptInterface]:
         """
