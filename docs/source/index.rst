@@ -135,28 +135,29 @@ These are some example commands:
 
 .. code-block:: bash
 
-   # ts-backend-check -gcf
+   # ts-backend-check --generate-config-file
    tsbc -gcf
 
-**Generate a Test Project**
+**Generate the Test Project**
 
 .. code-block:: bash
 
-   # ts-backend-check -gtp
+   # ts-backend-check includes a test project for testing the functionalities.
+   # ts-backend-check --generate-test-project
    tsbc -gtp
 
-**Check a TypeScript Type Against a Backend Model**
+**Check a TypeScript Interface Against a Backend Model**
 
 .. code-block:: bash
 
-   # ts-backend-check -i <model-interface-identifier-from-config-file>
+   # ts-backend-check --identifier <model-interface-identifier-from-config-file>
    tsbc -i <model-interface-identifier-from-config-file>
 
-**Run All Models**
+**Check All Models and Interfaces**
 
 .. code-block:: bash
 
-   # ts-backend-check -a
+   # ts-backend-check --all
    tsbc -a
 
 Example Outputs

@@ -19,12 +19,13 @@ class TestGenerateTestProject(unittest.TestCase):
     Test cases for the generate_test_project function.
     """
 
+    @patch("builtins.input", return_value="n")  # don't overwrite config file
     @patch("pathlib.Path.is_dir", return_value=False)
     @patch("shutil.copytree")
     @patch("builtins.print")
     @patch("pathlib.Path.is_file", return_value=False)
     def test_generate_when_directory_does_not_exist(
-        self, mock_is_file, mock_print, mock_copytree, mock_is_dir
+        self, mock_is_file, mock_print, mock_copytree, mock_is_dir, monkeypatch
     ):
         """
         Tests that the test project are generated when the destination directory does not exist.
@@ -49,7 +50,7 @@ class TestGenerateTestProject(unittest.TestCase):
         )
         self.assertIn(
             call(
-                "Please generate one with the 'ts-backend-check --generate-config-file' command."
+                "Within the test project there's one model interface identifier that passes all checks and one that fails all checks."
             ),
             mock_print.call_args_list,
         )
@@ -71,34 +72,36 @@ class TestGenerateTestProject(unittest.TestCase):
             f"Test project for ts-backend-check already exist in .{PATH_SEPARATOR}ts_backend_check_test_project{PATH_SEPARATOR} and will not be regenerated."
         )
 
+    @patch("builtins.input", return_value="n")  # don't overwrite config file
     @patch("pathlib.Path.is_dir", return_value=False)
     @patch("shutil.copytree")
     @patch("builtins.print")
     @patch("pathlib.Path.is_file", side_effect=[True, True])
     def test_prints_correct_message_when_yaml_exists(
-        self, mock_is_file, mock_print, mock_copytree, mock_is_dir
+        self, mock_is_file, mock_print, mock_copytree, mock_is_dir, monkeypatch
     ):
         """
         Tests the output message when a .ts-backend-check.yaml file exists.
         """
         generate_test_project()
         mock_print.assert_any_call(
-            "You can set which one to test in the .ts-backend-check.yaml file."
+            "You can set which models and interfaces to test in the .ts-backend-check.yaml configuration file."
         )
 
+    @patch("builtins.input", return_value="n")  # don't overwrite config file
     @patch("pathlib.Path.is_dir", return_value=False)
     @patch("shutil.copytree")
     @patch("builtins.print")
     @patch("pathlib.Path.is_file", side_effect=[False, True, False, True])
     def test_prints_correct_message_when_yml_exists(
-        self, mock_is_file, mock_print, mock_copytree, mock_is_dir
+        self, mock_is_file, mock_print, mock_copytree, mock_is_dir, monkeypatch
     ):
         """
         Tests the output message when a .ts-backend-check.yml file exists.
         """
         generate_test_project()
         mock_print.assert_any_call(
-            "You can set which one to test in the .ts-backend-check.yml file."
+            "You can set which models and interfaces to test in the .ts-backend-check.yml configuration file."
         )
 
 

@@ -219,6 +219,10 @@ def main() -> None:
 
     YAML_CONFIG_FILE_PATH = get_config_file_path()
 
+    if args.generate_test_project:
+        generate_test_project()
+        return
+
     # MARK: CLI Vars
 
     if not Path(YAML_CONFIG_FILE_PATH).is_file() and args.generate_config_file:
@@ -240,10 +244,6 @@ def main() -> None:
 
     if args.generate_config_file:
         generate_config_file()
-        return
-
-    if args.generate_test_project:
-        generate_test_project()
         return
 
     # MARK: Run Checks
