@@ -14,14 +14,15 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ✨ Features
 
-- Interface file paths can now be broken up over multiple files in the `.ts-backend-check.yaml` configuration file.
-- Backend models can be ignored in the `.ts-backend-check.yaml` configuration file.
-- The user is prompted to regenerate their `.ts-backend-check.yaml` if the file is found to be empty.
+- Interface file paths can now be broken up over multiple files in the `.ts-backend-check.yaml` configuration file ([#39](https://github.com/activist-org/ts-backend-check/issues/39)).
+- Backend models can be ignored in the `.ts-backend-check.yaml` configuration file ([#40](https://github.com/activist-org/ts-backend-check/issues/40)).
+- The user is prompted to regenerate their `.ts-backend-check.yaml` if the file is found to be empty ([#41](https://github.com/activist-org/ts-backend-check/issues/41)).
+- The user is prompted to write a configuration file for the test project on generation ([#46](https://github.com/activist-org/ts-backend-check/issues/46)).
 
 ### ♻️ Code Refactoring
 
-- The `--identifier` (`-i`) flag was renamed `--identifier` (`-i`) for clarity as we're passing a model-interface identifier to the CLI.
-- Messages to the user we improved and refactored given the changes above.
+- The `--identifier` (`-i`) flag was renamed `--identifier` (`-i`) for clarity as we're passing a model-interface identifier to the CLI ([#42](https://github.com/activist-org/ts-backend-check/issues/42)).
+- Messages to the user were improved and refactored given the changes above.
 
 ### ✅ Tests
 
