@@ -5,7 +5,7 @@ from ts_backend_check.checker import TypeChecker
 
 def test_checker_invalid_checks_fail(
     return_invalid_django_models,
-    return_invalid_ts_interfaces,
+    return_invalid_concatenated_types_file,
     return_invalid_check_blank_models,
     return_invalid_backend_to_ts_conversions,
 ):
@@ -14,7 +14,7 @@ def test_checker_invalid_checks_fail(
     """
     checker = TypeChecker(
         models_file=return_invalid_django_models,
-        types_file=return_invalid_ts_interfaces,
+        concatenated_types_file=return_invalid_concatenated_types_file,
         check_blank=return_invalid_check_blank_models,
         model_name_conversions=return_invalid_backend_to_ts_conversions,
     )
@@ -25,7 +25,7 @@ def test_checker_invalid_checks_fail(
 
 def test_checker_ignored_missing_fields(
     return_valid_django_models,
-    return_valid_ts_interfaces,
+    return_valid_concatenated_types_file,
     return_valid_check_blank_models,
     return_valid_backend_to_ts_conversions,
 ):
@@ -34,7 +34,7 @@ def test_checker_ignored_missing_fields(
     """
     checker = TypeChecker(
         models_file=return_valid_django_models,
-        types_file=return_valid_ts_interfaces,
+        concatenated_types_file=return_valid_concatenated_types_file,
         check_blank=return_valid_check_blank_models,
         model_name_conversions=return_valid_backend_to_ts_conversions,
     )
@@ -46,7 +46,7 @@ def test_checker_ignored_missing_fields(
 
 def test_checker_with_actual_missing_fields(
     return_invalid_django_models,
-    return_invalid_ts_interfaces,
+    return_invalid_concatenated_types_file,
     return_invalid_check_blank_models,
     return_invalid_backend_to_ts_conversions,
 ):
@@ -55,7 +55,7 @@ def test_checker_with_actual_missing_fields(
     """
     checker = TypeChecker(
         models_file=return_invalid_django_models,
-        types_file=return_invalid_ts_interfaces,
+        concatenated_types_file=return_invalid_concatenated_types_file,
         check_blank=return_invalid_check_blank_models,
         model_name_conversions=return_invalid_backend_to_ts_conversions,
     )
@@ -67,7 +67,7 @@ def test_checker_with_actual_missing_fields(
 
 def test_checker_with_no_matching_interface(
     return_invalid_django_models,
-    return_invalid_ts_interfaces,
+    return_invalid_concatenated_types_file,
     return_invalid_check_blank_models,
     return_invalid_backend_to_ts_conversions,
 ):
@@ -76,7 +76,7 @@ def test_checker_with_no_matching_interface(
     """
     checker = TypeChecker(
         models_file=return_invalid_django_models,
-        types_file=return_invalid_ts_interfaces,
+        concatenated_types_file=return_invalid_concatenated_types_file,
         check_blank=return_invalid_check_blank_models,
         model_name_conversions=return_invalid_backend_to_ts_conversions,
     )
@@ -110,11 +110,16 @@ class ModelWithOrder(models.Model):
     type_file = tmp_path / "unordered_interface_type.ts"
     type_file.write_text(type_content)
 
-    checker = TypeChecker(models_file=str(model_file), types_file=str(type_file))
+    with open(type_file, "r", encoding="utf-8") as f:
+        concatenated_types_file = f.read()
+
+    checker = TypeChecker(
+        models_file=str(model_file), concatenated_types_file=concatenated_types_file
+    )
     errors = checker.check()
 
     assert len(errors) == 1
-    assert "The properties of the interface file" in errors[0]
+    assert "The interface properties of the 'ts_interface_paths' files" in errors[0]
     assert "are unordered" in errors[0]
     assert (
         "All interface properties should exactly match the order of the corresponding fields"

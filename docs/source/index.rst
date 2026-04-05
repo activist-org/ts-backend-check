@@ -149,8 +149,8 @@ These are some example commands:
 
 .. code-block:: bash
 
-   # ts-backend-check -m <model-identifier-from-config-file>
-   tsbc -m <model-identifier-from-config-file>
+   # ts-backend-check -i <model-interface-identifier-from-config-file>
+   tsbc -i <model-interface-identifier-from-config-file>
 
 **Run All Models**
 
@@ -169,7 +169,7 @@ Passed Check
 
 .. code-block:: text
 
-   ts-backend-check -m valid_model
+   ts-backend-check -i valid_model
    ✅ Success: All backend models are synced with their corresponding TypeScript interfaces for the provided 'valid_model' files.
 
 Failed Check
@@ -177,7 +177,7 @@ Failed Check
 
 .. code-block:: text
 
-   ts-backend-check -m invalid_model
+   ts-backend-check -i invalid_model
 
    ❌ ts-backend-check error: There are inconsistencies between the provided 'invalid_model' backend models and TypeScript interfaces. Please see the output below for
    details.
@@ -218,7 +218,9 @@ This example describes the structure of an entry in this file:
 
    model_identifier: # an identifier you define that you want to pass to the CLI
      backend_model_path: path/to/a/models.py
-     ts_interface_path: path/to/the/corresponding/model_interfaces.ts
+     ts_interface_paths:
+       - path/to/the/corresponding/model_interfaces.ts
+       - path/to/another/corresponding/model_interfaces.ts
      check_blank_model_fields: true # whether to assert that fields that can be blank must also be optional
      backend_to_ts_model_name_conversions: # used if the frontend name is not the backend name
        BackendModel:

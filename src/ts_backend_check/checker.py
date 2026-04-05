@@ -22,8 +22,8 @@ class TypeChecker:
     models_file : str
         The file path for the models file to check.
 
-    types_file : str
-        The file path for the TypeScript interfaces file to check.
+    concatenated_types_file : str
+        A concatenated file text joined from all paths in ts_interface_file_paths.
 
     check_blank : bool, default=False
         Whether to also check that fields marked 'blank=True' within Django models are optional (?) in the TypeScript interfaces.
@@ -35,19 +35,19 @@ class TypeChecker:
     def __init__(
         self,
         models_file: str,
-        types_file: str,
+        concatenated_types_file: str,
         check_blank: bool = False,
         model_name_conversions: dict[str, list[str]] = {},
     ) -> None:
         self.models_file = models_file
-        self.types_file = types_file
+        self.concatenated_types_file = concatenated_types_file
         self.check_blank = check_blank
         self.model_name_conversions = model_name_conversions
         self.django_model_visitor = DjangoModelVisitor
         self.model_fields, self.models_and_blank_fields = extract_model_fields(
             models_file
         )
-        self.ts_parser = TypeScriptParser(types_file)
+        self.ts_parser = TypeScriptParser(concatenated_types_file)
         self.ts_interfaces = self.ts_parser.parse_interfaces()
         self.backend_only = self.ts_parser.get_ignored_fields()
 
@@ -87,7 +87,6 @@ class TypeChecker:
                         field=field,
                         model_name=model_name,
                         models_file=self.models_file,
-                        types_file=self.types_file,
                     )
                     for field in self.models_and_blank_fields[model_name]
                     if not self._property_is_optional_when_field_is_blank(
@@ -101,7 +100,7 @@ class TypeChecker:
             ):
                 error_fields.append(
                     self._format_unordered_interface_properties_message(
-                        models_file=self.models_file, types_file=self.types_file
+                        models_file=self.models_file
                     )
                 )
 
@@ -280,12 +279,12 @@ class TypeChecker:
         return (
             f"\nField '{field}' (camelCase: '{camel_field}') from model '{model_name}' is missing in the TypeScript interfaces."
             f"\nExpected to find this field in the frontend {interface_of_interfaces}: {', '.join(interfaces.keys())}"
-            f"\nTo ignore this field, add the following comment to the TypeScript file (in order based on the model fields): '// ts-backend-check: ignore {camel_field}'"
+            f"\nTo ignore this field, add the following comment to the TypeScript file (in the sane order as the model fields): '// ts-backend-check: ignore {camel_field}'"
         )
 
     @staticmethod
     def _format_optional_properties_message(
-        field: str, model_name: str, models_file: str, types_file: str
+        field: str, model_name: str, models_file: str
     ) -> str:
         """
         Format message for when the blank status of a model field doesn't match the optional status of the corresponding property.
@@ -301,9 +300,6 @@ class TypeChecker:
         models_file : str
             The file path for the models file to check.
 
-        types_file : str
-            The file path for the TypeScript interfaces file that was checked.
-
         Returns
         -------
         str
@@ -313,13 +309,11 @@ class TypeChecker:
 
         return (
             f"\nField '{field}' (camelCase: '{camel_field}') from model '{model_name}' doesn't match the TypeScript interfaces based on blank to optional agreement."
-            f"\nPlease check '{models_file}' and '{types_file}' to make sure that all 'blank=True' fields are optional (?) in the TypeScript interfaces file."
+            f"\nPlease check '{models_file}' and files in 'ts_interface_paths' to make sure that all 'blank=True' fields are optional (?) in the TypeScript interfaces file."
         )
 
     @staticmethod
-    def _format_unordered_interface_properties_message(
-        models_file: str, types_file: str
-    ) -> str:
+    def _format_unordered_interface_properties_message(models_file: str) -> str:
         """
         Format message for unordered interface properties.
 
@@ -328,16 +322,13 @@ class TypeChecker:
         models_file : str
             The file path for the models file to check.
 
-        types_file : str
-            The file path for the TypeScript interfaces file that was checked.
-
         Returns
         -------
         str
             The message displayed to the user when unordered interface properties are found.
         """
         return (
-            f"\nThe properties of the interface file '{types_file}' are unordered."
+            "\nThe interface properties of the 'ts_interface_paths' files are unordered."
             f"\nAll interface properties should exactly match the order of the corresponding fields in the '{models_file}' backend model."
             "\nIf the model is synced with multiple interfaces, then their properties should follow the order prescribed by the model fields."
         )

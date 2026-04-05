@@ -3,8 +3,8 @@
 from ts_backend_check.parsers.typescript_parser import TypeScriptParser
 
 
-def test_parse_interfaces(return_invalid_ts_interfaces):
-    parser = TypeScriptParser(return_invalid_ts_interfaces)
+def test_parse_interfaces(return_invalid_concatenated_types_file):
+    parser = TypeScriptParser(return_invalid_concatenated_types_file)
     interfaces = parser.parse_interfaces()
 
     # Check Event interface.
@@ -35,8 +35,8 @@ def test_parse_interfaces(return_invalid_ts_interfaces):
     assert "name" in user.properties
 
 
-def test_get_ignored_fields(return_invalid_ts_interfaces):
-    parser = TypeScriptParser(return_invalid_ts_interfaces)
+def test_get_ignored_fields(return_invalid_concatenated_types_file):
+    parser = TypeScriptParser(return_invalid_concatenated_types_file)
     backend_only = parser.get_ignored_fields()
 
     assert "date" in backend_only  # date is ignored
@@ -57,10 +57,14 @@ def test_parse_interfaces_with_extends(tmp_path):
     tmp_file = tmp_path / "extended.ts"
     tmp_file.write_text(ts_content)
 
-    parser = TypeScriptParser(str(tmp_file))
+    with open(tmp_file, "r", encoding="utf-8") as f:
+        concatenated_types_file = f.read()
+
+    parser = TypeScriptParser(concatenated_types_file)
     interfaces = parser.parse_interfaces()
 
     assert "ExtendedEvent" in interfaces
+
     extended = interfaces["ExtendedEvent"]
     assert extended.parents == ["BaseEvent"]
     assert "description" in extended.properties
