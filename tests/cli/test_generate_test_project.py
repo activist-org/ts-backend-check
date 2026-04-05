@@ -11,6 +11,7 @@ from ts_backend_check.cli.generate_test_project import (
     INTERNAL_TEST_PROJECT_DIR_PATH,
     PATH_SEPARATOR,
     generate_test_project,
+    get_test_project_config_file_text,
 )
 
 
@@ -103,6 +104,28 @@ class TestGenerateTestProject(unittest.TestCase):
         mock_print.assert_any_call(
             "You can set which models and interfaces to test in the .ts-backend-check.yml configuration file."
         )
+
+    @patch("builtins.input", return_value="y")  # overwrite config file
+    @patch("pathlib.Path.is_dir", return_value=False)
+    @patch("shutil.copytree")
+    @patch("builtins.print")
+    @patch("pathlib.Path.is_file", side_effect=[True, True])
+    def test_configuration_file_overwrite_for_test_project(
+        self, mock_is_file, mock_print, mock_copytree, mock_is_dir, monkeypatch
+    ):
+        """
+        Tests the output message when a .ts-backend-check.yaml file exists.
+        """
+        repo_config_file = Path() / ".ts-backend-check.yaml"
+        original_config_file_text = repo_config_file.read_text()
+
+        generate_test_project()
+
+        new_config_file_text = repo_config_file.read_text()
+        assert new_config_file_text == get_test_project_config_file_text()
+
+        with open(".ts-backend-check.yaml", "w") as file:
+            file.write(original_config_file_text)
 
 
 if __name__ == "__main__":

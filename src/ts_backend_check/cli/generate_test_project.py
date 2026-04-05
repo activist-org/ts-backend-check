@@ -12,21 +12,17 @@ PATH_SEPARATOR = "\\" if os.name == "nt" else "/"
 INTERNAL_TEST_PROJECT_DIR_PATH = Path(__file__).parent.parent / "test_project"
 
 
-def write_test_project_config_file(config_file_name: str) -> None:
+def get_test_project_config_file_text() -> str:
     """
-    Write a YAML configuration file for the ts-backend-check test project.
-
-    Parameters
-    ----------
-    config_file_name : str
-        The name for the ts-backend-check configuration file.
+    Return the text for the configuration file for the ts-backend-check test project.
 
     Returns
     -------
-    None
-        The contents of a configuration file are written to match the test project.
+    str
+        The text for the configuration file for the ts-backend-check test project.
     """
-    test_project_config = """# Configuration file for ts-backend-check validation.
+
+    return """# Configuration file for ts-backend-check validation.
 # See https://github.com/activist-org/ts-backend-check for details.
 
 valid_model:
@@ -57,6 +53,22 @@ invalid_model:
     #   - User
 """
 
+
+def write_test_project_config_file(config_file_name: str) -> None:
+    """
+    Write a YAML configuration file for the ts-backend-check test project.
+
+    Parameters
+    ----------
+    config_file_name : str
+        The name for the ts-backend-check configuration file.
+
+    Returns
+    -------
+    None
+        The contents of a configuration file are written to match the test project.
+    """
+    test_project_config = get_test_project_config_file_text()
     with open(config_file_name, "w") as file:
         file.write(test_project_config)
 
