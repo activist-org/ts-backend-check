@@ -51,7 +51,7 @@ class TestGenerateTestProject(unittest.TestCase):
         )
         self.assertIn(
             call(
-                "Within the test project there's one model interface identifier that passes all checks and one that fails all checks."
+                "Within the test project there's one model-interface identifier that passes all checks and one that fails all checks."
             ),
             mock_print.call_args_list,
         )

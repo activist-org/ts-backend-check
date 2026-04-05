@@ -90,7 +90,7 @@ def generate_test_project() -> None:
 
         print("The test project has been successfully generated.")
         print(
-            "Within the test project there's one model interface identifier that passes all checks and one that fails all checks."
+            "Within the test project there's one model-interface identifier that passes all checks and one that fails all checks."
         )
 
         if (

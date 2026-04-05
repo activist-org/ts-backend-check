@@ -148,7 +148,7 @@ def main() -> None:
     - --upgrade (-u): Upgrade the ts-backend-check CLI to the latest version.
     - --generate-config-file (-gcf): Interactively generate a configuration file for ts-backend-check.
     - --generate-test-project (-gtp): Generate project to test ts-backend-check functionalities.
-    - --identifier (-i): The model interface identifier in the .ts-backend-check.yaml configuration file to check.
+    - --identifier (-i): The model-interface identifier in the .ts-backend-check.yaml configuration file to check.
     - --all (-a): Run checks of all backend models against their corresponding TypeScript interfaces.
 
     Examples
