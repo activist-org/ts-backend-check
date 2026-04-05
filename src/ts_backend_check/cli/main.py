@@ -223,6 +223,10 @@ def main() -> None:
         generate_test_project()
         return
 
+    if args.upgrade:
+        upgrade_cli()
+        return
+
     # MARK: CLI Vars
 
     if not Path(YAML_CONFIG_FILE_PATH).is_file() and args.generate_config_file:
@@ -237,10 +241,6 @@ def main() -> None:
 
     with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
         config = yaml.safe_load(file)
-
-    if args.upgrade:
-        upgrade_cli()
-        return
 
     if args.generate_config_file:
         generate_config_file()

@@ -68,9 +68,9 @@ def write_test_project_config_file(config_file_name: str) -> None:
     None
         The contents of a configuration file are written to match the test project.
     """
-    test_project_config = get_test_project_config_file_text()
+    test_project_config_text = get_test_project_config_file_text()
     with open(config_file_name, "w") as file:
-        file.write(test_project_config)
+        file.write(test_project_config_text)
 
 
 def generate_test_project() -> None:
@@ -134,9 +134,7 @@ def generate_test_project() -> None:
                 )
 
             if generate_test_project_config_answer in ["y", ""]:
-                write_test_project_config_file(
-                    config_file_name=".ts-backend-check.yaml"
-                )
+                write_test_project_config_file(config_file_name=config_file_name)
                 print(
                     f"The {config_file_name} configuration file has been overwritten to match the test project."
                 )
