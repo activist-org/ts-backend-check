@@ -21,7 +21,7 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ♻️ Code Refactoring
 
-- The `--identifier` (`-i`) flag was renamed `--identifier` (`-i`) for clarity as we're passing a model-interface identifier to the CLI ([#42](https://github.com/activist-org/ts-backend-check/issues/42)).
+- The `--model` (`-m`) flag was renamed `--identifier` (`-i`) for clarity as we're passing a model-interface identifier to the CLI ([#42](https://github.com/activist-org/ts-backend-check/issues/42)).
 - Messages to the user were improved and refactored given the changes above.
 
 ### ✅ Tests
