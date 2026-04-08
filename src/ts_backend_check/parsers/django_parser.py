@@ -11,7 +11,6 @@ class DjangoModelVisitor(ast.NodeVisitor):
     """
     AST visitor to extract fields from Django models.
     """
-
     DJANGO_FIELD_TYPES = {
         "Field",
         "CharField",
@@ -30,35 +29,45 @@ class DjangoModelVisitor(ast.NodeVisitor):
         "AutoField",
     }
 
-    def __init__(self) -> None:
+    BACKEND_ONLY_TAG = "#tsbc: backend_only_model"
+
+    def __init__(self, source_lines: list[str]) -> None:
         self.models: Dict[str, List[str]] = {}
         self.current_model: str | None = None
         self.models_and_blank_fields: Dict[str, List[str]] = {}
+        self._backend_only_lines = self._index_backend_only_lines(source_lines)
+
+    def _index_backend_only_lines(self, source_lines: list[str]) -> set[int]:
+        return {
+            lineno
+            for lineno, line in enumerate(source_lines, start=1)
+            if self.BACKEND_ONLY_TAG in line
+        }
+
+    def _is_backend_only(self, node: ast.ClassDef) -> bool:
+        return node.lineno in self._backend_only_lines
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
         Check class definitions, specifically those that inherit from other classes.
-
         Parameters
         ----------
         node : ast.ClassDef
             A class definition from Python AST (Abstract Syntax Tree).
             It contains information about the class, such as its name, base classes, body, decorators, etc.
         """
-        # Only process classes that inherit from something.
-        if node.bases:
+        # Only process classes that inherit from something and are not tagged
+        # as backend-only models.
+        if node.bases and not self._is_backend_only(node):
             self.current_model = node.name
             if self.current_model not in self.models:
                 self.models[self.current_model] = []
-
             self.generic_visit(node)
-
         self.current_model = None
 
     def visit_Assign(self, node: ast.Assign) -> None:
         """
         Check assignment statements within a class.
-
         Parameters
         ----------
         node : ast.Assign
@@ -67,7 +76,6 @@ class DjangoModelVisitor(ast.NodeVisitor):
         """
         if not self.current_model:
             return
-
         for target in node.targets:
             if (
                 isinstance(target, ast.Name)
@@ -79,7 +87,6 @@ class DjangoModelVisitor(ast.NodeVisitor):
                 for field_type in self.DJANGO_FIELD_TYPES
             ):
                 self.models[self.current_model].append(target.id)
-
                 if any(
                     kw.arg == "blank"
                     and isinstance(kw.value, ast.Constant)
@@ -88,7 +95,6 @@ class DjangoModelVisitor(ast.NodeVisitor):
                 ):
                     if self.current_model not in self.models_and_blank_fields:
                         self.models_and_blank_fields[self.current_model] = []
-
                     self.models_and_blank_fields[self.current_model].append(target.id)
 
 
@@ -97,12 +103,10 @@ def extract_model_fields(
 ) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
     """
     Extract fields from Django models file.
-
     Parameters
     ----------
     models_file : str
         A models.py file that defines Django models.
-
     Returns
     -------
     Tuple(Dict[str, List[str]], Dict[str, List[str]])
@@ -116,13 +120,12 @@ def extract_model_fields(
 
     try:
         tree = ast.parse(content)
-
     except SyntaxError as e:
         raise SyntaxError(
             f"Failed to parse {models_file}. Make sure it's a valid Python file. Error: {str(e)}"
         ) from e
 
-    visitor = DjangoModelVisitor()
+    source_lines = content.splitlines()
+    visitor = DjangoModelVisitor(source_lines)
     visitor.visit(tree)
-
     return visitor.models, visitor.models_and_blank_fields

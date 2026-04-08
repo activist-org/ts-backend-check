@@ -1,8 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import pytest
+import ast
+import textwrap
 
-from ts_backend_check.parsers.django_parser import extract_model_fields
+from ts_backend_check.parsers.django_parser import extract_model_fields, DjangoModelVisitor
 
 
 def test_extract_model_fields(return_invalid_django_models):
@@ -37,3 +39,21 @@ def test_extract_model_fields_with_empty_file(tmp_path):
 
     fields = extract_model_fields(str(empty_file))
     assert fields == ({}, {})
+
+def make_visitor(source: str) -> DjangoModelVisitor:
+    """Parse *source* and return a visited DjangoModelVisitor."""
+    source = textwrap.dedent(source).strip()
+    tree = ast.parse(source)
+    visitor = DjangoModelVisitor(source.splitlines())
+    visitor.visit(tree)
+    return visitor
+
+def test_tagged_class_is_excluded_from_models():
+    source = """
+    class AuditLog(models.Model):  #tsbc: backend_only_model
+        action = models.CharField(max_length=100)
+        timestamp = models.DateTimeField()
+    """
+    v = make_visitor(source)
+    print(v.models)
+    assert "AuditLog" not in v.models
