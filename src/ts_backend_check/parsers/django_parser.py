@@ -11,6 +11,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
     """
     AST visitor to extract fields from Django models.
     """
+
     DJANGO_FIELD_TYPES = {
         "Field",
         "CharField",
