@@ -300,10 +300,8 @@ class TestCliMain(unittest.TestCase):
             with patch("sys.argv", ["ts-backend-check", "--all"]):
                 main()
 
-        # Assert it was called once per config entry
         assert check_files_and_print_results_model.call_count == len(config.keys())
 
-        # Assert each identifier call explicitly (example for 4 identifiers)
         for identifier in list(config.keys())[:4]:
             identifier_config = config[identifier]
 
