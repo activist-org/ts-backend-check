@@ -32,25 +32,15 @@ class DjangoModelVisitor(ast.NodeVisitor):
 
     BACKEND_ONLY_TAG = "#tsbc: backend_only_model"
 
-    def __init__(self, source_lines: list[str]) -> None:
+    def __init__(self, models_to_ignore: list[str] | None) -> None:
         self.models: Dict[str, List[str]] = {}
         self.current_model: str | None = None
         self.models_and_blank_fields: Dict[str, List[str]] = {}
-        self._backend_only_lines = self._index_backend_only_lines(source_lines)
-
-    def _index_backend_only_lines(self, source_lines: list[str]) -> set[int]:
-        return {
-            lineno
-            for lineno, line in enumerate(source_lines, start=1)
-            if self.BACKEND_ONLY_TAG in line
-        }
-
-    def _is_backend_only(self, node: ast.ClassDef) -> bool:
-        return node.lineno in self._backend_only_lines
+        self.models_to_ignore: set[str] = set(models_to_ignore or [])
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
-        Check class definitions, specifically those that inherit from other classes.
+        Check class definitions, specifically those that inherit from other classes and not listed in the ignore classes list.
         Parameters
         ----------
         node : ast.ClassDef
@@ -59,7 +49,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
         """
         # Only process classes that inherit from something and are not tagged
         # as backend-only models.
-        if node.bases and not self._is_backend_only(node):
+        if node.bases and node.name not in self.models_to_ignore:
             self.current_model = node.name
             if self.current_model not in self.models:
                 self.models[self.current_model] = []
@@ -100,7 +90,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
 
 
 def extract_model_fields(
-    models_file: str,
+    models_file: str, models_to_ignore: List[str] | None
 ) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
     """
     Extract fields from Django models file.
@@ -108,6 +98,8 @@ def extract_model_fields(
     ----------
     models_file : str
         A models.py file that defines Django models.
+    models_to_ignore: List[str]
+        Model classes to ignore, obtained from the config file.
     Returns
     -------
     Tuple(Dict[str, List[str]], Dict[str, List[str]])
@@ -126,7 +118,6 @@ def extract_model_fields(
             f"Failed to parse {models_file}. Make sure it's a valid Python file. Error: {str(e)}"
         ) from e
 
-    source_lines = content.splitlines()
-    visitor = DjangoModelVisitor(source_lines)
+    visitor = DjangoModelVisitor(models_to_ignore=models_to_ignore)
     visitor.visit(tree)
     return visitor.models, visitor.models_and_blank_fields

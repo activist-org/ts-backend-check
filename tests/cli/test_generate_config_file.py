@@ -75,6 +75,7 @@ def test_configure_model_interface_arguments_identifier_empty_first(
             "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "",  # check blank
+            "",  # ignore models
             "",  # no conversions
             "",  # finish
         ]
@@ -109,6 +110,7 @@ def test_configure_model_interface_arguments_empty_backend_path(
             "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "",  # check blank
+            "",  # ignore models
             "",  # no conversions
             "",  # finish
         ]
@@ -143,6 +145,7 @@ def test_configure_model_interface_arguments_empty_typescript_path(
             "",  # empty ts path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "",  # check blank
+            "",  # ignore models
             "",  # no conversions
             "",  # finish
         ]
@@ -179,6 +182,7 @@ def test_configure_model_interface_arguments_valid_flow(
             "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "y",  # check blank
+            "n",  # ignore models
             "y",  # include conversions
             "UserModel",
             "User",
@@ -230,6 +234,7 @@ def test_configure_model_interface_arguments_invalid_then_valid(
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
             "not_y_or_n_or_blank",  # check blank
             "n",  # check blank
+            "n",  # ignore models
             "",  # no conversions
             "",  # finish
         ]

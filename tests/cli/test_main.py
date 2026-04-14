@@ -290,6 +290,7 @@ class TestCliMain(unittest.TestCase):
                 "EventModel": ["Event", "EventExtended"],
                 "UserModel": ["User"],
             },
+            backend_models_to_ignore=["BackendOnlyModel"],
         )
 
     def test_typechecker_no_missing_fields_prints_success(self):

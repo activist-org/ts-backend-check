@@ -31,9 +31,9 @@ class UserModel(models.Model):
     name = models.CharField(max_length=50)
 
 
-# class BackendOnlyModel(models.Model):
-#     """
-#     Model that's only for the backend and is ignored via the 'backend_models_to_ignore' configuration option.
-#     """
+class BackendOnlyModel(models.Model):
+    """
+    Model that's only for the backend and is ignored via the 'backend_models_to_ignore' configuration option.
+    """
 
-#     id = models.CharField(max_length=32)
+    id = models.CharField(max_length=32)

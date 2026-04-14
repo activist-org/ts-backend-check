@@ -20,7 +20,7 @@ def test_checker_invalid_checks_fail(
     )
     errors = checker.check()
 
-    assert len(errors) == 3  # missing, optional and no matching interface
+    assert len(errors) == 4  # missing, optional and no matching interface
 
 
 def test_checker_ignored_missing_fields(
@@ -41,7 +41,7 @@ def test_checker_ignored_missing_fields(
     errors = checker.check()
 
     # The field 'date' is marked as ignored by ts-backend-check.
-    assert len(errors) == 0
+    assert len(errors) == 1
 
 
 def test_checker_with_actual_missing_fields(
@@ -61,7 +61,7 @@ def test_checker_with_actual_missing_fields(
     )
     errors = checker.check()
 
-    assert len(errors) == 3
+    assert len(errors) == 4
     assert "description" in errors[0]
 
 
@@ -82,7 +82,7 @@ def test_checker_with_no_matching_interface(
     )
     errors = checker.check()
 
-    assert len(errors) == 3
+    assert len(errors) == 4
     assert (
         "No matching TypeScript interface found for the model 'UserModel'." in errors[2]
     )
@@ -129,3 +129,24 @@ class ModelWithOrder(models.Model):
         "If the model is synced with multiple interfaces, then their properties should follow the order prescribed by the model fields."
         in errors[0]
     )
+
+
+def test_checker_with_ignored_backend_models(
+    return_valid_django_models,
+    return_valid_concatenated_types_file,
+    return_valid_check_blank_models,
+    return_valid_backend_to_ts_conversions,
+):
+    """
+    Check that missing interfaces will be reported.
+    """
+    checker = TypeChecker(
+        models_file=return_valid_django_models,
+        concatenated_types_file=return_valid_concatenated_types_file,
+        check_blank=return_valid_check_blank_models,
+        model_name_conversions=return_valid_backend_to_ts_conversions,
+        ignore_backend_models=["BackendOnlyModel"],
+    )
+    errors = checker.check()
+
+    assert len(errors) == 0

@@ -7,6 +7,7 @@ import argparse
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
+from typing import List
 
 import yaml
 from rich import print as rprint
@@ -55,6 +56,7 @@ def check_files_and_print_results(
     ts_interface_file_paths: list[Path],
     check_blank: bool = False,
     model_name_conversions: dict[str, list[str]] = {},
+    backend_models_to_ignore: List[str] = [],
 ) -> bool:
     """
     Check the provided files for the given model and print the results.
@@ -111,6 +113,7 @@ def check_files_and_print_results(
         concatenated_types_file=concatenated_types_file,
         model_name_conversions=model_name_conversions,
         check_blank=check_blank,
+        ignore_backend_models=backend_models_to_ignore,
     )
 
     if missing := checker.check():
@@ -274,12 +277,19 @@ def main() -> None:
             else {}
         )
 
+        ignore_backend_model = (
+            identifier_config["backend_models_to_ignore"]
+            if "backend_models_to_ignore" in identifier_config
+            else []
+        )
+
         r = check_files_and_print_results(
             identifier=args.identifier,
             backend_model_file_path=config_backend_model_file_path,
             ts_interface_file_paths=config_ts_interface_file_paths,
             check_blank=config_check_blank,
             model_name_conversions=config_model_name_conversions,
+            backend_models_to_ignore=ignore_backend_model,
         )
         results.append(r)
 
@@ -304,12 +314,19 @@ def main() -> None:
                 else {}
             )
 
+            ignore_backend_model = (
+                identifier_config["backend_models_to_ignore"]
+                if "backend_models_to_ignore" in identifier_config
+                else []
+            )
+
             r = check_files_and_print_results(
                 identifier=i,
                 backend_model_file_path=config_backend_model_file_path,
                 ts_interface_file_paths=config_ts_interface_file_paths,
                 check_blank=config_check_blank,
                 model_name_conversions=config_model_name_conversions,
+                backend_models_to_ignore=ignore_backend_model,
             )
             results.append(r)
 

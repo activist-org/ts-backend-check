@@ -30,6 +30,9 @@ class TypeChecker:
 
     model_name_conversions : dict[str: list[str]], default={}
         A dictionary containing conversions of model names to their corresponding TypeScript interfaces.
+
+    ignore_backend_models : List[str], default=None | []
+        A list containing all Django models to be ignored by tsbc.
     """
 
     def __init__(
@@ -38,6 +41,7 @@ class TypeChecker:
         concatenated_types_file: str,
         check_blank: bool = False,
         model_name_conversions: dict[str, list[str]] = {},
+        ignore_backend_models: List[str] = [],
     ) -> None:
         self.models_file = models_file
         self.concatenated_types_file = concatenated_types_file
@@ -45,7 +49,8 @@ class TypeChecker:
         self.model_name_conversions = model_name_conversions
         self.django_model_visitor = DjangoModelVisitor
         self.model_fields, self.models_and_blank_fields = extract_model_fields(
-            models_file
+            models_file,
+            models_to_ignore=ignore_backend_models,
         )
         self.ts_parser = TypeScriptParser(concatenated_types_file)
         self.ts_interfaces = self.ts_parser.parse_interfaces()
