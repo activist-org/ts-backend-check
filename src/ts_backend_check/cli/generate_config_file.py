@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from rich import print as rprint
-from yaml import dump
+from yaml import dump, safe_load
 
 CWD_PATH = Path.cwd()
 YAML_CONFIG_FILE_PATH = CWD_PATH / ".ts-backend-check.yaml"
@@ -29,6 +29,19 @@ def path_exists(path: str) -> bool:
     """
     full_path = Path.cwd() / path
     return bool(Path(full_path).is_file())
+
+
+def check_config_empty() -> bool:
+    with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
+        config = safe_load(file)
+
+        if config is None:
+            rprint(
+                "[red]Config is empty. Please regenerate your config file with tsbc -gcf.[/red]"
+            )
+            return True
+        else:
+            return False
 
 
 def write_config(config: dict[str, dict[str, object]]) -> None:

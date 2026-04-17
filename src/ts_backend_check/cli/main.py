@@ -13,7 +13,10 @@ from rich import print as rprint
 from rich.text import Text
 
 from ts_backend_check.checker import TypeChecker
-from ts_backend_check.cli.generate_config_file import generate_config_file
+from ts_backend_check.cli.generate_config_file import (
+    check_config_empty,
+    generate_config_file,
+)
 from ts_backend_check.cli.generate_test_project import generate_test_project
 from ts_backend_check.cli.upgrade import upgrade_cli
 from ts_backend_check.cli.version import get_version_message
@@ -251,41 +254,14 @@ def main() -> None:
     results: list[bool] = []
 
     if args.identifier:
-        identifier_config = config.get(args.identifier)
+        if check_config_empty() is False:
+            identifier_config = config.get(args.identifier)
 
-        if not identifier_config:
-            rprint(
-                f"[red]{args.identifier} is not an index within the .ts-backend-check.yaml configuration file. Please check the defined models and try again.[/red]"
-            )
-            sys.exit(1)
-
-        config_backend_model_file_path = Path(identifier_config["backend_model_path"])
-        config_ts_interface_file_paths = [
-            Path(p) for p in identifier_config["ts_interface_paths"]
-        ]
-        config_check_blank = (
-            identifier_config["check_blank_model_fields"]
-            if "check_blank_model_fields" in identifier_config
-            else False
-        )
-        config_model_name_conversions = (
-            identifier_config["backend_to_ts_model_name_conversions"]
-            if "backend_to_ts_model_name_conversions" in identifier_config
-            else {}
-        )
-
-        r = check_files_and_print_results(
-            identifier=args.identifier,
-            backend_model_file_path=config_backend_model_file_path,
-            ts_interface_file_paths=config_ts_interface_file_paths,
-            check_blank=config_check_blank,
-            model_name_conversions=config_model_name_conversions,
-        )
-        results.append(r)
-
-    if args.all:
-        for i in config.keys():
-            identifier_config = config.get(i)
+            if not identifier_config:
+                rprint(
+                    f"[red]{args.identifier} is not an index within the .ts-backend-check.yaml configuration file. Please check the defined models and try again.[/red]"
+                )
+                sys.exit(1)
 
             config_backend_model_file_path = Path(
                 identifier_config["backend_model_path"]
@@ -305,13 +281,44 @@ def main() -> None:
             )
 
             r = check_files_and_print_results(
-                identifier=i,
+                identifier=args.identifier,
                 backend_model_file_path=config_backend_model_file_path,
                 ts_interface_file_paths=config_ts_interface_file_paths,
                 check_blank=config_check_blank,
                 model_name_conversions=config_model_name_conversions,
             )
             results.append(r)
+
+    if args.all:
+        if check_config_empty() is False:
+            for i in config.keys():
+                identifier_config = config.get(i)
+
+                config_backend_model_file_path = Path(
+                    identifier_config["backend_model_path"]
+                )
+                config_ts_interface_file_paths = [
+                    Path(p) for p in identifier_config["ts_interface_paths"]
+                ]
+                config_check_blank = (
+                    identifier_config["check_blank_model_fields"]
+                    if "check_blank_model_fields" in identifier_config
+                    else False
+                )
+                config_model_name_conversions = (
+                    identifier_config["backend_to_ts_model_name_conversions"]
+                    if "backend_to_ts_model_name_conversions" in identifier_config
+                    else {}
+                )
+
+                r = check_files_and_print_results(
+                    identifier=i,
+                    backend_model_file_path=config_backend_model_file_path,
+                    ts_interface_file_paths=config_ts_interface_file_paths,
+                    check_blank=config_check_blank,
+                    model_name_conversions=config_model_name_conversions,
+                )
+                results.append(r)
 
     if args.identifier or args.all:
         if not all(results):
