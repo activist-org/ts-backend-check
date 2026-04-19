@@ -40,7 +40,7 @@ def config_file_is_valid() -> bool:
     Returns
     -------
     bool
-        True if the ts-backend-check configuration file is invalid. False otherwise.
+        True if the ts-backend-check configuration file is valid. False otherwise.
     """
     with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
         config = safe_load(file)
