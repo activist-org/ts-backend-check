@@ -129,5 +129,4 @@ exclude = [
     "^.*\\.__str__$",  # __str__ methods
     "^__init__$",      # __init__ files
     "^.*\\.__init__$", # __init__ methods
-    "^tests/.*$",      # test files
 ]
