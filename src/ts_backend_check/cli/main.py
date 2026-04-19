@@ -14,7 +14,7 @@ from rich.text import Text
 
 from ts_backend_check.checker import TypeChecker
 from ts_backend_check.cli.generate_config_file import (
-    check_config_empty,
+    config_file_is_valid,
     generate_config_file,
 )
 from ts_backend_check.cli.generate_test_project import generate_test_project
@@ -254,7 +254,7 @@ def main() -> None:
     results: list[bool] = []
 
     if args.identifier:
-        if check_config_empty() is False:
+        if config_file_is_valid():
             identifier_config = config.get(args.identifier)
 
             if not identifier_config:
@@ -290,7 +290,7 @@ def main() -> None:
             results.append(r)
 
     if args.all:
-        if check_config_empty() is False:
+        if config_file_is_valid():
             for i in config.keys():
                 identifier_config = config.get(i)
 
