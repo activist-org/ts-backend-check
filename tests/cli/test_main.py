@@ -367,6 +367,31 @@ class TestCliMain(unittest.TestCase):
             msg=f"Expected error header in rprint calls, got: {calls_str}",
         )
 
+    def test_cli_all_identifiers_in_config_file(self):
+        result = subprocess.run(
+            [
+                sys.executable,
+                "src/ts_backend_check/cli/main.py",
+                "-a",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        std_flat = result.stdout.strip().replace("\n", "")
+
+
+        self.assertIn(
+            "All backend models are synced with their corresponding TypeScript interfaces for the provided 'valid_model' files.", std_flat
+        )
+        self.assertIn(
+            "There are inconsistencies between the provided 'invalid_model' backend models and TypeScript interfaces. Please see the output below for details.", std_flat
+        )
+        self.assertIn(
+            "Please fix the 3 errors above to continue the sync of the backend models of src/ts_backend_check/test_project/backend/models.py and the corresponding TypeScript interfaces.", std_flat
+        )
+
+
 
 if __name__ == "__main__":
     unittest.main()
