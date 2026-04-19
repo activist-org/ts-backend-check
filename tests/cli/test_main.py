@@ -116,7 +116,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-i",
+                "--identifier",
                 model_name,
             ],
             capture_output=True,
@@ -140,7 +140,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-i",
+                "--identifier",
                 "invalid_model",
             ],
             capture_output=True,
@@ -158,7 +158,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-i",
+                "--identifier",
                 "invalid_identifier",
             ],
             capture_output=True,
@@ -181,7 +181,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-i",
+                "--identifier",
                 "invalid_backend_model_path",
             ],
             capture_output=True,
@@ -220,7 +220,7 @@ class TestCliMain(unittest.TestCase):
             [
                 sys.executable,
                 "src/ts_backend_check/cli/main.py",
-                "-i",
+                "--identifier",
                 "invalid_typescript_interface_path",
             ],
             capture_output=True,
@@ -305,7 +305,7 @@ class TestCliMain(unittest.TestCase):
                     "sys.argv",
                     [
                         "ts-backend-check",
-                        "-i",
+                        "--identifier",
                         "valid_model",
                     ],
                 ):
@@ -341,7 +341,7 @@ class TestCliMain(unittest.TestCase):
                         "sys.argv",
                         [
                             "ts-backend-check",
-                            "-i",
+                            "--identifier",
                             "invalid_model",
                         ],
                     ):
