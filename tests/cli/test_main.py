@@ -12,7 +12,8 @@ from unittest.mock import patch
 
 import yaml
 
-from ts_backend_check.cli.main import get_config_file_path, main
+from ts_backend_check.cli.main import main
+from ts_backend_check.utils import get_config_file_path
 
 YAML_CONFIG_FILE_PATH = get_config_file_path()
 with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
@@ -46,7 +47,7 @@ class TestCliMain(unittest.TestCase):
         yml_file.write_text("yml: true", encoding="utf-8")
 
         # Mock CWD_PATH to use self.tmp_path.
-        with patch("ts_backend_check.cli.main.CWD_PATH", self.tmp_path):
+        with patch("ts_backend_check.utils.CWD_PATH", self.tmp_path):
             result = get_config_file_path()
             self.assertEqual(result.name, ".ts-backend-check.yaml")
             self.assertTrue(result.is_file())
@@ -59,7 +60,7 @@ class TestCliMain(unittest.TestCase):
         yml_file.write_text("yml: true", encoding="utf-8")
 
         # Mock CWD_PATH to use self.tmp_path.
-        with patch("ts_backend_check.cli.main.CWD_PATH", self.tmp_path):
+        with patch("ts_backend_check.utils.CWD_PATH", self.tmp_path):
             result = get_config_file_path()
             self.assertEqual(result.name, ".ts-backend-check.yml")
             self.assertTrue(result.is_file())
@@ -69,7 +70,7 @@ class TestCliMain(unittest.TestCase):
         Test that .yaml is returned as default when neither file exists.
         """
         # Mock CWD_PATH to use self.tmp_path.
-        with patch("ts_backend_check.cli.main.CWD_PATH", self.tmp_path):
+        with patch("ts_backend_check.utils.CWD_PATH", self.tmp_path):
             result = get_config_file_path()
             self.assertEqual(result.name, ".ts-backend-check.yaml")
             self.assertFalse(result.is_file())

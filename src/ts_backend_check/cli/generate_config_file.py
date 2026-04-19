@@ -9,8 +9,10 @@ from typing import Any, Dict
 from rich import print as rprint
 from yaml import dump, safe_load
 
+from ts_backend_check.utils import get_config_file_path
+
 CWD_PATH = Path.cwd()
-YAML_CONFIG_FILE_PATH = CWD_PATH / ".ts-backend-check.yaml"
+YAML_CONFIG_FILE_PATH = get_config_file_path()
 
 
 def path_exists(path: str) -> bool:

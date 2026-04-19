@@ -3,7 +3,36 @@
 Utility functions for ts-backend-check.
 """
 
+from pathlib import Path
 from typing import Any
+
+CWD_PATH = Path.cwd()
+
+
+def get_config_file_path() -> Path:
+    """
+    Get the path to the ts-backend-check configuration file.
+
+    Checks for both .yaml and .yml extensions, preferring .yaml if both exist.
+
+    Returns
+    -------
+    Path
+        The path to the configuration file (.yaml or .yml).
+    """
+    yaml_path = CWD_PATH / ".ts-backend-check.yaml"
+    yml_path = CWD_PATH / ".ts-backend-check.yml"
+
+    # Prefer .yaml if it exists, otherwise check for .yml.
+    if yaml_path.is_file():
+        return yaml_path
+
+    elif yml_path.is_file():
+        return yml_path
+
+    else:
+        # Default to .yaml for new files.
+        return yaml_path
 
 
 def snake_to_camel(input_str: str) -> str:
