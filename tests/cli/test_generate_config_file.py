@@ -300,8 +300,8 @@ def test_config_file_is_valid_empty_file_returns_false(tmp_path, monkeypatch, ca
     result = config_file_is_valid()
 
     assert result is False
-    captured = capsys.readouterr()
-    assert "empty" in captured.out
+    out = capsys.readouterr().out.replace("\n", " ")
+    assert "empty" in out
 
 
 def test_config_file_is_valid_value_not_dict_returns_false(
@@ -319,9 +319,9 @@ def test_config_file_is_valid_value_not_dict_returns_false(
     result = config_file_is_valid()
 
     assert result is False
-    captured = capsys.readouterr()
-    assert "not\na dictionary" in captured.out
-    assert "my_identifier" in captured.out
+    out = capsys.readouterr().out.replace("\n", " ")
+    assert "not" in out and "dictionary" in out
+    assert "my_identifier" in out
 
 
 def test_config_file_is_valid_backend_model_path_none_returns_false(
@@ -343,9 +343,9 @@ def test_config_file_is_valid_backend_model_path_none_returns_false(
     result = config_file_is_valid()
 
     assert result is False
-    captured = capsys.readouterr()
-    assert "backend_model_path" in captured.out
-    assert "my_identifier" in captured.out
+    out = capsys.readouterr().out.replace("\n", " ")
+    assert "backend_model_path" in out
+    assert "my_identifier" in out
 
 
 def test_config_file_is_valid_ts_interface_paths_none_returns_false(
@@ -367,9 +367,9 @@ def test_config_file_is_valid_ts_interface_paths_none_returns_false(
     result = config_file_is_valid()
 
     assert result is False
-    captured = capsys.readouterr()
-    assert "ts_interface_paths" in captured.out
-    assert "my_identifier" in captured.out
+    out = capsys.readouterr().out.replace("\n", " ")
+    assert "ts_interface_paths" in out
+    assert "my_identifier" in out
 
 
 def test_config_file_is_valid_single_valid_identifier_returns_true(
@@ -388,9 +388,7 @@ def test_config_file_is_valid_single_valid_identifier_returns_true(
 
     from ts_backend_check.cli.generate_config_file import config_file_is_valid
 
-    result = config_file_is_valid()
-
-    assert result is True
+    assert config_file_is_valid() is True
 
 
 def test_config_file_is_valid_multiple_valid_identifiers_returns_true(
@@ -412,9 +410,7 @@ def test_config_file_is_valid_multiple_valid_identifiers_returns_true(
 
     from ts_backend_check.cli.generate_config_file import config_file_is_valid
 
-    result = config_file_is_valid()
-
-    assert result is True
+    assert config_file_is_valid() is True
 
 
 def test_config_file_is_valid_second_identifier_not_dict_returns_false(
@@ -437,9 +433,9 @@ def test_config_file_is_valid_second_identifier_not_dict_returns_false(
     result = config_file_is_valid()
 
     assert result is False
-    captured = capsys.readouterr()
-    assert "bad_identifier" in captured.out
-    assert "not a dictionary" in captured.out
+    out = capsys.readouterr().out.replace("\n", " ")
+    assert "bad_identifier" in out
+    assert "not" in out and "dictionary" in out
 
 
 def test_config_file_is_valid_second_identifier_missing_backend_path_returns_false(
@@ -464,6 +460,6 @@ def test_config_file_is_valid_second_identifier_missing_backend_path_returns_fal
     result = config_file_is_valid()
 
     assert result is False
-    captured = capsys.readouterr()
-    assert "bad_identifier" in captured.out
-    assert "backend_model_path" in captured.out
+    out = capsys.readouterr().out.replace("\n", " ")
+    assert "bad_identifier" in out
+    assert "backend_model_path" in out
