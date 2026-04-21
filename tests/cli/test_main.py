@@ -207,7 +207,7 @@ class TestCliMain(unittest.TestCase):
             stdout_flat,
         )
         self.assertIn(
-            "Please check the.ts-backend-check.yaml configuration file and try again.",
+            "Please check the .ts-backend-check.yaml configuration file and try again.",
             stdout_flat,
         )
 
