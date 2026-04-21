@@ -285,3 +285,185 @@ def test_generate_config_file_existing_user_skips(
     generate_config_file()
 
     mock_configure.assert_not_called()
+
+
+def test_config_file_is_valid_empty_file_returns_false(tmp_path, monkeypatch, capsys):
+    config_path = tmp_path / ".ts-backend-check.yaml"
+    config_path.write_text("")
+
+    monkeypatch.setattr(
+        "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", config_path
+    )
+
+    from ts_backend_check.cli.generate_config_file import config_file_is_valid
+
+    result = config_file_is_valid()
+
+    assert result is False
+    captured = capsys.readouterr()
+    assert "empty" in captured.out
+
+
+def test_config_file_is_valid_value_not_dict_returns_false(
+    tmp_path, monkeypatch, capsys
+):
+    config_path = tmp_path / ".ts-backend-check.yaml"
+    config_path.write_text("my_identifier: just_a_string\n")
+
+    monkeypatch.setattr(
+        "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", config_path
+    )
+
+    from ts_backend_check.cli.generate_config_file import config_file_is_valid
+
+    result = config_file_is_valid()
+
+    assert result is False
+    captured = capsys.readouterr()
+    assert "not\na dictionary" in captured.out
+    assert "my_identifier" in captured.out
+
+
+def test_config_file_is_valid_backend_model_path_none_returns_false(
+    tmp_path, monkeypatch, capsys
+):
+    config_path = tmp_path / ".ts-backend-check.yaml"
+    config_path.write_text(
+        "my_identifier:\n"
+        "  backend_model_path: null\n"
+        "  ts_interface_paths: some/path.ts\n"
+    )
+
+    monkeypatch.setattr(
+        "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", config_path
+    )
+
+    from ts_backend_check.cli.generate_config_file import config_file_is_valid
+
+    result = config_file_is_valid()
+
+    assert result is False
+    captured = capsys.readouterr()
+    assert "backend_model_path" in captured.out
+    assert "my_identifier" in captured.out
+
+
+def test_config_file_is_valid_ts_interface_paths_none_returns_false(
+    tmp_path, monkeypatch, capsys
+):
+    config_path = tmp_path / ".ts-backend-check.yaml"
+    config_path.write_text(
+        "my_identifier:\n"
+        "  backend_model_path: some/models.py\n"
+        "  ts_interface_paths: null\n"
+    )
+
+    monkeypatch.setattr(
+        "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", config_path
+    )
+
+    from ts_backend_check.cli.generate_config_file import config_file_is_valid
+
+    result = config_file_is_valid()
+
+    assert result is False
+    captured = capsys.readouterr()
+    assert "ts_interface_paths" in captured.out
+    assert "my_identifier" in captured.out
+
+
+def test_config_file_is_valid_single_valid_identifier_returns_true(
+    tmp_path, monkeypatch
+):
+    config_path = tmp_path / ".ts-backend-check.yaml"
+    config_path.write_text(
+        "my_identifier:\n"
+        "  backend_model_path: some/models.py\n"
+        "  ts_interface_paths: some/interfaces.ts\n"
+    )
+
+    monkeypatch.setattr(
+        "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", config_path
+    )
+
+    from ts_backend_check.cli.generate_config_file import config_file_is_valid
+
+    result = config_file_is_valid()
+
+    assert result is True
+
+
+def test_config_file_is_valid_multiple_valid_identifiers_returns_true(
+    tmp_path, monkeypatch
+):
+    config_path = tmp_path / ".ts-backend-check.yaml"
+    config_path.write_text(
+        "identifier_one:\n"
+        "  backend_model_path: app/models.py\n"
+        "  ts_interface_paths: app/types.ts\n"
+        "identifier_two:\n"
+        "  backend_model_path: other/models.py\n"
+        "  ts_interface_paths: other/types.ts\n"
+    )
+
+    monkeypatch.setattr(
+        "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", config_path
+    )
+
+    from ts_backend_check.cli.generate_config_file import config_file_is_valid
+
+    result = config_file_is_valid()
+
+    assert result is True
+
+
+def test_config_file_is_valid_second_identifier_not_dict_returns_false(
+    tmp_path, monkeypatch, capsys
+):
+    config_path = tmp_path / ".ts-backend-check.yaml"
+    config_path.write_text(
+        "good_identifier:\n"
+        "  backend_model_path: app/models.py\n"
+        "  ts_interface_paths: app/types.ts\n"
+        "bad_identifier: not_a_dict\n"
+    )
+
+    monkeypatch.setattr(
+        "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", config_path
+    )
+
+    from ts_backend_check.cli.generate_config_file import config_file_is_valid
+
+    result = config_file_is_valid()
+
+    assert result is False
+    captured = capsys.readouterr()
+    assert "bad_identifier" in captured.out
+    assert "not a dictionary" in captured.out
+
+
+def test_config_file_is_valid_second_identifier_missing_backend_path_returns_false(
+    tmp_path, monkeypatch, capsys
+):
+    config_path = tmp_path / ".ts-backend-check.yaml"
+    config_path.write_text(
+        "good_identifier:\n"
+        "  backend_model_path: app/models.py\n"
+        "  ts_interface_paths: app/types.ts\n"
+        "bad_identifier:\n"
+        "  backend_model_path: null\n"
+        "  ts_interface_paths: other/types.ts\n"
+    )
+
+    monkeypatch.setattr(
+        "ts_backend_check.cli.generate_config_file.YAML_CONFIG_FILE_PATH", config_path
+    )
+
+    from ts_backend_check.cli.generate_config_file import config_file_is_valid
+
+    result = config_file_is_valid()
+
+    assert result is False
+    captured = capsys.readouterr()
+    assert "bad_identifier" in captured.out
+    assert "backend_model_path" in captured.out
