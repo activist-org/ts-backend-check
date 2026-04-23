@@ -168,6 +168,26 @@ def configure_model_interface_arguments() -> None:
             else:
                 rprint("[red]Invalid response. Please try again.[/red]")
 
+        # Get Backend models to ignore.
+        backend_models_to_ignore: list[str] = []
+        confirm_backend_models_to_ignore = (
+            input(
+                "Are there backend models that should be ignored as they don't have frontend interfaces? (y/[n])"
+            )
+            .strip()
+            .lower()
+        )
+
+        while True:
+            if confirm_backend_models_to_ignore in ["n", ""]:
+                break
+
+            model = input("Enter name of the model to ignore: ").strip()
+            backend_models_to_ignore.append(model)
+            confirm_continue = input("Add another model to ignore: ").strip().lower()
+            if confirm_continue in ["n", ""]:
+                break
+
         # Get model name conversions.
         rprint(
             "[yellow]💡 Note: You need model name conversions if your TypeScript interfaces are not named exactly the same as the corresponding models (i.e. UserModel in Django and User in TS).[/yellow]"
@@ -220,6 +240,9 @@ def configure_model_interface_arguments() -> None:
             "backend_model_path": backend_path,
             "ts_interface_paths": frontend_path,
             "check_blank_model_fields": check_blank_model_fields,
+            "backend_models_to_ignore": backend_models_to_ignore
+            if len(backend_models_to_ignore) > 0
+            else None,
         }
 
         if backend_to_ts_model_name_conversions:

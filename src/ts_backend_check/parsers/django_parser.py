@@ -10,6 +10,11 @@ from typing import Dict, List, Tuple
 class DjangoModelVisitor(ast.NodeVisitor):
     """
     AST visitor to extract fields from Django models.
+
+    Parameters
+    ----------
+    models_to_ignore : List[str]
+        Model classes to ignore, obtained from the config file.
     """
 
     DJANGO_FIELD_TYPES = {
@@ -30,14 +35,15 @@ class DjangoModelVisitor(ast.NodeVisitor):
         "AutoField",
     }
 
-    def __init__(self) -> None:
+    def __init__(self, models_to_ignore: list[str] | None) -> None:
         self.models: Dict[str, List[str]] = {}
         self.current_model: str | None = None
         self.models_and_blank_fields: Dict[str, List[str]] = {}
+        self.models_to_ignore: set[str] = set(models_to_ignore or [])
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
-        Check class definitions, specifically those that inherit from other classes.
+        Check class definitions, specifically those that inherit from other classes and not listed in ignore classes.
 
         Parameters
         ----------
@@ -45,8 +51,8 @@ class DjangoModelVisitor(ast.NodeVisitor):
             A class definition from Python AST (Abstract Syntax Tree).
             It contains information about the class, such as its name, base classes, body, decorators, etc.
         """
-        # Only process classes that inherit from something.
-        if node.bases:
+        # Only process classes that inherit from something and are not ignored.
+        if node.bases and node.name not in self.models_to_ignore:
             self.current_model = node.name
             if self.current_model not in self.models:
                 self.models[self.current_model] = []
@@ -79,7 +85,6 @@ class DjangoModelVisitor(ast.NodeVisitor):
                 for field_type in self.DJANGO_FIELD_TYPES
             ):
                 self.models[self.current_model].append(target.id)
-
                 if any(
                     kw.arg == "blank"
                     and isinstance(kw.value, ast.Constant)
@@ -88,12 +93,11 @@ class DjangoModelVisitor(ast.NodeVisitor):
                 ):
                     if self.current_model not in self.models_and_blank_fields:
                         self.models_and_blank_fields[self.current_model] = []
-
                     self.models_and_blank_fields[self.current_model].append(target.id)
 
 
 def extract_model_fields(
-    models_file: str,
+    models_file: str, models_to_ignore: List[str] | None
 ) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
     """
     Extract fields from Django models file.
@@ -102,6 +106,9 @@ def extract_model_fields(
     ----------
     models_file : str
         A models.py file that defines Django models.
+
+    models_to_ignore : List[str]
+        Model classes to ignore, obtained from the config file.
 
     Returns
     -------
@@ -122,7 +129,6 @@ def extract_model_fields(
             f"Failed to parse {models_file}. Make sure it's a valid Python file. Error: {str(e)}"
         ) from e
 
-    visitor = DjangoModelVisitor()
+    visitor = DjangoModelVisitor(models_to_ignore=models_to_ignore)
     visitor.visit(tree)
-
     return visitor.models, visitor.models_and_blank_fields

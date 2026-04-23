@@ -291,7 +291,55 @@ class TestCliMain(unittest.TestCase):
                 "EventModel": ["Event", "EventExtended"],
                 "UserModel": ["User"],
             },
+            backend_models_to_ignore=["BackendOnlyModel"],
         )
+
+    def test_all_flag_invokes_check_files_and_print_results_for_all_identifiers(self):
+        with patch(
+            "ts_backend_check.cli.main.check_files_and_print_results"
+        ) as check_files_and_print_results_model:
+            with patch("sys.argv", ["ts-backend-check", "--all"]):
+                main()
+
+        assert check_files_and_print_results_model.call_count == len(config.keys())
+
+        for identifier in list(config.keys())[:4]:
+            identifier_config = config[identifier]
+
+            expected_backend_model_file_path = Path(
+                identifier_config["backend_model_path"]
+            )
+
+            expected_ts_interface_file_paths = [
+                Path(p) for p in identifier_config["ts_interface_paths"]
+            ]
+
+            expected_check_blank = (
+                identifier_config["check_blank_model_fields"]
+                if "check_blank_model_fields" in identifier_config
+                else False
+            )
+
+            expected_model_name_conversions = (
+                identifier_config["backend_to_ts_model_name_conversions"]
+                if "backend_to_ts_model_name_conversions" in identifier_config
+                else {}
+            )
+
+            expected_backend_models_to_ignore = (
+                identifier_config["backend_models_to_ignore"]
+                if "backend_models_to_ignore" in identifier_config
+                else []
+            )
+
+            check_files_and_print_results_model.assert_any_call(
+                identifier=identifier,
+                backend_model_file_path=expected_backend_model_file_path,
+                ts_interface_file_paths=expected_ts_interface_file_paths,
+                check_blank=expected_check_blank,
+                model_name_conversions=expected_model_name_conversions,
+                backend_models_to_ignore=expected_backend_models_to_ignore,
+            )
 
     def test_typechecker_no_missing_fields_prints_success(self):
         """

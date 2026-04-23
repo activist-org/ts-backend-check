@@ -45,6 +45,8 @@ invalid_model:
   ts_interface_paths:
     - src/ts_backend_check/test_project/frontend/invalid_interfaces.ts
   check_blank_model_fields: true
+  backend_models_to_ignore:
+    - BackendOnlyModel
   backend_to_ts_model_name_conversions:
     EventModel:
       - Event

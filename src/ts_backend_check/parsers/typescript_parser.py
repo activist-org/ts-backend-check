@@ -71,7 +71,7 @@ class TypeScriptParser:
         Set[str]
             The field names that are marked with a ts-backend-check-ignore identifier to ignore them.
         """
-        ignore_pattern = r"//.*?ts-backend-check: ignore\s+(\w+)"
+        ignore_pattern = r"//.*?(?:tsbc|ts-backend-check): ignore\s+(\w+)"
         return set(re.findall(ignore_pattern, self.content))
 
     @staticmethod
