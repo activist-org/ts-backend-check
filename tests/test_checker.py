@@ -8,6 +8,7 @@ def test_checker_invalid_checks_fail(
     return_invalid_concatenated_types_file,
     return_invalid_check_blank_models,
     return_invalid_backend_to_ts_conversions,
+    return_valid_backend_models_to_ignore,
 ):
     """
     Test that those checks that should fail in the invalid files do.
@@ -17,10 +18,11 @@ def test_checker_invalid_checks_fail(
         concatenated_types_file=return_invalid_concatenated_types_file,
         check_blank=return_invalid_check_blank_models,
         model_name_conversions=return_invalid_backend_to_ts_conversions,
+        backend_models_to_ignore=return_valid_backend_models_to_ignore,
     )
     errors = checker.check()
 
-    assert len(errors) == 4  # missing, optional and no matching interface
+    assert len(errors) == 3  # missing, optional and no matching interface
 
 
 def test_checker_ignored_missing_fields(
@@ -28,6 +30,7 @@ def test_checker_ignored_missing_fields(
     return_valid_concatenated_types_file,
     return_valid_check_blank_models,
     return_valid_backend_to_ts_conversions,
+    return_valid_backend_models_to_ignore,
 ):
     """
     Test that the ignore fields comment functions properly.
@@ -37,11 +40,12 @@ def test_checker_ignored_missing_fields(
         concatenated_types_file=return_valid_concatenated_types_file,
         check_blank=return_valid_check_blank_models,
         model_name_conversions=return_valid_backend_to_ts_conversions,
+        backend_models_to_ignore=return_valid_backend_models_to_ignore,
     )
     errors = checker.check()
 
     # The field 'date' is marked as ignored by ts-backend-check.
-    assert len(errors) == 1
+    assert len(errors) == 0
 
 
 def test_checker_with_actual_missing_fields(
@@ -49,6 +53,7 @@ def test_checker_with_actual_missing_fields(
     return_invalid_concatenated_types_file,
     return_invalid_check_blank_models,
     return_invalid_backend_to_ts_conversions,
+    return_valid_backend_models_to_ignore,
 ):
     """
     Check that missing fields are reported in invalid files.
@@ -58,10 +63,11 @@ def test_checker_with_actual_missing_fields(
         concatenated_types_file=return_invalid_concatenated_types_file,
         check_blank=return_invalid_check_blank_models,
         model_name_conversions=return_invalid_backend_to_ts_conversions,
+        backend_models_to_ignore=return_valid_backend_models_to_ignore,
     )
     errors = checker.check()
 
-    assert len(errors) == 4
+    assert len(errors) == 3
     assert "description" in errors[0]
 
 
@@ -70,6 +76,7 @@ def test_checker_with_no_matching_interface(
     return_invalid_concatenated_types_file,
     return_invalid_check_blank_models,
     return_invalid_backend_to_ts_conversions,
+    return_valid_backend_models_to_ignore,
 ):
     """
     Check that missing interfaces will be reported.
@@ -79,10 +86,11 @@ def test_checker_with_no_matching_interface(
         concatenated_types_file=return_invalid_concatenated_types_file,
         check_blank=return_invalid_check_blank_models,
         model_name_conversions=return_invalid_backend_to_ts_conversions,
+        backend_models_to_ignore=return_valid_backend_models_to_ignore,
     )
     errors = checker.check()
 
-    assert len(errors) == 4
+    assert len(errors) == 3
     assert (
         "No matching TypeScript interface found for the model 'UserModel'." in errors[2]
     )
