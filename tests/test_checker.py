@@ -136,6 +136,7 @@ def test_checker_with_ignored_backend_models(
     return_valid_concatenated_types_file,
     return_valid_check_blank_models,
     return_valid_backend_to_ts_conversions,
+    return_valid_backend_models_to_ignore,
 ):
     """
     Check that missing interfaces will be reported.
@@ -145,7 +146,7 @@ def test_checker_with_ignored_backend_models(
         concatenated_types_file=return_valid_concatenated_types_file,
         check_blank=return_valid_check_blank_models,
         model_name_conversions=return_valid_backend_to_ts_conversions,
-        backend_models_to_ignore=["BackendOnlyModel"],
+        backend_models_to_ignore=return_valid_backend_models_to_ignore,
     )
     errors = checker.check()
 
