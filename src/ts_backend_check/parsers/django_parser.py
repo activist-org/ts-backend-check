@@ -51,8 +51,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
             A class definition from Python AST (Abstract Syntax Tree).
             It contains information about the class, such as its name, base classes, body, decorators, etc.
         """
-        # Only process classes that inherit from something and are not tagged
-        # as backend-only models.
+        # Only process classes that inherit from something and are not ignored.
         if node.bases and node.name not in self.models_to_ignore:
             self.current_model = node.name
             if self.current_model not in self.models:
