@@ -16,12 +16,13 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 - Interface file paths can now be broken up over multiple files in the `.ts-backend-check.yaml` configuration file ([#39](https://github.com/activist-org/ts-backend-check/issues/39)).
 - Backend models can be ignored in the `.ts-backend-check.yaml` configuration file ([#40](https://github.com/activist-org/ts-backend-check/issues/40)).
-- The user is prompted to regenerate their `.ts-backend-check.yaml` if the file is found to be empty ([#41](https://github.com/activist-org/ts-backend-check/issues/41)).
+- The user is prompted to regenerate their `.ts-backend-check.yaml` if the file is found to be empty or is missing required arguments ([#41](https://github.com/activist-org/ts-backend-check/issues/41)).
 - The user is prompted to write a configuration file for the test project on generation ([#46](https://github.com/activist-org/ts-backend-check/issues/46)).
 
 ### ♻️ Code Refactoring
 
 - The `--model` (`-m`) flag was renamed `--identifier` (`-i`) for clarity as we're passing a model-interface identifier to the CLI ([#42](https://github.com/activist-org/ts-backend-check/issues/42)).
+- The `get_config_file_path` function was moved to `utils.py`.
 - Messages to the user were improved and refactored given the changes above.
 
 ### ✅ Tests

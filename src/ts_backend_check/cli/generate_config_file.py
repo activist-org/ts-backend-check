@@ -7,10 +7,12 @@ from pathlib import Path
 from typing import Any, Dict
 
 from rich import print as rprint
-from yaml import dump
+from yaml import dump, safe_load
+
+from ts_backend_check.utils import get_config_file_path
 
 CWD_PATH = Path.cwd()
-YAML_CONFIG_FILE_PATH = CWD_PATH / ".ts-backend-check.yaml"
+YAML_CONFIG_FILE_PATH = get_config_file_path()
 
 
 def path_exists(path: str) -> bool:
@@ -29,6 +31,47 @@ def path_exists(path: str) -> bool:
     """
     full_path = Path.cwd() / path
     return bool(Path(full_path).is_file())
+
+
+def config_file_is_valid() -> bool:
+    """
+    Check that the configuration file for ts-backend-check is not empty and has the necessary keys.
+
+    Returns
+    -------
+    bool
+        True if the ts-backend-check configuration file is valid. False otherwise.
+    """
+    with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
+        config = safe_load(file)
+
+        if config is not None:
+            for i in config.keys():
+                if not isinstance(config[i], dict):
+                    rprint(
+                        f"[red]The ts-backend-check identifier '{i}' in the configuration file is not a dictionary. Please check the configuration file and try again.[/red]"
+                    )
+                    return False
+
+                if config[i]["backend_model_path"] is None:
+                    rprint(
+                        f"[red]The ts-backend-check identifier '{i}' in the configuration file does not have a backend_model_path argument. Please check the configuration file and try again.[/red]"
+                    )
+                    return False
+
+                if config[i]["ts_interface_paths"] is None:
+                    rprint(
+                        f"[red]The ts-backend-check identifier '{i}' in the configuration file does not have a ts_interface_paths argument. Please check the configuration file and try again.[/red]"
+                    )
+                    return False
+
+            return True
+
+        else:
+            rprint(
+                "[red]The ts-backend-check configuration file is empty. Please regenerate your config file with tsbc -gcf.[/red]"
+            )
+            return False
 
 
 def write_config(config: dict[str, dict[str, object]]) -> None:
