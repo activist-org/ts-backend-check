@@ -14,40 +14,16 @@ from rich import print as rprint
 from rich.text import Text
 
 from ts_backend_check.checker import TypeChecker
-from ts_backend_check.cli.generate_config_file import generate_config_file
+from ts_backend_check.cli.generate_config_file import (
+    config_file_is_valid,
+    generate_config_file,
+)
 from ts_backend_check.cli.generate_test_project import generate_test_project
 from ts_backend_check.cli.upgrade import upgrade_cli
 from ts_backend_check.cli.version import get_version_message
+from ts_backend_check.utils import get_config_file_path
 
 # MARK: Base Paths
-
-CWD_PATH = Path.cwd()
-
-
-def get_config_file_path() -> Path:
-    """
-    Get the path to the ts-backend-check configuration file.
-
-    Checks for both .yaml and .yml extensions, preferring .yaml if both exist.
-
-    Returns
-    -------
-    Path
-        The path to the configuration file (.yaml or .yml).
-    """
-    yaml_path = CWD_PATH / ".ts-backend-check.yaml"
-    yml_path = CWD_PATH / ".ts-backend-check.yml"
-
-    # Prefer .yaml if it exists, otherwise check for .yml.
-    if yaml_path.is_file():
-        return yaml_path
-
-    elif yml_path.is_file():
-        return yml_path
-
-    else:
-        # Default to .yaml for new files.
-        return yaml_path
 
 
 def check_files_and_print_results(
@@ -248,6 +224,9 @@ def main() -> None:
     if args.generate_config_file:
         generate_config_file()
         return
+
+    if not config_file_is_valid():
+        sys.exit(1)
 
     # MARK: Run Checks
 
