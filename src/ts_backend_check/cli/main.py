@@ -54,6 +54,9 @@ def check_files_and_print_results(
     model_name_conversions : dict[str, list[str]], default={}
         A dictionary of backend model names to their corresponding TypeScript interfaces when snake to camel case isn't valid.
 
+    backend_models_to_ignore : List[str]
+        Backend model classes to ignore, obtained from the config file.
+
     Returns
     -------
     bool
@@ -89,7 +92,7 @@ def check_files_and_print_results(
         concatenated_types_file=concatenated_types_file,
         model_name_conversions=model_name_conversions,
         check_blank=check_blank,
-        ignore_backend_models=backend_models_to_ignore,
+        backend_models_to_ignore=backend_models_to_ignore,
     )
 
     if missing := checker.check():

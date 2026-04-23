@@ -41,7 +41,7 @@ def test_extract_model_fields_with_empty_file(tmp_path):
     assert fields == ({}, {})
 
 
-def ignore_backend_models_from_config(return_invalid_django_models):
+def backend_models_to_ignore_from_config(return_invalid_django_models):
     fields = extract_model_fields(return_invalid_django_models, ["BackendOnlyModel"])
 
     assert fields[0]["backend_models_to_ignore"][0] == "BackendOnlyModel"

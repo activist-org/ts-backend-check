@@ -10,6 +10,11 @@ from typing import Dict, List, Tuple
 class DjangoModelVisitor(ast.NodeVisitor):
     """
     AST visitor to extract fields from Django models.
+
+    Parameters
+    ----------
+    models_to_ignore : List[str]
+        Model classes to ignore, obtained from the config file.
     """
 
     DJANGO_FIELD_TYPES = {
@@ -30,8 +35,6 @@ class DjangoModelVisitor(ast.NodeVisitor):
         "AutoField",
     }
 
-    BACKEND_ONLY_TAG = "#tsbc: backend_only_model"
-
     def __init__(self, models_to_ignore: list[str] | None) -> None:
         self.models: Dict[str, List[str]] = {}
         self.current_model: str | None = None
@@ -40,7 +43,8 @@ class DjangoModelVisitor(ast.NodeVisitor):
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
-        Check class definitions, specifically those that inherit from other classes and not listed in the ignore classes list.
+        Check class definitions, specifically those that inherit from other classes and not listed in ignore classes.
+
         Parameters
         ----------
         node : ast.ClassDef
@@ -53,12 +57,15 @@ class DjangoModelVisitor(ast.NodeVisitor):
             self.current_model = node.name
             if self.current_model not in self.models:
                 self.models[self.current_model] = []
+
             self.generic_visit(node)
+
         self.current_model = None
 
     def visit_Assign(self, node: ast.Assign) -> None:
         """
         Check assignment statements within a class.
+
         Parameters
         ----------
         node : ast.Assign
@@ -67,6 +74,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
         """
         if not self.current_model:
             return
+
         for target in node.targets:
             if (
                 isinstance(target, ast.Name)
@@ -94,12 +102,15 @@ def extract_model_fields(
 ) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
     """
     Extract fields from Django models file.
+
     Parameters
     ----------
     models_file : str
         A models.py file that defines Django models.
-    models_to_ignore: List[str]
+
+    models_to_ignore : List[str]
         Model classes to ignore, obtained from the config file.
+
     Returns
     -------
     Tuple(Dict[str, List[str]], Dict[str, List[str]])
@@ -113,6 +124,7 @@ def extract_model_fields(
 
     try:
         tree = ast.parse(content)
+
     except SyntaxError as e:
         raise SyntaxError(
             f"Failed to parse {models_file}. Make sure it's a valid Python file. Error: {str(e)}"

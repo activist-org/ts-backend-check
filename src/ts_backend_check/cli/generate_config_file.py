@@ -170,17 +170,18 @@ def configure_model_interface_arguments() -> None:
 
         # Get Backend models to ignore.
         backend_models_to_ignore: list[str] = []
-        confirm_ignore_backend_models = (
+        confirm_backend_models_to_ignore = (
             input(
-                "Ignore backend models which do not have Frontend interfaces? (y/[n])"
+                "Are there backend models that should be ignored as they don't have frontend interfaces? (y/[n])"
             )
             .strip()
             .lower()
         )
 
         while True:
-            if confirm_ignore_backend_models in ["n", ""]:
+            if confirm_backend_models_to_ignore in ["n", ""]:
                 break
+
             model = input("Enter name of the model to ignore: ").strip()
             backend_models_to_ignore.append(model)
             confirm_continue = input("Add another model to ignore: ").strip().lower()

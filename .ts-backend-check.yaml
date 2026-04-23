@@ -35,10 +35,8 @@ invalid_backend_model_path:
   backend_model_path: invalid_path_to_models.py
   ts_interface_paths:
     - src/ts_backend_check/test_project/frontend/valid_interfaces_1.ts
-  backend_models_to_ignore: None
 
 invalid_typescript_interface_path:
   backend_model_path: src/ts_backend_check/test_project/backend/models.py
   ts_interface_paths:
     - invalid_path_to_interfaces.ts
-  backend_models_to_ignore: None
