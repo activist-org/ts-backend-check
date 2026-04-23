@@ -11,5 +11,5 @@ export interface Event {
 
 export interface EventExtended extends Event {
   isPrivate: boolean;
-  // ts-backend-check: ignore date
+  // tsbc: ignore date
 }
