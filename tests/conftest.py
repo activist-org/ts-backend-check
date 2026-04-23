@@ -57,6 +57,7 @@ def return_valid_backend_to_ts_conversions():
 invalid_django_models = config["invalid_model"]["backend_model_path"]
 invalid_ts_interfaces = [Path(p) for p in config["invalid_model"]["ts_interface_paths"]]
 invalid_check_blank_models = config["invalid_model"]["check_blank_model_fields"]
+invalid_backend_models_to_ignore = config["invalid_model"]["backend_models_to_ignore"]
 invalid_backend_to_ts_conversions = config["invalid_model"][
     "backend_to_ts_model_name_conversions"
 ]
@@ -80,6 +81,11 @@ def return_invalid_concatenated_types_file():
 @pytest.fixture
 def return_invalid_check_blank_models():
     return invalid_check_blank_models
+
+
+@pytest.fixture
+def return_invalid_backend_models_to_ignore():
+    return invalid_backend_models_to_ignore
 
 
 @pytest.fixture

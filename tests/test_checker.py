@@ -8,7 +8,7 @@ def test_checker_invalid_checks_fail(
     return_invalid_concatenated_types_file,
     return_invalid_check_blank_models,
     return_invalid_backend_to_ts_conversions,
-    return_valid_backend_models_to_ignore,
+    return_invalid_backend_models_to_ignore,
 ):
     """
     Test that those checks that should fail in the invalid files do.
@@ -18,7 +18,7 @@ def test_checker_invalid_checks_fail(
         concatenated_types_file=return_invalid_concatenated_types_file,
         check_blank=return_invalid_check_blank_models,
         model_name_conversions=return_invalid_backend_to_ts_conversions,
-        backend_models_to_ignore=return_valid_backend_models_to_ignore,
+        backend_models_to_ignore=return_invalid_backend_models_to_ignore,
     )
     errors = checker.check()
 
@@ -53,7 +53,7 @@ def test_checker_with_actual_missing_fields(
     return_invalid_concatenated_types_file,
     return_invalid_check_blank_models,
     return_invalid_backend_to_ts_conversions,
-    return_valid_backend_models_to_ignore,
+    return_invalid_backend_models_to_ignore,
 ):
     """
     Check that missing fields are reported in invalid files.
@@ -63,7 +63,7 @@ def test_checker_with_actual_missing_fields(
         concatenated_types_file=return_invalid_concatenated_types_file,
         check_blank=return_invalid_check_blank_models,
         model_name_conversions=return_invalid_backend_to_ts_conversions,
-        backend_models_to_ignore=return_valid_backend_models_to_ignore,
+        backend_models_to_ignore=return_invalid_backend_models_to_ignore,
     )
     errors = checker.check()
 
@@ -76,7 +76,7 @@ def test_checker_with_no_matching_interface(
     return_invalid_concatenated_types_file,
     return_invalid_check_blank_models,
     return_invalid_backend_to_ts_conversions,
-    return_valid_backend_models_to_ignore,
+    return_invalid_backend_models_to_ignore,
 ):
     """
     Check that missing interfaces will be reported.
@@ -86,7 +86,7 @@ def test_checker_with_no_matching_interface(
         concatenated_types_file=return_invalid_concatenated_types_file,
         check_blank=return_invalid_check_blank_models,
         model_name_conversions=return_invalid_backend_to_ts_conversions,
-        backend_models_to_ignore=return_valid_backend_models_to_ignore,
+        backend_models_to_ignore=return_invalid_backend_models_to_ignore,
     )
     errors = checker.check()
 
