@@ -1,8 +1,8 @@
 # Configuration file for ts-backend-check validation.
 # See https://github.com/activist-org/ts-backend-check for details.
 
-# Note: You can also switch slashes for backslashes to test how Windows paths will be handled.
 valid_model:
+auth:
   backend_model_path: src/ts_backend_check/test_project/backend/models.py
   ts_interface_paths:
     - src/ts_backend_check/test_project/frontend/valid_interfaces_1.ts
