@@ -117,7 +117,9 @@ def configure_model_interface_arguments() -> None:
 
         # Get backend path.
         while True:
-            backend_path = input("Enter the path for Django models.py file: ").strip()
+            backend_path = input(
+                "Enter the path for the Django models.py file: "
+            ).strip()
             if not backend_path:
                 rprint(
                     "[red]The path for the Django models.py file cannot be empty. Please try again.[/red]"
@@ -133,7 +135,7 @@ def configure_model_interface_arguments() -> None:
         # Get frontend path.
         while True:
             frontend_path = input(
-                "Enter the path to TypeScript interface file: "
+                "Enter the path to the TypeScript interface file: "
             ).strip()
             if not frontend_path:
                 rprint(
