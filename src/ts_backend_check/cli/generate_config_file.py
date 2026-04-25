@@ -133,6 +133,7 @@ def configure_model_interface_arguments() -> None:
             rprint("[yellow]Please check the path and try again.[/yellow]")
 
         # Get frontend path.
+        frontend_path_lists: list[Path] = []
         while True:
             frontend_path = input(
                 "Enter the path to the TypeScript interface file: "
@@ -143,11 +144,18 @@ def configure_model_interface_arguments() -> None:
                 )
                 continue
 
-            if path_exists(frontend_path):
-                break
+            if path_exists(frontend_path) is True:
+                frontend_path_lists.append(frontend_path)
 
-            rprint(f"[red]File not found: {CWD_PATH / frontend_path}[/red]")
-            rprint("[yellow]Please check the path and try again.[/yellow]")
+                stop_frontend_path_input = input("Do you want to continue to add more frontend paths?")
+                if stop_frontend_path_input in ["n", ""]:
+                    break
+                else:
+                    continue
+
+            else:
+                rprint(f"[red]File not found: {CWD_PATH / frontend_path}[/red]")
+                rprint("[yellow]Please check the path and try again.[/yellow]")
 
         # Get whether to check blank model fields.
         while True:
@@ -240,7 +248,7 @@ def configure_model_interface_arguments() -> None:
 
         config_options[key] = {
             "backend_model_path": backend_path,
-            "ts_interface_paths": frontend_path,
+            "ts_interface_paths": frontend_path_lists,
             "check_blank_model_fields": check_blank_model_fields,
             "backend_models_to_ignore": backend_models_to_ignore
             if len(backend_models_to_ignore) > 0
