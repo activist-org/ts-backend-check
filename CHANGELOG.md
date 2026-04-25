@@ -10,7 +10,7 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
-## [Upcoming] ts-backend-check 1.5.0
+## ts-backend-check 1.5.0
 
 ### ✨ Features
 
