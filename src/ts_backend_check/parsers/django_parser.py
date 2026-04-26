@@ -93,6 +93,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
                 ):
                     if self.current_model not in self.models_and_blank_fields:
                         self.models_and_blank_fields[self.current_model] = []
+
                     self.models_and_blank_fields[self.current_model].append(target.id)
 
 
@@ -131,4 +132,5 @@ def extract_model_fields(
 
     visitor = DjangoModelVisitor(models_to_ignore=models_to_ignore)
     visitor.visit(tree)
+
     return visitor.models, visitor.models_and_blank_fields
