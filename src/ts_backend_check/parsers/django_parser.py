@@ -144,20 +144,21 @@ def extract_model_fields(
     }
 
     # Derive fields inherited from other classes via comments.
-    INHERIT_COMMENT_REGEX = re.compile(
+    INHERIT_FIELD_COMMENT_REGEX = re.compile(
         r"#.*?(?:tsbc|ts-backend-check): .*inherit\s+(\w+)\b(?!\s*\(blank=True\))"
     )
-    INHERIT_BLANK_COMMENT_REGEX = re.compile(
+    INHERIT_BLANK_FIELD_COMMENT_REGEX = re.compile(
         r"#\s*?(?:tsbc|ts-backend-check): .*inherit\s+(\w+)\s+\((blank=True)\)"
     )
 
     model_inherited_fields = {}
     for k, v in model_lines.items():
         model_inherited_fields[k] = {
-            "inherited_fields": INHERIT_COMMENT_REGEX.findall(v)
+            "inherited_fields": INHERIT_FIELD_COMMENT_REGEX.findall(v)
         }
         model_inherited_fields[k]["inherited_blank_fields"] = [
-            match.group(1).strip() for match in INHERIT_BLANK_COMMENT_REGEX.finditer(v)
+            match.group(1).strip()
+            for match in INHERIT_BLANK_FIELD_COMMENT_REGEX.finditer(v)
         ]
 
     # Derive all fields ordered.
