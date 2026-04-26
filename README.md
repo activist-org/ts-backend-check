@@ -196,7 +196,7 @@ model_identifier: # an identifier you define that you want to pass to the CLI
 
 ## pre-commit
 
-This is an exaple of a [prek](https://prek.j178.dev/) or [pre-commit](https://github.com/pre-commit/pre-commit) hook:
+This is an example of a [prek](https://prek.j178.dev/) or [pre-commit](https://github.com/pre-commit/pre-commit) hook:
 
 ```yaml
 - repo: local
@@ -204,11 +204,9 @@ This is an exaple of a [prek](https://prek.j178.dev/) or [pre-commit](https://gi
     - id: run-ts-backend-check
       name: run ts-backend-check key-value checks
       files: ^src-dir/
-      entry: ts-backend-check -a
+      entry: uv run ts-backend-check -a
       language: python
       pass_filenames: false
-      additional_dependencies:
-        - ts-backend-check
 ```
 
 ## GitHub Action

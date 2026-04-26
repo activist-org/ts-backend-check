@@ -238,11 +238,9 @@ This is an example of a `prek <https://prek.j178.dev/>`_ or `pre-commit <https:/
        - id: run-ts-backend-check
          name: run ts-backend-check key-value checks
          files: ^src-dir/
-         entry: ts-backend-check -a
+         entry: uv run ts-backend-check -a
          language: python
          pass_filenames: false
-         additional_dependencies:
-           - ts-backend-check
 
 GitHub Action
 -------------
