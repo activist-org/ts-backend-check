@@ -132,7 +132,7 @@ def configure_model_interface_arguments() -> None:
             rprint(f"[red]File not found: {CWD_PATH / backend_path}[/red]")
             rprint("[yellow]Please check the path and try again.[/yellow]")
 
-        # Get frontend path.
+        # Get frontend paths.
         frontend_path_lists: list[Path] = []
         while True:
             frontend_path = input(
@@ -148,7 +148,7 @@ def configure_model_interface_arguments() -> None:
                 frontend_path_lists.append(Path(frontend_path))
 
                 stop_frontend_path_input = input(
-                    "Do you want to continue to add more frontend paths?(y/[n]) "
+                    "Do you want to continue to add more frontend paths? (y/[n]) "
                 )
                 if stop_frontend_path_input in ["n", ""]:
                     break
