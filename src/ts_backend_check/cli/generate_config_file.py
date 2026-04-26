@@ -136,7 +136,7 @@ def configure_model_interface_arguments() -> None:
         frontend_path_lists: list[str] = []
         while True:
             frontend_path = input(
-                "Enter the path to the TypeScript interface file: "
+                "Enter the path to a TypeScript interface file: "
             ).strip()
             if not frontend_path:
                 rprint(
@@ -148,7 +148,7 @@ def configure_model_interface_arguments() -> None:
                 frontend_path_lists.append(frontend_path)
 
                 stop_frontend_path_input = input(
-                    "Do you want to continue to add more frontend paths? (y/[n]) "
+                    "Do you want to continue to add more TypeScript interface file paths? (y/[n]): "
                 )
                 if stop_frontend_path_input in ["n", ""]:
                     break
@@ -184,7 +184,7 @@ def configure_model_interface_arguments() -> None:
         backend_models_to_ignore: list[str] = []
         confirm_backend_models_to_ignore = (
             input(
-                "Are there backend models that should be ignored as they don't have frontend interfaces? (y/[n])"
+                "Are there backend models that should be ignored as they don't have frontend interfaces? (y/[n]): "
             )
             .strip()
             .lower()
