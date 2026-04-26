@@ -132,10 +132,11 @@ def configure_model_interface_arguments() -> None:
             rprint(f"[red]File not found: {CWD_PATH / backend_path}[/red]")
             rprint("[yellow]Please check the path and try again.[/yellow]")
 
-        # Get frontend path.
+        # Get frontend paths.
+        frontend_path_lists: list[str] = []
         while True:
             frontend_path = input(
-                "Enter the path to the TypeScript interface file: "
+                "Enter the path to a TypeScript interface file: "
             ).strip()
             if not frontend_path:
                 rprint(
@@ -143,11 +144,20 @@ def configure_model_interface_arguments() -> None:
                 )
                 continue
 
-            if path_exists(frontend_path):
-                break
+            if path_exists(frontend_path) is True:
+                frontend_path_lists.append(frontend_path)
 
-            rprint(f"[red]File not found: {CWD_PATH / frontend_path}[/red]")
-            rprint("[yellow]Please check the path and try again.[/yellow]")
+                stop_frontend_path_input = input(
+                    "Do you want to continue to add more TypeScript interface file paths? (y/[n]): "
+                )
+                if stop_frontend_path_input in ["n", ""]:
+                    break
+                else:
+                    continue
+
+            else:
+                rprint(f"[red]File not found: {CWD_PATH / frontend_path}[/red]")
+                rprint("[yellow]Please check the path and try again.[/yellow]")
 
         # Get whether to check blank model fields.
         while True:
@@ -174,7 +184,7 @@ def configure_model_interface_arguments() -> None:
         backend_models_to_ignore: list[str] = []
         confirm_backend_models_to_ignore = (
             input(
-                "Are there backend models that should be ignored as they don't have frontend interfaces? (y/[n])"
+                "Are there backend models that should be ignored as they don't have frontend interfaces? (y/[n]): "
             )
             .strip()
             .lower()
@@ -186,7 +196,9 @@ def configure_model_interface_arguments() -> None:
 
             model = input("Enter name of the model to ignore: ").strip()
             backend_models_to_ignore.append(model)
-            confirm_continue = input("Add another model to ignore: ").strip().lower()
+            confirm_continue = (
+                input("Add another model to ignore? (y/[n]): ").strip().lower()
+            )
             if confirm_continue in ["n", ""]:
                 break
 
@@ -218,7 +230,7 @@ def configure_model_interface_arguments() -> None:
                     if ts_interface_name := [
                         name.strip()
                         for name in input(
-                            "Enter the TypeScript interface name (if multiple separate them with commas): "
+                            "Enter the TypeScript interface name (separate multiple interface names with commas): "
                         ).split(",")
                     ]:
                         break
@@ -240,7 +252,7 @@ def configure_model_interface_arguments() -> None:
 
         config_options[key] = {
             "backend_model_path": backend_path,
-            "ts_interface_paths": frontend_path,
+            "ts_interface_paths": frontend_path_lists,
             "check_blank_model_fields": check_blank_model_fields,
             "backend_models_to_ignore": backend_models_to_ignore
             if len(backend_models_to_ignore) > 0
