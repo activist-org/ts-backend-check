@@ -145,9 +145,11 @@ def configure_model_interface_arguments() -> None:
                 continue
 
             if path_exists(frontend_path) is True:
-                frontend_path_lists.append(frontend_path)
+                frontend_path_lists.append(Path(frontend_path))
 
-                stop_frontend_path_input = input("Do you want to continue to add more frontend paths?")
+                stop_frontend_path_input = input(
+                    "Do you want to continue to add more frontend paths?(y/[n]) "
+                )
                 if stop_frontend_path_input in ["n", ""]:
                     break
                 else:

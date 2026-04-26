@@ -2,7 +2,6 @@
 # See https://github.com/activist-org/ts-backend-check for details.
 
 valid_model:
-auth:
   backend_model_path: src/ts_backend_check/test_project/backend/models.py
   ts_interface_paths:
     - src/ts_backend_check/test_project/frontend/valid_interfaces_1.ts

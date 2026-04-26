@@ -74,10 +74,11 @@ def test_configure_model_interface_arguments_identifier_empty_first(
             "valid_model",  # identifier
             "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
-            "",  # check blank
+            "n",  # check blank
             "",  # ignore models
             "",  # no conversions
             "",  # finish
+            "",
         ]
     )
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
@@ -113,6 +114,7 @@ def test_configure_model_interface_arguments_empty_backend_path(
             "",  # ignore models
             "",  # no conversions
             "",  # finish
+            "",
         ]
     )
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
@@ -144,6 +146,7 @@ def test_configure_model_interface_arguments_empty_typescript_path(
             "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "",  # empty ts path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
+            "n",
             "",  # check blank
             "",  # ignore models
             "",  # no conversions
@@ -181,6 +184,7 @@ def test_configure_model_interface_arguments_valid_flow(
             "valid_model",  # identifier
             "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
+            "n",
             "y",  # check blank
             "n",  # ignore models
             "y",  # include conversions
@@ -232,6 +236,7 @@ def test_configure_model_interface_arguments_invalid_then_valid(
             "src/ts_backend_check/test_project/backend/models.py",  # backend path
             "invalid_path_to_interfaces_path.ts",
             "src/ts_backend_check/test_project/frontend/valid_interfaces.ts",  # frontend path
+            "n",
             "not_y_or_n_or_blank",  # check blank
             "n",  # check blank
             "n",  # ignore models
