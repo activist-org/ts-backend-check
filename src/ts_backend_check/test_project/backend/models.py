@@ -30,7 +30,7 @@ class UserModel(models.Model):
     id = models.CharField(max_length=32)
     name = models.CharField(max_length=50)
     # tsbc: inherit email (blank=True)
-    # ts-backend-check: inherit password
+    # ts-backend-check: from AbstractUser inherit password
 
 
 class BackendOnlyModel(models.Model):

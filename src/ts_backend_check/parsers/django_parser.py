@@ -164,7 +164,7 @@ def extract_model_fields(
     ALL_MODEL_FIELDS_ORDERED_REGEX = re.compile(
         r"(?:^\s*(?!\s*_)(\w+)\s*=\s*\w+)"  # field (not including private)
         r"|"
-        r"(?:#\s*(?:tsbc|ts-backend-check):\s*inherit\s+(\w+)(?:\s*\((blank=True)\))?)",  # inherited
+        r"(?:#\s*(?:tsbc|ts-backend-check): .*inherit\s+(\w+)(?:\s*\((blank=True)\))?)",  # inherited
         re.MULTILINE,
     )
     models_all_fields_and_blank_fields_ordered = {
