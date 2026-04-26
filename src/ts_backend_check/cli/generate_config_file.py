@@ -133,7 +133,7 @@ def configure_model_interface_arguments() -> None:
             rprint("[yellow]Please check the path and try again.[/yellow]")
 
         # Get frontend paths.
-        frontend_path_lists: list[Path] = []
+        frontend_path_lists: list[str] = []
         while True:
             frontend_path = input(
                 "Enter the path to the TypeScript interface file: "
@@ -145,7 +145,7 @@ def configure_model_interface_arguments() -> None:
                 continue
 
             if path_exists(frontend_path) is True:
-                frontend_path_lists.append(Path(frontend_path))
+                frontend_path_lists.append(frontend_path)
 
                 stop_frontend_path_input = input(
                     "Do you want to continue to add more frontend paths? (y/[n]) "
