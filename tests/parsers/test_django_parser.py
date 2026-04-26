@@ -38,7 +38,7 @@ def test_extract_model_fields_with_empty_file(tmp_path):
     empty_file.write_text("")
 
     fields = extract_model_fields(str(empty_file), [])
-    assert fields == ({}, {})
+    assert fields == ({}, {}, {})
 
 
 def backend_models_to_ignore_from_config(return_invalid_django_models):
