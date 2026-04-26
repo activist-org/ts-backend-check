@@ -4,18 +4,88 @@ Changelog
 
 See the `releases for ts-backend-check <https://github.com/activist-org/ts-backend-check/releases>`_ for an up to date list of versions and their release dates.
 
-``ts-backend-check`` tries to follow `semantic versioning <https://semver.org/>`_, a **MAJOR.MINOR.PATCH** version where increments are made of the:
+``ts-backend-check`` tries to follow `semantic versioning <https://semver.org/>`_, a ``MAJOR.MINOR.PATCH`` version where increments are made of the:
 
-* `MAJOR` version when we make incompatible API changes
-* `MINOR` version when we add functionality in a backwards compatible manner
-* `PATCH` version when we make backwards compatible bug fixes
+* ``MAJOR`` version when we make incompatible API changes
+* ``MINOR`` version when we add functionality in a backwards compatible manner
+* ``PATCH`` version when we make backwards compatible bug fixes
 
 Emojis for the following are chosen based on `gitmoji <https://gitmoji.dev/>`_.
 
--------------------------------
+ts-backend-check 1.5.0
+======================
+
+✨ Features
+-----------
+
+- Interface file paths can now be broken up over multiple files in the ``.ts-backend-check.yaml`` configuration file (`#39 <https://github.com/activist-org/ts-backend-check/issues/39>`_).
+- Backend models can be ignored in the ``.ts-backend-check.yaml`` configuration file (`#40 <https://github.com/activist-org/ts-backend-check/issues/40>`_).
+- The user is prompted to regenerate their ``.ts-backend-check.yaml`` if the file is found to be empty or is missing required arguments (`#41 <https://github.com/activist-org/ts-backend-check/issues/41>`_).
+- The user is prompted to write a configuration file for the test project on generation (`#46 <https://github.com/activist-org/ts-backend-check/issues/46>`_).
+
+♻️ Code Refactoring
+-------------------
+
+- The ``--model`` (``-m``) flag was renamed ``--identifier`` (``-i``) for clarity as we're passing a model-interface identifier to the CLI (`#42 <https://github.com/activist-org/ts-backend-check/issues/42>`_).
+- The ``get_config_file_path`` function was moved to ``utils.py``.
+- Messages to the user were improved and refactored given the changes above.
+
+✅ Tests
+--------
+
+- Tests were refactored given the changes above.
+
+ts-backend-check 1.4.4
+======================
+
+⬆️ Dependencies
+---------------
+
+- Update all dev and production dependencies.
+
+ts-backend-check 1.4.3
+======================
+
+🐞 Bug Fixes
+------------
+
+- The configuration setup was being ran again after a successful creation of a config file (`#36 <https://github.com/activist-org/ts-backend-check/issues/36>`_).
+
+ts-backend-check 1.4.2
+======================
+
+🐞 Bug Fixes
+------------
+
+- The configuration file was being saved to the install directory rather than the current working directory (`#33 <https://github.com/activist-org/ts-backend-check/issues/33>`_).
+
+## ts-backend-check 1.4.1
+
+🐞 Bug Fixes
+------------
+
+- The file paths were not being picked up when generating a configuration file (`#33 <https://github.com/activist-org/ts-backend-check/issues/33>`_).
+
+ts-backend-check 1.4.0
+======================
+
+✨ Features
+-----------
+
+- The user is now able to access the CLI via ``tsbc`` for quicker commands.
+
+🐞 Bug Fixes
+------------
+
+- The CLI wasn't printing help when the user entered no arguments without a configuration file.
+- The values in ``backend_to_ts_model_name_conversions`` dictionaries were being saved as strings instead of lists (`#34 <https://github.com/activist-org/ts-backend-check/issues/34>`_).
+- Type definitions were added to empty variables to assure that they're use appropriately.
 
 ts-backend-check 1.3.2
 ======================
+
+📝 Documentation
+----------------
 
 - All documentation for the package was updated to improve clarity (`#26 <https://github.com/activist-org/ts-backend-check/issues/26>`_).
 
