@@ -196,7 +196,9 @@ def configure_model_interface_arguments() -> None:
 
             model = input("Enter name of the model to ignore: ").strip()
             backend_models_to_ignore.append(model)
-            confirm_continue = input("Add another model to ignore: ").strip().lower()
+            confirm_continue = (
+                input("Add another model to ignore? (y/[n]): ").strip().lower()
+            )
             if confirm_continue in ["n", ""]:
                 break
 
@@ -228,7 +230,7 @@ def configure_model_interface_arguments() -> None:
                     if ts_interface_name := [
                         name.strip()
                         for name in input(
-                            "Enter the TypeScript interface name (if multiple separate them with commas): "
+                            "Enter the TypeScript interface name (separate multiple interface names with commas): "
                         ).split(",")
                     ]:
                         break
