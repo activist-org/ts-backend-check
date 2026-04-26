@@ -10,6 +10,16 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
+## ts-backend-check 1.5.1
+
+### ✨ Features
+
+- The configuration generation process now allows for multiple interface file paths to be passed ([#49](https://github.com/activist-org/ts-backend-check/issues/49)).
+
+### ♻️ Code Refactoring
+
+- Messages to the user were updated to make them more clear and make formatting more consistent.
+
 ## ts-backend-check 1.5.0
 
 ### ✨ Features
