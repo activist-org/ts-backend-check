@@ -4,7 +4,8 @@ Module for parsing Django models and extracting field information.
 """
 
 import ast
-from typing import Dict, List, Tuple
+import re
+from typing import Any, Dict, List, Tuple
 
 
 class DjangoModelVisitor(ast.NodeVisitor):
@@ -36,8 +37,8 @@ class DjangoModelVisitor(ast.NodeVisitor):
     }
 
     def __init__(self, models_to_ignore: list[str] | None) -> None:
-        self.models: Dict[str, List[str]] = {}
         self.current_model: str | None = None
+        self.models_and_fields: Dict[str, List[str]] = {}
         self.models_and_blank_fields: Dict[str, List[str]] = {}
         self.models_to_ignore: set[str] = set(models_to_ignore or [])
 
@@ -54,8 +55,8 @@ class DjangoModelVisitor(ast.NodeVisitor):
         # Only process classes that inherit from something and are not ignored.
         if node.bases and node.name not in self.models_to_ignore:
             self.current_model = node.name
-            if self.current_model not in self.models:
-                self.models[self.current_model] = []
+            if self.current_model not in self.models_and_fields:
+                self.models_and_fields[self.current_model] = []
 
             self.generic_visit(node)
 
@@ -84,7 +85,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
                 field_type in node.value.func.attr
                 for field_type in self.DJANGO_FIELD_TYPES
             ):
-                self.models[self.current_model].append(target.id)
+                self.models_and_fields[self.current_model].append(target.id)
                 if any(
                     kw.arg == "blank"
                     and isinstance(kw.value, ast.Constant)
@@ -99,7 +100,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
 
 def extract_model_fields(
     models_file: str, models_to_ignore: List[str] | None
-) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
+) -> Tuple[Dict[str, List[Any]], Dict[str, List[Any]], Dict[str, List[Any]]]:
     """
     Extract fields from Django models file.
 
@@ -113,8 +114,8 @@ def extract_model_fields(
 
     Returns
     -------
-    Tuple(Dict[str, List[str]], Dict[str, List[str]])
-        The fields from the models file extracted into a dictionary for future processing.
+    Tuple(Dict[str, List[Any]], Dict[str, List[Any]], Dict[str, List[Any]])
+        The fields from the models file extracted into dictionaries for future processing.
     """
     with open(models_file, "r", encoding="utf-8") as f:
         content = f.read().strip()
@@ -133,4 +134,65 @@ def extract_model_fields(
     visitor = DjangoModelVisitor(models_to_ignore=models_to_ignore)
     visitor.visit(tree)
 
-    return visitor.models, visitor.models_and_blank_fields
+    # Derive texts for all model classes.
+    MODEL_TEXT_REGEX = re.compile(
+        r"^(class\s+(\w+).+?)(?=\nclass|\Z)", re.MULTILINE | re.DOTALL
+    )
+    model_lines = {
+        match.group(2): match.group(1).strip()
+        for match in MODEL_TEXT_REGEX.finditer(content)
+    }
+
+    # Derive fields inherited from other classes via comments.
+    INHERIT_FIELD_COMMENT_REGEX = re.compile(
+        r"#.*?(?:tsbc|ts-backend-check): .*inherit\s+(\w+)\b(?!\s*\(blank=True\))"
+    )
+    INHERIT_BLANK_FIELD_COMMENT_REGEX = re.compile(
+        r"#\s*?(?:tsbc|ts-backend-check): .*inherit\s+(\w+)\s+\((blank=True)\)"
+    )
+
+    model_inherited_fields = {}
+    for k, v in model_lines.items():
+        model_inherited_fields[k] = {
+            "inherited_fields": INHERIT_FIELD_COMMENT_REGEX.findall(v)
+        }
+        model_inherited_fields[k]["inherited_blank_fields"] = [
+            match.group(1).strip()
+            for match in INHERIT_BLANK_FIELD_COMMENT_REGEX.finditer(v)
+        ]
+
+    # Derive all fields ordered.
+    ALL_MODEL_FIELDS_ORDERED_REGEX = re.compile(
+        r"(?:^\s*(?!\s*_)(\w+)\s*=\s*\w+)"  # field (not including private)
+        r"|"
+        r"(?:#\s*(?:tsbc|ts-backend-check): .*inherit\s+(\w+)(?:\s*\((blank=True)\))?)",  # inherited
+        re.MULTILINE,
+    )
+    models_all_fields_and_blank_fields_ordered = {
+        m: [
+            f[0] if f[0] != "" else f[1]
+            for f in ALL_MODEL_FIELDS_ORDERED_REGEX.findall(model_lines[m])
+        ]
+        for m in set(
+            list(visitor.models_and_fields.keys())
+            + list(visitor.models_and_blank_fields.keys())
+        )
+    }
+
+    # Combine all fields for the model.
+    models_all_fields = {}
+    models_all_blank_fields = {}
+    for m in list(models_all_fields_and_blank_fields_ordered.keys()):
+        models_all_fields[m] = model_inherited_fields.get(m, {}).get(
+            "inherited_fields", []
+        ) + visitor.models_and_fields.get(m, [])
+
+        models_all_blank_fields[m] = model_inherited_fields.get(m, {}).get(
+            "inherited_blank_fields", []
+        ) + visitor.models_and_blank_fields.get(m, [])
+
+    return (
+        models_all_fields_and_blank_fields_ordered,
+        models_all_fields,
+        models_all_blank_fields,
+    )

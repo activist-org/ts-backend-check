@@ -48,8 +48,12 @@ class TypeChecker:
         self.check_blank = check_blank
         self.model_name_conversions = model_name_conversions
         self.django_model_visitor = DjangoModelVisitor
-        self.model_fields, self.models_and_blank_fields = extract_model_fields(
-            models_file,
+        (
+            self.models_all_fields_and_blank_fields_ordered,
+            self.models_all_fields,
+            self.models_all_blank_fields,
+        ) = extract_model_fields(
+            models_file=models_file,
             models_to_ignore=backend_models_to_ignore,
         )
         self.ts_parser = TypeScriptParser(concatenated_types_file)
@@ -67,7 +71,21 @@ class TypeChecker:
         """
         error_fields: list[str] = []
 
-        for model_name, fields in self.model_fields.items():
+        for model_name in list(self.models_all_fields_and_blank_fields_ordered.keys()):
+            fields_and_blank_fields_ordered = (
+                self.models_all_fields_and_blank_fields_ordered[model_name]
+            )
+            # fields = (
+            #     self.models_all_fields[model_name]
+            #     if model_name in self.models_all_fields
+            #     else []
+            # )
+            blank_fields = (
+                self.models_all_blank_fields[model_name]
+                if model_name in self.models_all_blank_fields
+                else []
+            )
+
             missing_fields_exist = False
             interfaces, _ = self._find_matching_interfaces(model_name=model_name)
 
@@ -77,7 +95,7 @@ class TypeChecker:
                 )
                 continue
 
-            for field in fields:
+            for field in fields_and_blank_fields_ordered:
                 if not self._field_is_accounted_for(field=field, interfaces=interfaces):
                     error_fields.append(
                         self._format_missing_field_message(
@@ -86,22 +104,22 @@ class TypeChecker:
                     )
                     missing_fields_exist = True
 
-            if self.check_blank and model_name in self.models_and_blank_fields:
+            if self.check_blank and blank_fields:
                 error_fields.extend(
                     self._format_optional_properties_message(
-                        field=field,
+                        field=bf,
                         model_name=model_name,
                         models_file=self.models_file,
                     )
-                    for field in self.models_and_blank_fields[model_name]
+                    for bf in blank_fields
                     if not self._property_is_optional_when_field_is_blank(
                         model_name=model_name,
-                        field=field,
+                        field=bf,
                     )
                 )
 
             if not missing_fields_exist and not self._ts_interface_properties_ordered(
-                model_name=model_name, fields=fields
+                model_name=model_name, fields=fields_and_blank_fields_ordered
             ):
                 error_fields.append(
                     self._format_unordered_interface_properties_message(

@@ -10,6 +10,20 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
+## ts-backend-check 1.6.0
+
+### ✨ Features
+
+- The user is now able to use comments to indicate which fields in the model are being inherited from other classes and whether these fields are nullable ([#51](https://github.com/activist-org/ts-backend-check/issues/51)).
+
+### 🐞 Bug Fixes
+
+- The validation of existing fields was only being ran over fields and not nullable fields.
+
+### ♻️ Code Refactoring
+
+- Variables were renamed in parts of the project to make the code more clear.
+
 ## ts-backend-check 1.5.1
 
 ### ✨ Features

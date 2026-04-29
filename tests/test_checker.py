@@ -68,7 +68,7 @@ def test_checker_with_actual_missing_fields(
     errors = checker.check()
 
     assert len(errors) == 3
-    assert "description" in errors[0]
+    assert "description" in "".join(errors)
 
 
 def test_checker_with_no_matching_interface(
@@ -92,7 +92,8 @@ def test_checker_with_no_matching_interface(
 
     assert len(errors) == 3
     assert (
-        "No matching TypeScript interface found for the model 'UserModel'." in errors[2]
+        "No matching TypeScript interface found for the model 'UserModel'."
+        in "".join(errors)
     )
 
 
