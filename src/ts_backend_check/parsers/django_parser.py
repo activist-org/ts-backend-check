@@ -80,7 +80,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
                 isinstance(target, ast.Name)
                 and not target.id.startswith("_")
                 and isinstance(node.value, ast.Call)
-                and hasattr(node.value.func, "attr")
+                and isinstance(node.value.func, ast.Attribute)
             ) and any(
                 field_type in node.value.func.attr
                 for field_type in self.DJANGO_FIELD_TYPES

@@ -7,7 +7,6 @@ import argparse
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import List
 
 import yaml
 from rich import print as rprint
@@ -32,7 +31,7 @@ def check_files_and_print_results(
     ts_interface_file_paths: list[Path],
     check_blank: bool = False,
     model_name_conversions: dict[str, list[str]] = {},
-    backend_models_to_ignore: List[str] = [],
+    backend_models_to_ignore: list[str] = [],
 ) -> bool:
     """
     Check the provided files for the given model and print the results.
@@ -54,7 +53,7 @@ def check_files_and_print_results(
     model_name_conversions : dict[str, list[str]], default={}
         A dictionary of backend model names to their corresponding TypeScript interfaces when snake to camel case isn't valid.
 
-    backend_models_to_ignore : List[str]
+    backend_models_to_ignore : list[str]
         Backend model classes to ignore, obtained from the config file.
 
     Returns

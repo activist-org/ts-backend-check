@@ -3,9 +3,7 @@
 Example backend model file that has both valid and invalid TS interface files in test_project/frontend.
 """
 
-from django.db import models
-
-# mypy: ignore-errors
+from django.db import models  # ty: ignore[unresolved-import]
 
 
 class EventModel(models.Model):
