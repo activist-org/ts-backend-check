@@ -8,6 +8,6 @@ cli/
 
     main
     generate_config_file
-    generate_test_project
+    generate_test_projects
     upgrade
     version
