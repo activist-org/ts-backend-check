@@ -10,6 +10,12 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
+## [Upcoming] ts-backend-check 1.6.1
+
+### ♻️ Code Refactoring
+
+- Static analysis has been shifted from `mypy` to `ty` ([#53](https://github.com/activist-org/ts-backend-check/issues/53)).
+
 ## ts-backend-check 1.6.0
 
 ### ✨ Features
