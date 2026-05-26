@@ -5,7 +5,7 @@ Module for parsing Django models and extracting field information.
 
 import ast
 import re
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 
 class DjangoModelVisitor(ast.NodeVisitor):
@@ -14,7 +14,7 @@ class DjangoModelVisitor(ast.NodeVisitor):
 
     Parameters
     ----------
-    models_to_ignore : List[str]
+    models_to_ignore : list[str]
         Model classes to ignore, obtained from the config file.
     """
 
@@ -38,8 +38,8 @@ class DjangoModelVisitor(ast.NodeVisitor):
 
     def __init__(self, models_to_ignore: list[str] | None) -> None:
         self.current_model: str | None = None
-        self.models_and_fields: Dict[str, List[str]] = {}
-        self.models_and_blank_fields: Dict[str, List[str]] = {}
+        self.models_and_fields: dict[str, list[str]] = {}
+        self.models_and_blank_fields: dict[str, list[str]] = {}
         self.models_to_ignore: set[str] = set(models_to_ignore or [])
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
@@ -99,8 +99,8 @@ class DjangoModelVisitor(ast.NodeVisitor):
 
 
 def extract_model_fields(
-    models_file: str, models_to_ignore: List[str] | None
-) -> Tuple[Dict[str, List[Any]], Dict[str, List[Any]], Dict[str, List[Any]]]:
+    models_file: str, models_to_ignore: list[str] | None
+) -> tuple[dict[str, list[Any]], dict[str, list[Any]], dict[str, list[Any]]]:
     """
     Extract fields from Django models file.
 
@@ -109,12 +109,12 @@ def extract_model_fields(
     models_file : str
         A models.py file that defines Django models.
 
-    models_to_ignore : List[str]
+    models_to_ignore : list[str]
         Model classes to ignore, obtained from the config file.
 
     Returns
     -------
-    Tuple(Dict[str, List[Any]], Dict[str, List[Any]], Dict[str, List[Any]])
+    tuple(dict[str, list[Any]], dict[str, list[Any]], dict[str, list[Any]])
         The fields from the models file extracted into dictionaries for future processing.
     """
     with open(models_file, "r", encoding="utf-8") as f:
