@@ -54,8 +54,8 @@ repos:
         language: python
         additional_dependencies:
           - packaging
-          - rich
-          - requests
           - pyyaml
+          - requests
+          - rich
         types: [python]
         pass_filenames: false
