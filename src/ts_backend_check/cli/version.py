@@ -4,7 +4,7 @@ Functions for checking current version of the ts-backend-check CLI.
 """
 
 import importlib.metadata
-from typing import Any, Dict
+from typing import Any
 
 import requests
 
@@ -44,7 +44,7 @@ def get_latest_version() -> Any:
         response = requests.get(
             "https://api.github.com/repos/activist-org/ts-backend-check/releases/latest"
         )
-        response_data: Dict[str, Any] = response.json()
+        response_data: dict[str, Any] = response.json()
         return response_data["name"]
 
     except Exception:

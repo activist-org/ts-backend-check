@@ -5,7 +5,6 @@ Module for parsing TypeScript interfaces and types.
 
 import re
 from dataclasses import dataclass
-from typing import Dict, List, Set
 
 
 @dataclass
@@ -15,9 +14,9 @@ class TypeScriptInterface:
     """
 
     name: str
-    properties: List[str]
-    optional_properties: List[str]
-    parents: List[str]
+    properties: list[str]
+    optional_properties: list[str]
+    parents: list[str]
 
 
 class TypeScriptParser:
@@ -33,16 +32,16 @@ class TypeScriptParser:
     def __init__(self, concatenated_types_file: str) -> None:
         self.content = concatenated_types_file
 
-    def parse_interfaces(self) -> Dict[str, TypeScriptInterface]:
+    def parse_interfaces(self) -> dict[str, TypeScriptInterface]:
         """
         Parse TypeScript interfaces from the file.
 
         Returns
         -------
-        Dict[str, TypeScriptInterface]
+        dict[str, TypeScriptInterface]
             The interface parsed into a dictionary for future processing.
         """
-        interfaces: Dict[str, TypeScriptInterface] = {}
+        interfaces: dict[str, TypeScriptInterface] = {}
         interface_pattern = (
             r"(?:export\s+|declare\s+)?interface\s+(\w+)"
             r"(?:\s+extends\s+([^{]+))?\s*{([\s\S]*?)}"
@@ -62,20 +61,20 @@ class TypeScriptParser:
 
         return interfaces
 
-    def get_ignored_fields(self) -> Set[str]:
+    def get_ignored_fields(self) -> set[str]:
         """
         Extract fields marked as ignored in comments.
 
         Returns
         -------
-        Set[str]
+        set[str]
             The field names that are marked with a ts-backend-check ignore identifier.
         """
         ignore_pattern = r"//.*?(?:tsbc|ts-backend-check): ignore\s+(\w+)"
         return set(re.findall(ignore_pattern, self.content))
 
     @staticmethod
-    def _extract_properties(interface_body: str) -> List[str]:
+    def _extract_properties(interface_body: str) -> list[str]:
         """
         Extract both real properties and 'ignored' comment backend fields from interface bodies.
 
@@ -86,7 +85,7 @@ class TypeScriptParser:
 
         Returns
         -------
-        List[str]
+        list[str]
             The property names from the model interface body.
         """
         combined_pattern = (
@@ -104,7 +103,7 @@ class TypeScriptParser:
         return properties
 
     @staticmethod
-    def _extract_optional_properties(interface_body: str) -> List[str]:
+    def _extract_optional_properties(interface_body: str) -> list[str]:
         """
         Extract all optional properties from interface bodies.
 
@@ -115,7 +114,7 @@ class TypeScriptParser:
 
         Returns
         -------
-        List[str]
+        list[str]
             The optional property names from the model interface body.
         """
         pattern = r"^\s*(?:readonly\s+)?(\w+)\s*\?:"  # optional properties

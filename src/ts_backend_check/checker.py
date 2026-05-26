@@ -3,8 +3,6 @@
 Main module for checking Django models against TypeScript types.
 """
 
-from typing import Dict, List, Tuple
-
 from ts_backend_check.parsers.django_parser import (
     DjangoModelVisitor,
     extract_model_fields,
@@ -31,7 +29,7 @@ class TypeChecker:
     model_name_conversions : dict[str: list[str]], default={}
         A dictionary containing conversions of model names to their corresponding TypeScript interfaces.
 
-    backend_models_to_ignore : List[str], default=None | []
+    backend_models_to_ignore : list[str], default=None | []
         A list containing all Django models to be ignored by tsbc.
     """
 
@@ -41,7 +39,7 @@ class TypeChecker:
         concatenated_types_file: str,
         check_blank: bool = False,
         model_name_conversions: dict[str, list[str]] = {},
-        backend_models_to_ignore: List[str] = [],
+        backend_models_to_ignore: list[str] = [],
     ) -> None:
         self.models_file = models_file
         self.concatenated_types_file = concatenated_types_file
@@ -60,7 +58,7 @@ class TypeChecker:
         self.ts_interfaces = self.ts_parser.parse_interfaces()
         self.backend_only = self.ts_parser.get_ignored_fields()
 
-    def check(self) -> List[str]:
+    def check(self) -> list[str]:
         """
         Check models against TypeScript types.
 
@@ -131,7 +129,7 @@ class TypeChecker:
 
     def _find_matching_interfaces(
         self, model_name: str
-    ) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
+    ) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
         """
         Find matching TypeScript interfaces for a model.
 
@@ -142,7 +140,7 @@ class TypeChecker:
 
         Returns
         -------
-        Tuple[Dict[str, List[str]], Dict[str, List[str]]]
+        tuple[dict[str, list[str]], dict[str, list[str]]]
             Interfaces that match a model name.
         """
         if self.model_name_conversions and model_name in self.model_name_conversions:
@@ -165,7 +163,7 @@ class TypeChecker:
         return interfaces, interfaces_with_optional_properties
 
     def _field_is_accounted_for(
-        self, field: str, interfaces: Dict[str, List[str]]
+        self, field: str, interfaces: dict[str, list[str]]
     ) -> bool:
         """
         Check if a field is accounted for in TypeScript.
@@ -175,7 +173,7 @@ class TypeChecker:
         field : str
             The field that should be used in the frontend TypeScript file.
 
-        interfaces : Dict[str, List[str]]
+        interfaces : dict[str, list[str]]
             The interfaces from the frontend TypeScript file.
 
         Returns
@@ -230,7 +228,7 @@ class TypeChecker:
         model_name : str
             The name of the model to check the frontend TypeScript file for.
 
-        fields : List[str]
+        fields : list[str]
             The fields of the backend model.
 
         Returns
@@ -273,7 +271,7 @@ class TypeChecker:
 
     @staticmethod
     def _format_missing_field_message(
-        field: str, model_name: str, interfaces: Dict[str, List[str]]
+        field: str, model_name: str, interfaces: dict[str, list[str]]
     ) -> str:
         """
         Format message for missing field.
@@ -286,7 +284,7 @@ class TypeChecker:
         model_name : str
             The name of the model that the field is missing from.
 
-        interfaces : Dict[str, Set[str]]
+        interfaces : dict[str, set[str]]
             The interfaces that have been searched.
 
         Returns

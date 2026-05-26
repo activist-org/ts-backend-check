@@ -33,10 +33,10 @@ def test_path_exists_false(tmp_path, monkeypatch):
 
 
 def test_write_config_creates_yaml(tmp_path, monkeypatch):
-    config = {
-        "auth": {
+    config: dict[str, dict[str, object]] = {
+        "model_identifier": {
             "backend_model_path": "backend/models.py",
-            "frontend_interface_path": "frontend/auth.ts",
+            "ts_interface_paths": ["frontend/auth.ts"],
         }
     }
 
@@ -50,9 +50,9 @@ def test_write_config_creates_yaml(tmp_path, monkeypatch):
     assert yaml_file.exists()
 
     content = yaml_file.read_text()
-    assert "auth:" in content
+    assert "model_identifier:" in content
     assert "backend_model_path" in content
-    assert "frontend_interface_path" in content
+    assert "ts_interface_paths" in content
 
 
 @patch("ts_backend_check.cli.generate_config_file.path_exists", return_value=True)
