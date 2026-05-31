@@ -1,0 +1,46 @@
+[
+  {
+    "path": "ts-backend-check/src/ts_backend_check/checker.py",
+    "file_name": "checker.py",
+    "functions": [
+      {
+        "name": "TypeChecker::check",
+        "complexity": 16
+      }
+    ]
+  },
+  {
+    "path": "ts-backend-check/src/ts_backend_check/cli/generate_config_file.py",
+    "file_name": "generate_config_file.py",
+    "functions": [
+      {
+        "name": "config_file_is_valid",
+        "complexity": 18
+      },
+      {
+        "name": "configure_model_interface_arguments",
+        "complexity": 85
+      }
+    ]
+  },
+  {
+    "path": "ts-backend-check/src/ts_backend_check/cli/generate_test_project.py",
+    "file_name": "generate_test_project.py",
+    "functions": [
+      {
+        "name": "generate_test_project",
+        "complexity": 22
+      }
+    ]
+  },
+  {
+    "path": "ts-backend-check/src/ts_backend_check/cli/main.py",
+    "file_name": "main.py",
+    "functions": [
+      {
+        "name": "main",
+        "complexity": 35
+      }
+    ]
+  }
+]
