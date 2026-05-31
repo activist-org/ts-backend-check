@@ -30,7 +30,7 @@ dependencies = [
     "rich>=15.0.0",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
 
     "prek>=0.4.3",
