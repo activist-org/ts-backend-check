@@ -33,6 +33,48 @@ def path_exists(path: str) -> bool:
     return bool(Path(full_path).is_file())
 
 
+def config_file_validation(config: dict) -> bool:
+    """
+    Validate the configuration file for ts-backend-check to ensure it has the necessary keys, values and types.
+
+    Parameters
+    ----------
+    config : dict
+        The configuration file to validate.
+
+    Returns
+    -------
+    bool
+        True if the configuration file is valid. False otherwise.
+    """
+    if config is not None:
+        for i in config.keys():
+            if not isinstance(config[i], dict):
+                rprint(
+                    f"[red]The ts-backend-check identifier '{i}' in the configuration file is not a dictionary. Please check the configuration file and try again.[/red]"
+                )
+                return False
+
+            if config[i]["backend_model_path"] is None:
+                rprint(
+                    f"[red]The ts-backend-check identifier '{i}' in the configuration file does not have a backend_model_path argument. Please check the configuration file and try again.[/red]"
+                )
+                return False
+
+            if config[i]["ts_interface_paths"] is None:
+                rprint(
+                    f"[red]The ts-backend-check identifier '{i}' in the configuration file does not have a ts_interface_paths argument. Please check the configuration file and try again.[/red]"
+                )
+                return False
+        return True
+
+    else:
+        rprint(
+            "[red]The ts-backend-check configuration file is empty. Please regenerate your config file with tsbc -gcf.[/red]"
+        )
+        return False
+
+
 def config_file_is_valid() -> bool:
     """
     Check that the configuration file for ts-backend-check is not empty and has the necessary keys.
@@ -44,34 +86,7 @@ def config_file_is_valid() -> bool:
     """
     with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
         config = safe_load(file)
-
-        if config is not None:
-            for i in config.keys():
-                if not isinstance(config[i], dict):
-                    rprint(
-                        f"[red]The ts-backend-check identifier '{i}' in the configuration file is not a dictionary. Please check the configuration file and try again.[/red]"
-                    )
-                    return False
-
-                if config[i]["backend_model_path"] is None:
-                    rprint(
-                        f"[red]The ts-backend-check identifier '{i}' in the configuration file does not have a backend_model_path argument. Please check the configuration file and try again.[/red]"
-                    )
-                    return False
-
-                if config[i]["ts_interface_paths"] is None:
-                    rprint(
-                        f"[red]The ts-backend-check identifier '{i}' in the configuration file does not have a ts_interface_paths argument. Please check the configuration file and try again.[/red]"
-                    )
-                    return False
-
-            return True
-
-        else:
-            rprint(
-                "[red]The ts-backend-check configuration file is empty. Please regenerate your config file with tsbc -gcf.[/red]"
-            )
-            return False
+        return config_file_validation(config)
 
 
 def write_config(config: dict[str, dict[str, object]]) -> None:
