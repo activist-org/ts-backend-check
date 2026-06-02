@@ -78,10 +78,7 @@ class TypeChecker:
             #     if model_name in self.models_all_fields
             #     else []
             # )
-            blank_fields: list[str] = self._blank_fields(
-                models_all_blank_fields=self.models_all_blank_fields,
-                model_name=model_name,
-            )
+            blank_fields: list[str] = self.models_all_blank_fields.get(model_name, [])
 
             missing_fields_exist = False
             interfaces, _ = self._find_matching_interfaces(model_name=model_name)
@@ -125,28 +122,6 @@ class TypeChecker:
                 )
 
         return error_fields
-
-    def _blank_fields(
-        self, models_all_blank_fields: dict[str, list[str]], model_name: str
-    ) -> list[str]:
-        """
-        Get a list of all blank fields for each model.
-
-        Parameters
-        ----------
-        models_all_blank_fields : dict[str,list[str]]
-            A dictionary containing all models as keys and their blank fields as values.
-
-        model_name : str
-            The name of the model to check the frontend TypeScript file for.
-
-        Returns
-        -------
-        list[str]
-            A list of all blank fields for the model.
-        """
-        blank_fields: list[str] = models_all_blank_fields.get(model_name, [])
-        return blank_fields
 
     def _find_matching_interfaces(
         self, model_name: str
