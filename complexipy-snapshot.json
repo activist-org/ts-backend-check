@@ -10,16 +10,6 @@
     ]
   },
   {
-    "path": "ts-backend-check/src/ts_backend_check/cli/generate_test_project.py",
-    "file_name": "generate_test_project.py",
-    "functions": [
-      {
-        "name": "generate_test_project",
-        "complexity": 22
-      }
-    ]
-  },
-  {
     "path": "ts-backend-check/src/ts_backend_check/cli/main.py",
     "file_name": "main.py",
     "functions": [
