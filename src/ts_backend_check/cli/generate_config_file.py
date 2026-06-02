@@ -35,12 +35,12 @@ def path_exists(path: str) -> bool:
 
 def config_file_validation(config: dict) -> bool:
     """
-    Validate the configuration file for ts-backend-check to ensure it has the necessary keys and values and types.
+    Validate the configuration file for ts-backend-check to ensure it has the necessary keys, values and types.
 
     Parameters
     ----------
     config : dict
-        The configuration file is passed as a dictionary.
+        The configuration file to validate.
 
     Returns
     -------
@@ -86,7 +86,7 @@ def config_file_is_valid() -> bool:
     """
     with open(YAML_CONFIG_FILE_PATH, "r", encoding="utf-8") as file:
         config = safe_load(file)
-        return True if config_file_validation(config) else False
+        return config_file_validation(config)
 
 
 def write_config(config: dict[str, dict[str, object]]) -> None:
