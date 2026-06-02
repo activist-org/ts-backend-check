@@ -16,6 +16,7 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 - Static analysis has been shifted from `mypy` to `ty` ([#53](https://github.com/activist-org/ts-backend-check/issues/53)).
 - The legacy Python typing system was removed in favor of the more modern approach ([#53](https://github.com/activist-org/ts-backend-check/issues/53)).
+- The complexity of the code was reduced to improve maintainability via checks using `complexipy` ([#57](https://github.com/activist-org/ts-backend-check/issues/57)).
 
 ## ts-backend-check 1.6.0
 
