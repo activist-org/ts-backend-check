@@ -33,6 +33,40 @@ def path_exists(path: str) -> bool:
     return bool(Path(full_path).is_file())
 
 
+def prompt_yes_no(prompt: str) -> bool:
+    """
+    Prompt the user and receive a yes or no input.
+
+    Parameters
+    ----------
+    prompt : str
+        Prompt question to receive str input.
+
+    Returns
+    -------
+    bool
+        Return the boolean value.
+    """
+    while True:
+        response = input(prompt).strip().lower()
+
+        if "([y]/n)" in prompt:
+            if response in ("y", ""):
+                return True
+
+            elif response == "n":
+                return False
+
+        if "(y/[n])" in prompt:
+            if response == "y":
+                return True
+
+            if response in ("n", ""):
+                return False
+
+        rprint("[red]Invalid response. Please try again.[/red]")
+
+
 def config_file_validation(config: dict) -> bool:
     """
     Validate the configuration file for ts-backend-check to ensure it has the necessary keys, values and types.
@@ -147,17 +181,9 @@ def get_file_path_from_user(
     return key
 
 
-def prompt_validated_path(input_description: str, empty_error: str) -> str:
+def collect_and_validated_backend_model_path() -> str:
     """
     Prompt the user for the file path.
-
-    Parameters
-    ----------
-    input_description : str
-        Specified description for receiving input paths.
-
-    empty_error : str
-        Prompt the user when file path is not found.
 
     Returns
     -------
@@ -167,8 +193,8 @@ def prompt_validated_path(input_description: str, empty_error: str) -> str:
     while True:
         path = get_file_path_from_user(
             description=None,
-            input_prompt=input_description,
-            no_key_description=empty_error,
+            input_prompt="Enter the path for the Django models.py file: ",
+            no_key_description="[red]The path for the Django models.py file cannot be empty. Please try again.[/red]",
         )
         if not path:
             continue
@@ -180,9 +206,9 @@ def prompt_validated_path(input_description: str, empty_error: str) -> str:
         rprint("[yellow]Please check the path and try again.[/yellow]")
 
 
-def collect_frontend_paths() -> list[str]:
+def collect_and_validate_frontend_interface_paths() -> list[str]:
     """
-    Collect the frontend paths.
+    Collect the frontend paths and validate their existence.
 
     Returns
     -------
@@ -211,43 +237,9 @@ def collect_frontend_paths() -> list[str]:
             return paths
 
 
-def prompt_yes_no(prompt: str) -> bool:
+def collect_backend_models_to_ignore() -> list[str]:
     """
-    Function to Prompt the user and receive Yes or No input.
-
-    Parameters
-    ----------
-    prompt : str
-        Prompt a question to receive str input.
-
-    Returns
-    -------
-    bool
-        Return the boolean value.
-    """
-    while True:
-        response = input(prompt).strip().lower()
-
-        if "([y]/n)" in prompt:
-            if response in ("y", ""):
-                return True
-
-            elif response == "n":
-                return False
-
-        if "(y/[n])" in prompt:
-            if response == "y":
-                return True
-
-            if response in ("n", ""):
-                return False
-
-        rprint("[red]Invalid response. Please try again.[/red]")
-
-
-def collect_models_to_ignore() -> list[str]:
-    """
-    Function to collect and ignore models.
+    Collect the names of backend models that should be ignored.
 
     Returns
     -------
@@ -270,12 +262,12 @@ def collect_models_to_ignore() -> list[str]:
 
 def collect_model_name_conversions() -> dict[str, list[str]]:
     """
-    Function to collect model names which are conversed.
+    Collect model names that should be converted.
 
     Returns
     -------
     dict[str,list[str]]
-        A dictionary of conversed models after input Prompts.
+        A dictionary of converted models after input Prompts.
     """
     rprint(
         "[yellow]💡 Note: You need model name conversions if your TypeScript interfaces are not named exactly the same as the corresponding models (i.e. UserModel in Django and User in TS).[/yellow]"
@@ -303,28 +295,28 @@ def collect_model_name_conversions() -> dict[str, list[str]]:
             return conversions
 
 
-def create_entry(
-    backend_path: str,
-    frontend_path_lists: list[str],
+def derive_entry(
+    backend_model_path: str,
+    ts_interface_paths: list[str],
     check_blank_model_fields: bool,
     backend_models_to_ignore: list | None,
 ) -> dict[str, Any]:
     """
-    Function to create a entry dictionary.
+    Derive a configuration file entry dictionary from component parts.
 
     Parameters
     ----------
-    backend_path : str
-        Get Backend Path.
+    backend_model_path : str
+        The backend model path for the configuration entry.
 
-    frontend_path_lists : list[str]
-        Get a list of Frontend Paths.
+    ts_interface_paths : list[str]
+        The list of frontend interface file paths for the configuration entry.
 
     check_blank_model_fields :  bool
-        Get the boolean value for blank_model_fields.
+        The boolean value for whether blank model fields should be checked.
 
     backend_models_to_ignore : list | None
-        Get the backend models to ignore.
+        The list of backend models to ignore.
 
     Returns
     -------
@@ -332,17 +324,17 @@ def create_entry(
         A dictionary consisting of Various paths and values.
     """
     entry: dict[str, Any] = {
-        "backend_model_path": backend_path,
-        "ts_interface_paths": frontend_path_lists,
+        "backend_model_path": backend_model_path,
+        "ts_interface_paths": ts_interface_paths,
         "check_blank_model_fields": check_blank_model_fields,
         "backend_models_to_ignore": backend_models_to_ignore,
     }
     return entry
 
 
-def configure_model_interface_arguments() -> None:
+def configure_model_interface_entries() -> None:
     """
-    Function to receive paths from user.
+    Prompt the user for arguments that should be used to create the configuration file entries.
     """
     config_options: dict[str, Any] = {}
     while True:
@@ -354,27 +346,19 @@ def configure_model_interface_arguments() -> None:
         if not key:
             continue
 
-        # Get backend path.
-        backend_path = prompt_validated_path(
-            input_description="Enter the path for the Django models.py file: ",
-            empty_error="[red]The path for the Django models.py file cannot be empty. Please try again.[/red]",
-        )
-        # Get frontend paths.
-        frontend_path_lists = collect_frontend_paths()
-        # Get whether to check blank model fields.
+        backend_model_path = collect_and_validated_backend_model_path()
+        ts_interface_paths = collect_and_validate_frontend_interface_paths()
         check_blank_model_fields = prompt_yes_no(
             "Assert that blank model fields must also be optional in interfaces ([y]/n): ",
         )
-        # models to ignore
-        backend_models_to_ignore = collect_models_to_ignore()
-        # model name conversions
+        backend_models_to_ignore = collect_backend_models_to_ignore()
         model_name_conversions = collect_model_name_conversions()
 
-        entry: dict[str, Any] = create_entry(
-            backend_path,
-            frontend_path_lists,
-            check_blank_model_fields,
-            backend_models_to_ignore,
+        entry: dict[str, Any] = derive_entry(
+            backend_model_path=backend_model_path,
+            ts_interface_paths=ts_interface_paths,
+            check_blank_model_fields=check_blank_model_fields,
+            backend_models_to_ignore=backend_models_to_ignore,
         )
         if model_name_conversions:
             entry["backend_to_ts_model_name_conversions"] = model_name_conversions
@@ -423,7 +407,7 @@ def generate_config_file() -> None:
         print("Creating new configuration file...")
 
     try:
-        configure_model_interface_arguments()
+        configure_model_interface_entries()
 
     except KeyboardInterrupt:
         print("\n\nConfiguration cancelled by user.")
