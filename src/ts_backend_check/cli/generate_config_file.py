@@ -66,6 +66,7 @@ def config_file_validation(config: dict) -> bool:
                     f"[red]The ts-backend-check identifier '{i}' in the configuration file does not have a ts_interface_paths argument. Please check the configuration file and try again.[/red]"
                 )
                 return False
+
         return True
 
     else:
@@ -137,10 +138,12 @@ def get_file_path_from_user(
     """
     if description is not None:
         print(description)
+
     key: str = input(input_prompt).strip()
     if not key:
         rprint(no_key_description)
         return None
+
     return key
 
 
@@ -195,10 +198,12 @@ def collect_frontend_paths() -> list[str]:
         )
         if not path:
             continue
+
         if not path_exists(path):
             rprint(f"[red]File not found: {CWD_PATH / path}[/red]")
             rprint("[yellow]Please check the path and try again.[/yellow]")
             continue
+
         paths.append(path)
         if input(
             "Do you want to continue to add more TypeScript interface file paths? (y/[n]): "
@@ -225,12 +230,16 @@ def prompt_yes_no(prompt: str, default_yes: bool = True) -> bool:
     """
     while True:
         response = input(prompt).strip().lower()
+
         if response in ("y", "") and default_yes:
             return True
-        if response == "n":
-            return False
+
         if response == "y":
             return True
+
+        if response == "n":
+            return False
+
         rprint("[red]Invalid response. Please try again.[/red]")
 
 
@@ -247,6 +256,7 @@ def collect_models_to_ignore() -> list[str]:
         "Are there backend models that should be ignored? (y/[n]): "
     ).strip().lower() in ("n", ""):
         return []
+
     models: list[str] = []
     while True:
         models.append(input("Enter name of the model to ignore: ").strip())
@@ -272,9 +282,11 @@ def collect_model_name_conversions() -> dict[str, list[str]]:
         "",
     ):
         return conversions
+
     while True:
         while not (backend_name := input("Enter the backend model name: ").strip()):
             rprint("[red]Invalid response. Please try again.[/red]")
+
         ts_names = [
             n.strip()
             for n in input(
@@ -287,24 +299,6 @@ def collect_model_name_conversions() -> dict[str, list[str]]:
             "",
         ):
             return conversions
-
-
-def continue_add_config(prompt: str) -> bool:
-    """
-    Function to get Required prompts.
-
-    Parameters
-    ----------
-    prompt : str
-        Get Prompt as an input.
-
-    Returns
-    -------
-    bool
-        Returns Boolean Value.
-    """
-    continue_config = prompt_yes_no(prompt=prompt)
-    return continue_config
 
 
 def create_entry(
@@ -367,7 +361,8 @@ def configure_model_interface_arguments() -> None:
         frontend_path_lists = collect_frontend_paths()
         # Get whether to check blank model fields.
         check_blank_model_fields = prompt_yes_no(
-            "Assert that blank model fields must also be optional in interfaces ([y]/n): "
+            "Assert that blank model fields must also be optional in interfaces ([y]/n): ",
+            default_yes=True,
         )
         # models to ignore
         backend_models_to_ignore = collect_models_to_ignore()
@@ -396,10 +391,12 @@ def configure_model_interface_arguments() -> None:
             )
             break
 
-        if not continue_add_config(
-            prompt="Add another model-interface configuration (y/[n]): "
+        if not prompt_yes_no(
+            prompt="Add another model-interface configuration (y/[n]): ",
+            default_yes=True,
         ):
             break
+
     if config_options:
         optional_s = "s" if len(config_options) > 1 else ""
         rprint(
