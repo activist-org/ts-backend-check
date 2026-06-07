@@ -211,7 +211,7 @@ def collect_frontend_paths() -> list[str]:
             return paths
 
 
-def prompt_yes_no(prompt: str, default_yes: bool = True) -> bool:
+def prompt_yes_no(prompt: str) -> bool:
     """
     Function to Prompt the user and receive Yes or No input.
 
@@ -219,9 +219,6 @@ def prompt_yes_no(prompt: str, default_yes: bool = True) -> bool:
     ----------
     prompt : str
         Prompt a question to receive str input.
-
-    default_yes : bool
-        Boolean value for default yes inputs.
 
     Returns
     -------
@@ -231,14 +228,19 @@ def prompt_yes_no(prompt: str, default_yes: bool = True) -> bool:
     while True:
         response = input(prompt).strip().lower()
 
-        if response in ("y", "") and default_yes:
-            return True
+        if "([y]/n)" in prompt:
+            if response in ("y", ""):
+                return True
 
-        if response == "y":
-            return True
+            elif response == "n":
+                return False
 
-        if response == "n":
-            return False
+        if "(y/[n])" in prompt:
+            if response == "y":
+                return True
+
+            if response in ("n", ""):
+                return False
 
         rprint("[red]Invalid response. Please try again.[/red]")
 
@@ -252,15 +254,17 @@ def collect_models_to_ignore() -> list[str]:
     list[str]
         A list of Models needs to be ignored.
     """
-    if input(
-        "Are there backend models that should be ignored? (y/[n]): "
-    ).strip().lower() in ("n", ""):
+    if not prompt_yes_no(
+        prompt="Are there backend models that should be ignored? (y/[n]): ",
+    ):
         return []
 
     models: list[str] = []
     while True:
         models.append(input("Enter name of the model to ignore: ").strip())
-        if input("Add another model to ignore [y/[n]]").strip().lower() in ("n", ""):
+        if not prompt_yes_no(
+            prompt="Add another model to ignore (y/[n]): ",
+        ):
             return models
 
 
@@ -277,9 +281,8 @@ def collect_model_name_conversions() -> dict[str, list[str]]:
         "[yellow]💡 Note: You need model name conversions if your TypeScript interfaces are not named exactly the same as the corresponding models (i.e. UserModel in Django and User in TS).[/yellow]"
     )
     conversions: dict[str, list[str]] = {}
-    if input("Model name conversions are needed (y/[n]): ").strip().lower() in (
-        "n",
-        "",
+    if not prompt_yes_no(
+        prompt="Model name conversions are needed (y/[n]): ",
     ):
         return conversions
 
@@ -294,9 +297,8 @@ def collect_model_name_conversions() -> dict[str, list[str]]:
             ).split(",")
         ]
         conversions[backend_name] = ts_names
-        if input("Add more model name conversions (y/[n]): ").strip().lower() in (
-            "n",
-            "",
+        if not prompt_yes_no(
+            prompt="Add more model name conversions (y/[n]): ",
         ):
             return conversions
 
@@ -362,7 +364,6 @@ def configure_model_interface_arguments() -> None:
         # Get whether to check blank model fields.
         check_blank_model_fields = prompt_yes_no(
             "Assert that blank model fields must also be optional in interfaces ([y]/n): ",
-            default_yes=True,
         )
         # models to ignore
         backend_models_to_ignore = collect_models_to_ignore()
@@ -382,9 +383,7 @@ def configure_model_interface_arguments() -> None:
         write_config(config_options)
         rprint(f"[green]✅ Added configuration for the '{key}' check.[/green]")
 
-        if input(
-            "Add another model-interface configuration (y/[n]): "
-        ).strip().lower() in ("n", ""):
+        if not prompt_yes_no("Add another model-interface configuration (y/[n]): "):
             optional_s = "s" if len(config_options) > 1 else ""
             rprint(
                 f"[green]✅ Configuration complete! Added {len(config_options)} configuration{optional_s} to check.[/green]"
@@ -392,8 +391,7 @@ def configure_model_interface_arguments() -> None:
             break
 
         if not prompt_yes_no(
-            prompt="Add another model-interface configuration (y/[n]): ",
-            default_yes=True,
+            prompt="Add another model-interface configuration (y/[n]): "
         ):
             break
 
@@ -413,10 +411,9 @@ def generate_config_file() -> None:
     print("=" * len(header))
 
     if YAML_CONFIG_FILE_PATH.is_file():
-        reconfigure_choice = input(
-            "Configuration file exists. Confirm if you want to re-configure your .ts-backend-check.yaml file (y/[n]): "
-        )
-        if reconfigure_choice.lower() in ["n", ""]:
+        if not prompt_yes_no(
+            prompt="Configuration file exists. Confirm if you want to re-configure your .ts-backend-check.yaml file (y/[n]): "
+        ):
             print("Exiting without changes.")
             return
 
