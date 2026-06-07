@@ -118,6 +118,9 @@ def check_files_and_print_results(
         return True
 
 
+# MARK: Config Checks
+
+
 def extract_identifier_config(identifier_config: dict) -> dict[str, Any]:
     """
     Extract and normalize config fields with defaults.
@@ -145,6 +148,9 @@ def extract_identifier_config(identifier_config: dict) -> dict[str, Any]:
             "backend_models_to_ignore", []
         ),
     }
+
+
+# MARK: Checks Function
 
 
 def run_checks(config: dict, identifiers: list[str]) -> list[bool]:
@@ -274,7 +280,7 @@ def main() -> None:
         upgrade_cli()
         return
 
-    # MARK: CLI Vars
+    # MARK: CLI Variables
 
     if not Path(YAML_CONFIG_FILE_PATH).is_file() and args.generate_config_file:
         generate_config_file()

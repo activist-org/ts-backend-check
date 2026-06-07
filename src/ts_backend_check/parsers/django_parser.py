@@ -42,6 +42,8 @@ class DjangoModelVisitor(ast.NodeVisitor):
         self.models_and_blank_fields: dict[str, list[str]] = {}
         self.models_to_ignore: set[str] = set(models_to_ignore or [])
 
+    # MARK: Visit Class
+
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
         Check class definitions, specifically those that inherit from other classes and not listed in ignore classes.
@@ -61,6 +63,8 @@ class DjangoModelVisitor(ast.NodeVisitor):
             self.generic_visit(node)
 
         self.current_model = None
+
+    # MARK: Visit Assign
 
     def visit_Assign(self, node: ast.Assign) -> None:
         """
@@ -96,6 +100,9 @@ class DjangoModelVisitor(ast.NodeVisitor):
                         self.models_and_blank_fields[self.current_model] = []
 
                     self.models_and_blank_fields[self.current_model].append(target.id)
+
+
+# MARK: Extract Fields
 
 
 def extract_model_fields(

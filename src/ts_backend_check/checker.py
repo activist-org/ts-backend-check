@@ -58,6 +58,8 @@ class TypeChecker:
         self.ts_interfaces = self.ts_parser.parse_interfaces()
         self.backend_only = self.ts_parser.get_ignored_fields()
 
+    # MARK: Run Check
+
     def check(self) -> list[str]:
         """
         Check models against TypeScript types.
@@ -118,6 +120,8 @@ class TypeChecker:
 
         return error_fields
 
+    # MARK: Matching Interfaces
+
     def _find_matching_interfaces(
         self, model_name: str
     ) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
@@ -152,6 +156,8 @@ class TypeChecker:
         }
 
         return interfaces, interfaces_with_optional_properties
+
+    # MARK: Field Checks
 
     def _field_is_accounted_for(
         self, field: str, interfaces: dict[str, list[str]]
@@ -236,6 +242,8 @@ class TypeChecker:
             )
             for i in interfaces
         )
+
+    # MARK: Messages
 
     @staticmethod
     def _format_missing_interface_message(model_name: str) -> str:

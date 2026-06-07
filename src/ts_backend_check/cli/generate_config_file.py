@@ -169,8 +169,10 @@ def prompt_validated_path(input_description: str, empty_error: str) -> str:
         )
         if not path:
             continue
+
         if path_exists(path):
             return path
+
         rprint(f"[red]File not found: {CWD_PATH / path}[/red]")
         rprint("[yellow]Please check the path and try again.[/yellow]")
 
