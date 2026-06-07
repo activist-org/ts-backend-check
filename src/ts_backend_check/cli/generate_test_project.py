@@ -12,6 +12,9 @@ PATH_SEPARATOR = "\\" if os.name == "nt" else "/"
 INTERNAL_TEST_PROJECT_DIR_PATH = Path(__file__).parent.parent / "test_project"
 
 
+# MARK: File Text
+
+
 def get_test_project_config_file_text() -> str:
     """
     Return the text for the configuration file for the ts-backend-check test project.
@@ -56,6 +59,9 @@ invalid_model:
 """
 
 
+# MARK: Write File
+
+
 def write_test_project_config_file(config_file_name: str) -> None:
     """
     Write a YAML configuration file for the ts-backend-check test project.
@@ -75,23 +81,22 @@ def write_test_project_config_file(config_file_name: str) -> None:
         file.write(test_project_config_text)
 
 
-def check_and_generate_yaml_config_file_for_test_project(yaml_files: list[str]) -> None:
-    """
-    Generate a .yaml configuration file if it does not exist in the present working directory.
+# MARK: Gen Config File
 
-    Parameters
-    ----------
-    yaml_files : list[str]
-        Receives a list of the two possible .yaml configuration file as strings.
+
+def check_and_generate_yaml_config_file_for_test_project() -> None:
+    """
+    Generate a YAML configuration file if it does not exist in the present working directory.
 
     Returns
     -------
     None
         The User gets prompted to generate a configuration file for the test project.
     """
-    file1, file2 = yaml_files
-    if not Path(file1).is_file() and not Path(file2).is_file():
-        print(f"No {file1} configuration file found.")
+    yaml_file = ".ts-backend-check.yaml"
+    yml_file = ".ts-backend-check.yml"
+    if not Path(yaml_file).is_file() and not Path(yml_file).is_file():
+        print(f"No {yaml_file} configuration file found.")
 
         generate_test_project_config_answer = None
         while generate_test_project_config_answer not in ["y", "n", ""]:
@@ -104,12 +109,13 @@ def check_and_generate_yaml_config_file_for_test_project(yaml_files: list[str]) 
             )
 
         if generate_test_project_config_answer in ["y", ""]:
-            write_test_project_config_file(config_file_name=file1)
+            write_test_project_config_file(config_file_name=yaml_file)
             print(
-                f"A {file1} configuration file has been written to match the test project."
+                f"A {yaml_file} configuration file has been written to match the test project."
             )
+
     else:
-        config_file_name = file1 if Path(file1).is_file() else file2
+        config_file_name = yaml_file if Path(yaml_file).is_file() else yml_file
         generate_test_project_config_answer = None
         while generate_test_project_config_answer not in ["y", "n", ""]:
             generate_test_project_config_answer = (
@@ -132,11 +138,13 @@ def check_and_generate_yaml_config_file_for_test_project(yaml_files: list[str]) 
             )
 
 
+# MARK: Gen Test Project
+
+
 def generate_test_project() -> None:
     """
     Copy the ts_backend_check/test_project directory to the present working directory.
     """
-    yaml_files: list[str] = [".ts-backend-check.yaml", ".ts-backend-check.yml"]
     if not Path("./ts_backend_check_test_project/").is_dir():
         print(
             f"Generating testing project for ts-backend-check in .{PATH_SEPARATOR}ts_backend_check_test_project{PATH_SEPARATOR} ..."
@@ -153,7 +161,8 @@ def generate_test_project() -> None:
             "Within the test project there's one model-interface identifier that passes all checks and one that fails all checks."
         )
 
-        check_and_generate_yaml_config_file_for_test_project(yaml_files=yaml_files)
+        check_and_generate_yaml_config_file_for_test_project()
+
     else:
         print(
             f"Test project for ts-backend-check already exist in .{PATH_SEPARATOR}ts_backend_check_test_project{PATH_SEPARATOR} and will not be regenerated."
