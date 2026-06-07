@@ -13,6 +13,9 @@ UNKNOWN_VERSION_NOT_PIP = f"{UNKNOWN_VERSION} (Not installed via pip)"
 UNKNOWN_VERSION_NOT_FETCHED = f"{UNKNOWN_VERSION} (Unable to fetch version)"
 
 
+# MARK: Local
+
+
 def get_local_version() -> str:
     """
     Get the local version of the ts-backend-check package.
@@ -28,6 +31,9 @@ def get_local_version() -> str:
 
     except importlib.metadata.PackageNotFoundError:
         return UNKNOWN_VERSION_NOT_PIP
+
+
+# MARK: Latest
 
 
 def get_latest_version() -> Any:
@@ -49,6 +55,9 @@ def get_latest_version() -> Any:
 
     except Exception:
         return UNKNOWN_VERSION_NOT_FETCHED
+
+
+# MARK: Version Message
 
 
 def get_version_message() -> str:

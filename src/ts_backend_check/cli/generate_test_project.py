@@ -12,6 +12,9 @@ PATH_SEPARATOR = "\\" if os.name == "nt" else "/"
 INTERNAL_TEST_PROJECT_DIR_PATH = Path(__file__).parent.parent / "test_project"
 
 
+# MARK: File Text
+
+
 def get_test_project_config_file_text() -> str:
     """
     Return the text for the configuration file for the ts-backend-check test project.
@@ -56,6 +59,9 @@ invalid_model:
 """
 
 
+# MARK: Write File
+
+
 def write_test_project_config_file(config_file_name: str) -> None:
     """
     Write a YAML configuration file for the ts-backend-check test project.
@@ -73,6 +79,66 @@ def write_test_project_config_file(config_file_name: str) -> None:
     test_project_config_text = get_test_project_config_file_text()
     with open(config_file_name, "w") as file:
         file.write(test_project_config_text)
+
+
+# MARK: Gen Config File
+
+
+def check_and_generate_yaml_config_file_for_test_project() -> None:
+    """
+    Generate a YAML configuration file if it does not exist in the present working directory.
+
+    Returns
+    -------
+    None
+        The User gets prompted to generate a configuration file for the test project.
+    """
+    yaml_file = ".ts-backend-check.yaml"
+    yml_file = ".ts-backend-check.yml"
+    if not Path(yaml_file).is_file() and not Path(yml_file).is_file():
+        print(f"No {yaml_file} configuration file found.")
+
+        generate_test_project_config_answer = None
+        while generate_test_project_config_answer not in ["y", "n", ""]:
+            generate_test_project_config_answer = (
+                input(
+                    "Would you like to generate a configuration file for the test project? ([y]/n): "
+                )
+                .strip()
+                .lower()
+            )
+
+        if generate_test_project_config_answer in ["y", ""]:
+            write_test_project_config_file(config_file_name=yaml_file)
+            print(
+                f"A {yaml_file} configuration file has been written to match the test project."
+            )
+
+    else:
+        config_file_name = yaml_file if Path(yaml_file).is_file() else yml_file
+        generate_test_project_config_answer = None
+        while generate_test_project_config_answer not in ["y", "n", ""]:
+            generate_test_project_config_answer = (
+                input(
+                    f"Would you like to overwrite the {config_file_name} configuration file for the test project? ([y]/n): "
+                )
+                .strip()
+                .lower()
+            )
+
+        if generate_test_project_config_answer in ["y", ""]:
+            write_test_project_config_file(config_file_name=config_file_name)
+            print(
+                f"The {config_file_name} configuration file has been overwritten to match the test project."
+            )
+
+        else:
+            print(
+                f"You can set which models and interfaces to test in the {config_file_name} configuration file."
+            )
+
+
+# MARK: Gen Test Project
 
 
 def generate_test_project() -> None:
@@ -95,56 +161,7 @@ def generate_test_project() -> None:
             "Within the test project there's one model-interface identifier that passes all checks and one that fails all checks."
         )
 
-        if (
-            not Path(".ts-backend-check.yaml").is_file()
-            and not Path(".ts-backend-check.yml").is_file()
-        ):
-            print("No .ts-backend-check.yaml configuration file found.")
-
-            generate_test_project_config_answer = None
-            while generate_test_project_config_answer not in ["y", "n", ""]:
-                generate_test_project_config_answer = (
-                    input(
-                        "Would you like to generate a configuration file for the test project? ([y]/n): "
-                    )
-                    .strip()
-                    .lower()
-                )
-
-            if generate_test_project_config_answer in ["y", ""]:
-                write_test_project_config_file(
-                    config_file_name=".ts-backend-check.yaml"
-                )
-                print(
-                    "A .ts-backend-check.yaml configuration file has been written to match the test project."
-                )
-
-        else:
-            config_file_name = (
-                ".ts-backend-check.yaml"
-                if Path(".ts-backend-check.yaml").is_file()
-                else ".ts-backend-check.yml"
-            )
-            generate_test_project_config_answer = None
-            while generate_test_project_config_answer not in ["y", "n", ""]:
-                generate_test_project_config_answer = (
-                    input(
-                        f"Would you like to overwrite the {config_file_name} configuration file for the test project? ([y]/n): "
-                    )
-                    .strip()
-                    .lower()
-                )
-
-            if generate_test_project_config_answer in ["y", ""]:
-                write_test_project_config_file(config_file_name=config_file_name)
-                print(
-                    f"The {config_file_name} configuration file has been overwritten to match the test project."
-                )
-
-            else:
-                print(
-                    f"You can set which models and interfaces to test in the {config_file_name} configuration file."
-                )
+        check_and_generate_yaml_config_file_for_test_project()
 
     else:
         print(

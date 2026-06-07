@@ -32,6 +32,8 @@ class TypeScriptParser:
     def __init__(self, concatenated_types_file: str) -> None:
         self.content = concatenated_types_file
 
+    # MARK: Parse Interfaces
+
     def parse_interfaces(self) -> dict[str, TypeScriptInterface]:
         """
         Parse TypeScript interfaces from the file.
@@ -72,6 +74,8 @@ class TypeScriptParser:
         """
         ignore_pattern = r"//.*?(?:tsbc|ts-backend-check): ignore\s+(\w+)"
         return set(re.findall(ignore_pattern, self.content))
+
+    # MARK: Extract Properties
 
     @staticmethod
     def _extract_properties(interface_body: str) -> list[str]:

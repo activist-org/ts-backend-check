@@ -7,6 +7,7 @@ import argparse
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
+from typing import Any
 
 import yaml
 from rich import print as rprint
@@ -117,6 +118,77 @@ def check_files_and_print_results(
         return True
 
 
+# MARK: Config Checks
+
+
+def extract_identifier_config(identifier_config: dict) -> dict[str, Any]:
+    """
+    Extract and normalize config fields with defaults.
+
+    Parameters
+    ----------
+    identifier_config : dict
+        A dictionary of configuration parameters, with some being unset.
+
+    Returns
+    -------
+    dict[str,Any]
+        A dict of configuration parameters to pass to checks with defaults set.
+    """
+    return {
+        "backend_model_file_path": Path(identifier_config["backend_model_path"]),
+        "ts_interface_file_paths": [
+            Path(p) for p in identifier_config["ts_interface_paths"]
+        ],
+        "check_blank": identifier_config.get("check_blank_model_fields", False),
+        "model_name_conversions": identifier_config.get(
+            "backend_to_ts_model_name_conversions", {}
+        ),
+        "backend_models_to_ignore": identifier_config.get(
+            "backend_models_to_ignore", []
+        ),
+    }
+
+
+# MARK: Checks Function
+
+
+def run_checks(config: dict, identifiers: list[str]) -> list[bool]:
+    """
+    Function to run checks for the given list of identifiers.
+
+    Parameters
+    ----------
+    config : dict
+        Get a dictionary of config paths.
+
+    identifiers : list
+        Get a list of identifiers.
+
+    Returns
+    -------
+    list[bool]
+        Returns a list of boolean values that define whether checks have passed.
+    """
+    results: list[bool] = []
+    for identifier in identifiers:
+        identifier_config = config.get(identifier)
+        if not identifier_config:
+            rprint(
+                f"[red]{identifier} is not an index within the .ts-backend-check.yaml "
+                "configuration file. Please check the defined models and try again.[/red]"
+            )
+            sys.exit(1)
+
+        r = check_files_and_print_results(
+            identifier=identifier,
+            **extract_identifier_config(identifier_config),
+        )
+        results.append(r)
+
+    return results
+
+
 def main() -> None:
     """
     The main check function to compare a the methods within a backend model to a corresponding TypeScript file.
@@ -208,7 +280,7 @@ def main() -> None:
         upgrade_cli()
         return
 
-    # MARK: CLI Vars
+    # MARK: CLI Variables
 
     if not Path(YAML_CONFIG_FILE_PATH).is_file() and args.generate_config_file:
         generate_config_file()
@@ -235,94 +307,22 @@ def main() -> None:
     results: list[bool] = []
 
     if args.identifier:
-        identifier_config = config.get(args.identifier)
+        identifiers = [args.identifier]
 
-        if not identifier_config:
-            rprint(
-                f"[red]{args.identifier} is not an index within the .ts-backend-check.yaml configuration file. Please check the defined models and try again.[/red]"
-            )
-            sys.exit(1)
-
-        config_backend_model_file_path = Path(identifier_config["backend_model_path"])
-        config_ts_interface_file_paths = [
-            Path(p) for p in identifier_config["ts_interface_paths"]
-        ]
-        config_check_blank = (
-            identifier_config["check_blank_model_fields"]
-            if "check_blank_model_fields" in identifier_config
-            else False
-        )
-        config_model_name_conversions = (
-            identifier_config["backend_to_ts_model_name_conversions"]
-            if "backend_to_ts_model_name_conversions" in identifier_config
-            else {}
-        )
-
-        ignore_backend_model = (
-            identifier_config["backend_models_to_ignore"]
-            if "backend_models_to_ignore" in identifier_config
-            else []
-        )
-
-        r = check_files_and_print_results(
-            identifier=args.identifier,
-            backend_model_file_path=config_backend_model_file_path,
-            ts_interface_file_paths=config_ts_interface_file_paths,
-            check_blank=config_check_blank,
-            model_name_conversions=config_model_name_conversions,
-            backend_models_to_ignore=ignore_backend_model,
-        )
-        results.append(r)
-
-    if args.all:
-        for i in config.keys():
-            identifier_config = config.get(i)
-
-            config_backend_model_file_path = Path(
-                identifier_config["backend_model_path"]
-            )
-            config_ts_interface_file_paths = [
-                Path(p) for p in identifier_config["ts_interface_paths"]
-            ]
-            config_check_blank = (
-                identifier_config["check_blank_model_fields"]
-                if "check_blank_model_fields" in identifier_config
-                else False
-            )
-            config_model_name_conversions = (
-                identifier_config["backend_to_ts_model_name_conversions"]
-                if "backend_to_ts_model_name_conversions" in identifier_config
-                else {}
-            )
-
-            ignore_backend_model = (
-                identifier_config["backend_models_to_ignore"]
-                if "backend_models_to_ignore" in identifier_config
-                else []
-            )
-
-            r = check_files_and_print_results(
-                identifier=i,
-                backend_model_file_path=config_backend_model_file_path,
-                ts_interface_file_paths=config_ts_interface_file_paths,
-                check_blank=config_check_blank,
-                model_name_conversions=config_model_name_conversions,
-                backend_models_to_ignore=ignore_backend_model,
-            )
-            results.append(r)
-
-    if args.identifier or args.all:
-        if not all(results):
-            sys.exit(1)
-
-        else:
-            return  # exit 0
+    elif args.all:
+        identifiers = list(config.keys())
 
     else:
         rprint(
             "[red]CLI options not recognized. Please see the help directions below.[/red]"
         )
         parser.print_help()
+        return
+
+    results = run_checks(config, identifiers)
+
+    if not all(results):
+        sys.exit(1)
 
 
 if __name__ == "__main__":

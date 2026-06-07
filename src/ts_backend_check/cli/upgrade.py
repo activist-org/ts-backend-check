@@ -34,6 +34,8 @@ def upgrade_cli() -> None:
         )
         return
 
+    # MARK: Derive Version
+
     latest_version = latest_version_message.split("v")[-1]
     local_version_clean = local_version.strip()
     latest_version_clean = latest_version.replace("ts-backend-check", "").strip()
@@ -56,6 +58,8 @@ def upgrade_cli() -> None:
     except InvalidVersion:
         print("Unable to parse the latest version. Please check the GitHub repository.")
         return
+
+    # MARK: React to Version
 
     if local_ver == latest_ver:
         print("You already have the latest version of ts-backend-check.")
