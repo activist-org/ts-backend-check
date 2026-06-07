@@ -73,11 +73,6 @@ class TypeChecker:
             fields_and_blank_fields_ordered = (
                 self.models_all_fields_and_blank_fields_ordered[model_name]
             )
-            # fields = (
-            #     self.models_all_fields[model_name]
-            #     if model_name in self.models_all_fields
-            #     else []
-            # )
             blank_fields: list[str] = self.models_all_blank_fields.get(model_name, [])
 
             missing_fields_exist = False

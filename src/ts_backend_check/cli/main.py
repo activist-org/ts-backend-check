@@ -125,12 +125,12 @@ def extract_identifier_config(identifier_config: dict) -> dict[str, Any]:
     Parameters
     ----------
     identifier_config : dict
-        Get a dictionary of config paths.
+        A dictionary of configuration parameters, with some being unset.
 
     Returns
     -------
     dict[str,Any]
-        Returns a dict of normalized paths.
+        A dict of configuration parameters to pass to checks with defaults set.
     """
     return {
         "backend_model_file_path": Path(identifier_config["backend_model_path"]),
@@ -149,7 +149,7 @@ def extract_identifier_config(identifier_config: dict) -> dict[str, Any]:
 
 def run_checks(config: dict, identifiers: list[str]) -> list[bool]:
     """
-    Function to Run Checks for the given list of identifiers.
+    Function to run checks for the given list of identifiers.
 
     Parameters
     ----------
@@ -162,7 +162,7 @@ def run_checks(config: dict, identifiers: list[str]) -> list[bool]:
     Returns
     -------
     list[bool]
-        Returns a List of Boolean Values.
+        Returns a list of boolean values that define whether checks have passed.
     """
     results: list[bool] = []
     for identifier in identifiers:
@@ -173,11 +173,13 @@ def run_checks(config: dict, identifiers: list[str]) -> list[bool]:
                 "configuration file. Please check the defined models and try again.[/red]"
             )
             sys.exit(1)
+
         r = check_files_and_print_results(
             identifier=identifier,
             **extract_identifier_config(identifier_config),
         )
         results.append(r)
+
     return results
 
 
@@ -300,14 +302,17 @@ def main() -> None:
 
     if args.identifier:
         identifiers = [args.identifier]
+
     elif args.all:
         identifiers = list(config.keys())
+
     else:
         rprint(
             "[red]CLI options not recognized. Please see the help directions below.[/red]"
         )
         parser.print_help()
         return
+
     results = run_checks(config, identifiers)
 
     if not all(results):
