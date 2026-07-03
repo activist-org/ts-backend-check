@@ -1,0 +1,22 @@
+[
+  {
+    "path": "ts-backend-check/src/ts_backend_check/checker.py",
+    "file_name": "checker.py",
+    "functions": [
+      {
+        "name": "TypeChecker::check",
+        "complexity": 18
+      }
+    ]
+  },
+  {
+    "path": "ts-backend-check/src/ts_backend_check/parsers/django_parser.py",
+    "file_name": "django_parser.py",
+    "functions": [
+      {
+        "name": "DjangoModelVisitor::visit_Assign",
+        "complexity": 16
+      }
+    ]
+  }
+]
