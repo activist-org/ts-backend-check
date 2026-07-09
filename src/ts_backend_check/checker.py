@@ -1,19 +1,16 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """
-Main module for checking Django models against TypeScript types.
+Main module for checking Django and FastAPI models against TypeScript types.
 """
 
-from ts_backend_check.parsers.django_parser import (
-    DjangoModelVisitor,
-    extract_model_fields,
-)
+from ts_backend_check.parsers.context_parser import ParserContext
 from ts_backend_check.parsers.typescript_parser import TypeScriptParser
 from ts_backend_check.utils import is_ordered_subset, snake_to_camel
 
 
 class TypeChecker:
     """
-    Main class for checking Django models against TypeScript types.
+    Main class for checking Django and FastAPI models against TypeScript types.
 
     Parameters
     ----------
@@ -22,6 +19,9 @@ class TypeChecker:
 
     concatenated_types_file : str
         A concatenated file text joined from all paths in ts_interface_file_paths.
+
+    backend_type : str
+        The backend type to check against, either 'django' or 'fastapi'.
 
     check_blank : bool, default=False
         Whether to also check that fields marked 'blank=True' within Django models are optional (?) in the TypeScript interfaces.
@@ -37,6 +37,7 @@ class TypeChecker:
         self,
         models_file: str,
         concatenated_types_file: str,
+        backend_type: str,
         check_blank: bool = False,
         model_name_conversions: dict[str, list[str]] = {},
         backend_models_to_ignore: list[str] = [],
@@ -45,15 +46,17 @@ class TypeChecker:
         self.concatenated_types_file = concatenated_types_file
         self.check_blank = check_blank
         self.model_name_conversions = model_name_conversions
-        self.django_model_visitor = DjangoModelVisitor
-        (
-            self.models_all_fields_and_blank_fields_ordered,
-            self.models_all_fields,
-            self.models_all_blank_fields,
-        ) = extract_model_fields(
-            models_file=models_file,
+        self.parser_context = ParserContext(
+            backend_type=backend_type,
             models_to_ignore=backend_models_to_ignore,
         )
+        model_data = self.parser_context.parse(models_file=models_file)
+        self.models_all_fields_and_blank_fields_ordered = (
+            model_data.models_all_fields_ordered
+        )
+        self.models_all_fields = model_data.models_all_fields
+        self.models_all_blank_fields = model_data.models_all_blank_fields
+
         self.ts_parser = TypeScriptParser(concatenated_types_file)
         self.ts_interfaces = self.ts_parser.parse_interfaces()
         self.backend_only = self.ts_parser.get_ignored_fields()
@@ -154,7 +157,6 @@ class TypeChecker:
             for name, interface in self.ts_interfaces.items()
             if any(potential == name for potential in potential_names)
         }
-
         return interfaces, interfaces_with_optional_properties
 
     # MARK: Field Checks

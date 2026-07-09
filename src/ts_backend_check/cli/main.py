@@ -30,6 +30,7 @@ def check_files_and_print_results(
     identifier: str,
     backend_model_file_path: Path,
     ts_interface_file_paths: list[Path],
+    backend_type: str,
     check_blank: bool = False,
     model_name_conversions: dict[str, list[str]] = {},
     backend_models_to_ignore: list[str] = [],
@@ -47,6 +48,9 @@ def check_files_and_print_results(
 
     ts_interface_file_paths : list[Path]
         The paths to the TypeScript interfaces as defined in the .ts-backend-check.yaml configuration file.
+
+    backend_type : str
+        The backend type to check against, either 'django' or 'fastapi'.
 
     check_blank : bool, default=False
         Whether to also check that fields marked 'blank=True' within Django models are optional (?) in the TypeScript interfaces.
@@ -91,6 +95,7 @@ def check_files_and_print_results(
         models_file=str(backend_model_file_path),
         concatenated_types_file=concatenated_types_file,
         model_name_conversions=model_name_conversions,
+        backend_type=backend_type,
         check_blank=check_blank,
         backend_models_to_ignore=backend_models_to_ignore,
     )
@@ -121,7 +126,9 @@ def check_files_and_print_results(
 # MARK: Config Checks
 
 
-def extract_identifier_config(identifier_config: dict) -> dict[str, Any]:
+def extract_identifier_config(
+    identifier_config: dict, backend_type_filter: str
+) -> dict[str, Any]:
     """
     Extract and normalize config fields with defaults.
 
@@ -129,6 +136,9 @@ def extract_identifier_config(identifier_config: dict) -> dict[str, Any]:
     ----------
     identifier_config : dict
         A dictionary of configuration parameters, with some being unset.
+
+    backend_type_filter : str
+        The backend type to check against, either 'django' or 'fastapi'.
 
     Returns
     -------
@@ -140,6 +150,8 @@ def extract_identifier_config(identifier_config: dict) -> dict[str, Any]:
         "ts_interface_file_paths": [
             Path(p) for p in identifier_config["ts_interface_paths"]
         ],
+        # We default to Django if the backend type is not specified in the config file.
+        "backend_type": identifier_config.get("backend_type", backend_type_filter),
         "check_blank": identifier_config.get("check_blank_model_fields", False),
         "model_name_conversions": identifier_config.get(
             "backend_to_ts_model_name_conversions", {}
@@ -153,7 +165,9 @@ def extract_identifier_config(identifier_config: dict) -> dict[str, Any]:
 # MARK: Checks Function
 
 
-def run_checks(config: dict, identifiers: list[str]) -> list[bool]:
+def run_checks(
+    config: dict, identifiers: list[str], backend_type_filter: str | None = None
+) -> list[bool]:
     """
     Function to run checks for the given list of identifiers.
 
@@ -165,12 +179,20 @@ def run_checks(config: dict, identifiers: list[str]) -> list[bool]:
     identifiers : list
         Get a list of identifiers.
 
+    backend_type_filter : str | None
+        The backend type to check against, either 'django' or 'fastapi'.
+
     Returns
     -------
     list[bool]
         Returns a list of boolean values that define whether checks have passed.
     """
     results: list[bool] = []
+    if not backend_type_filter:
+        rprint(
+            "\n[red]❌  Please give a proper backend type command for django or fastapi models to check against. [/red]"
+        )
+        sys.exit(1)
     for identifier in identifiers:
         identifier_config = config.get(identifier)
         if not identifier_config:
@@ -180,9 +202,13 @@ def run_checks(config: dict, identifiers: list[str]) -> list[bool]:
             )
             sys.exit(1)
 
+        extracted = extract_identifier_config(identifier_config, backend_type_filter)
+        if extracted["backend_type"] != backend_type_filter:
+            continue
+
         r = check_files_and_print_results(
             identifier=identifier,
-            **extract_identifier_config(identifier_config),
+            **extracted,
         )
         results.append(r)
 
@@ -208,6 +234,7 @@ def main() -> None:
     --------
     >>> ts-backend-check --generate-config-file  # -gcf
     >>> ts-backend-check --identifier <model-interface-identifier-from-config-file>  # -i
+    >>> ts-backend-check --backend_type <django|fastapi> # -b
     >>> ts-backend-check --all  # -a
     """
     # MARK: CLI Base
@@ -257,10 +284,18 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "-b",
+        "--backend-type",
+        choices=["django", "fastapi"],
+        default=None,
+        help="The backend type to check against, either 'django' or 'fastapi'.",
+    )
+
+    parser.add_argument(
         "-a",
         "--all",
         action="store_true",
-        help="Run checks of all backend models against their corresponding TypeScript interfaces.",
+        help="Run checks of all django or fastapi backend models against their corresponding TypeScript interfaces, requires -b or --backend_type django or fastapi.",
     )
 
     # MARK: Setup CLI
@@ -319,7 +354,7 @@ def main() -> None:
         parser.print_help()
         return
 
-    results = run_checks(config, identifiers)
+    results = run_checks(config, identifiers, args.backend_type)
 
     if not all(results):
         sys.exit(1)
