@@ -1,19 +1,16 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """
-Main module for checking Django models against TypeScript types.
+Main module for checking Django and FastAPI models against TypeScript types.
 """
 
-from ts_backend_check.parsers.django_parser import (
-    DjangoModelVisitor,
-    extract_model_fields,
-)
+from ts_backend_check.parsers.context_parser import ParserContext
 from ts_backend_check.parsers.typescript_parser import TypeScriptParser
 from ts_backend_check.utils import is_ordered_subset, snake_to_camel
 
 
 class TypeChecker:
     """
-    Main class for checking Django models against TypeScript types.
+    Main class for checking Django and FastAPI models against TypeScript types.
 
     Parameters
     ----------
@@ -22,6 +19,9 @@ class TypeChecker:
 
     concatenated_types_file : str
         A concatenated file text joined from all paths in ts_interface_file_paths.
+
+    backend_type : str
+        The backend type to check against, either 'django' or 'fastapi'.
 
     check_blank : bool, default=False
         Whether to also check that fields marked 'blank=True' within Django models are optional (?) in the TypeScript interfaces.
@@ -37,6 +37,7 @@ class TypeChecker:
         self,
         models_file: str,
         concatenated_types_file: str,
+        backend_type: str,
         check_blank: bool = False,
         model_name_conversions: dict[str, list[str]] = {},
         backend_models_to_ignore: list[str] = [],
@@ -45,20 +46,55 @@ class TypeChecker:
         self.concatenated_types_file = concatenated_types_file
         self.check_blank = check_blank
         self.model_name_conversions = model_name_conversions
-        self.django_model_visitor = DjangoModelVisitor
-        (
-            self.models_all_fields_and_blank_fields_ordered,
-            self.models_all_fields,
-            self.models_all_blank_fields,
-        ) = extract_model_fields(
-            models_file=models_file,
+        self.parser_context = ParserContext(
+            backend_type=backend_type,
             models_to_ignore=backend_models_to_ignore,
         )
+        model_data = self.parser_context.parse(models_file=models_file)
+        self.models_all_fields_and_blank_fields_ordered = (
+            model_data.models_all_fields_and_blank_fields_ordered
+        )
+        self.models_all_fields = model_data.models_all_fields
+        self.models_all_blank_fields = model_data.models_all_blank_fields
+
         self.ts_parser = TypeScriptParser(concatenated_types_file)
         self.ts_interfaces = self.ts_parser.parse_interfaces()
         self.backend_only = self.ts_parser.get_ignored_fields()
 
     # MARK: Run Check
+
+    def _extend_error_fields(
+        self, blank_fields: list[str], error_fields: list[str], model_name: str
+    ) -> None:
+        """
+        Extend blank-field validation errors to the error_fields list in place.
+
+        Parameters
+        ----------
+        blank_fields : list[str]
+            Fields that were found to be blank for the current model.
+        error_fields : list[str]
+            The running list of error messages to extend in place.
+        model_name : str
+            Name of the model currently being checked.
+
+        Returns
+        -------
+        None
+            This method mutates error_fields in place and returns nothing.
+        """
+        error_fields.extend(
+            self._format_optional_properties_message(
+                field=bf,
+                model_name=model_name,
+                models_file=self.models_file,
+            )
+            for bf in blank_fields
+            if not self._property_is_optional_when_field_is_blank(
+                model_name=model_name,
+                field=bf,
+            )
+        )
 
     def check(self) -> list[str]:
         """
@@ -96,18 +132,7 @@ class TypeChecker:
                     missing_fields_exist = True
 
             if self.check_blank and blank_fields:
-                error_fields.extend(
-                    self._format_optional_properties_message(
-                        field=bf,
-                        model_name=model_name,
-                        models_file=self.models_file,
-                    )
-                    for bf in blank_fields
-                    if not self._property_is_optional_when_field_is_blank(
-                        model_name=model_name,
-                        field=bf,
-                    )
-                )
+                self._extend_error_fields(blank_fields, error_fields, model_name)
 
             if not missing_fields_exist and not self._ts_interface_properties_ordered(
                 model_name=model_name, fields=fields_and_blank_fields_ordered
@@ -154,7 +179,6 @@ class TypeChecker:
             for name, interface in self.ts_interfaces.items()
             if any(potential == name for potential in potential_names)
         }
-
         return interfaces, interfaces_with_optional_properties
 
     # MARK: Field Checks

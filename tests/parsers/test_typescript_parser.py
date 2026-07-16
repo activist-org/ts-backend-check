@@ -1,42 +1,75 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import pytest
+
 from ts_backend_check.parsers.typescript_parser import TypeScriptParser
 
 
-def test_parse_interfaces(return_invalid_concatenated_types_file):
-    parser = TypeScriptParser(return_invalid_concatenated_types_file)
+@pytest.fixture
+def parser_fixture_file(request):
+    fixture_name = {
+        "django": "return_invalid_django_concatenated_types_file",
+        "fastapi": "return_invalid_fastapi_concatenated_types_file",
+    }[request.param]
+    return request.getfixturevalue(fixture_name)
+
+
+@pytest.mark.parametrize(
+    "parser_fixture_file, interface_name, expected_properties, excluded_properties",
+    [
+        pytest.param(
+            "django",
+            "Event",
+            ["title", "organizer", "participants"],
+            ["Note", "Attn"],
+            id="django-event",
+        ),
+        pytest.param(
+            "django",
+            "EventExtended",
+            ["date", "isPrivate"],
+            ["Attn"],
+            id="django-event_extended",
+        ),
+        pytest.param("django", "User", ["id", "name"], [], id="django-user"),
+        pytest.param(
+            "fastapi",
+            "Event",
+            ["title", "organizer", "participants"],
+            ["Note", "Attn"],
+            id="fastapi-event",
+        ),
+        pytest.param(
+            "fastapi",
+            "EventExtended",
+            ["date", "isPrivate"],
+            ["Attn"],
+            id="fastapi-event_extended",
+        ),
+        pytest.param("fastapi", "User", ["id", "name"], [], id="fastapi-user"),
+    ],
+    indirect=["parser_fixture_file"],
+)
+def test_parse_interfaces(
+    parser_fixture_file, interface_name, expected_properties, excluded_properties
+):
+    parser = TypeScriptParser(parser_fixture_file)
     interfaces = parser.parse_interfaces()
 
-    # Check Event interface.
-    assert "Event" in interfaces
-
-    event = interfaces["Event"]
-    assert event.name == "Event"
-    assert "title" in event.properties
-    assert "organizer" in event.properties
-    assert "participants" in event.properties
-
-    assert "Note" not in event.properties  # don't pick up other comments
-    assert "Attn" not in event.properties  # don't pick up other comments
-
-    assert "EventExtended" in interfaces
-
-    event_extended = interfaces["EventExtended"]
-    assert "date" in event_extended.properties
-    assert "isPrivate" in event_extended.properties
-
-    assert "Attn" not in event_extended.properties  # don't pick up other comments
-
-    # Check User interface.
-    assert "User" in interfaces
-    user = interfaces["User"]
-    assert user.name == "User"
-    assert "id" in user.properties
-    assert "name" in user.properties
+    assert interface_name in interfaces
+    interface = interfaces[interface_name]
+    assert interface.name == interface_name
+    for prop in expected_properties:
+        assert prop in interface.properties
+    for prop in excluded_properties:
+        assert prop not in interface.properties
 
 
-def test_get_ignored_fields(return_invalid_concatenated_types_file):
-    parser = TypeScriptParser(return_invalid_concatenated_types_file)
+@pytest.mark.parametrize(
+    "parser_fixture_file", ["django", "fastapi"], indirect=["parser_fixture_file"]
+)
+def test_get_ignored_fields(parser_fixture_file):
+    parser = TypeScriptParser(parser_fixture_file)
     backend_only = parser.get_ignored_fields()
 
     assert "date" in backend_only  # date is ignored
