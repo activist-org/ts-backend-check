@@ -3,13 +3,13 @@
 import pytest
 
 from ts_backend_check.parsers.backend_parser import ModelData
-from ts_backend_check.parsers.django_parser import DjangoModelParser
+from ts_backend_check.parsers.fastapi_parser import FastAPIModelParser
 
 
-def test_extract_model_fields(return_invalid_django_models):
-    parser = DjangoModelParser()
-
-    fields = parser.parse(return_invalid_django_models)
+# Regex Test
+def test_extract_model_fields(return_invalid_fastapi_models):
+    parser = FastAPIModelParser()
+    fields = parser.parse(return_invalid_fastapi_models)
 
     assert "EventModel" in fields.models_all_fields
     event_fields = fields.models_all_fields["EventModel"]
@@ -27,7 +27,7 @@ def test_extract_model_fields(return_invalid_django_models):
 
 
 def test_extract_model_fields_with_invalid_syntax(tmp_path):
-    parser = DjangoModelParser()
+    parser = FastAPIModelParser()
     invalid_model = tmp_path / "invalid_model.py"
     invalid_model.write_text("this is not valid python syntax")
 
@@ -39,13 +39,13 @@ def test_extract_model_fields_with_empty_file(tmp_path):
     empty_file = tmp_path / "empty.py"
     empty_file.write_text("")
 
-    parser = DjangoModelParser()
+    parser = FastAPIModelParser()
 
     fields = parser.parse(empty_file)
     assert fields == ModelData()
 
 
 def backend_models_to_ignore_from_config(return_invalid_django_models):
-    parser = DjangoModelParser()
+    parser = FastAPIModelParser()
     fields = parser.parse(return_invalid_django_models)
     assert fields.models_all_fields[0] == "BackendOnlyModel"
