@@ -225,5 +225,5 @@ class FastAPIModelParser(BackendModelParser):
         return ModelData(
             models_all_fields=models_all_fields,
             models_all_blank_fields=models_all_blank_fields,
-            models_all_fields_ordered=models_all_fields_ordered,
+            models_all_fields_and_blank_fields_ordered=models_all_fields_ordered,
         )

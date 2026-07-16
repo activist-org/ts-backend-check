@@ -115,27 +115,54 @@ class DjangoModelParser(BackendModelParser):
             A tuple containing two lists: field names and blank field names found in the class.
         """
         for target in stmt.targets:
-            if not isinstance(target, ast.Name):
-                continue
-            if target.id.startswith("_"):
-                continue
-            if not isinstance(stmt.value, ast.Call):
-                continue
-            if not isinstance(stmt.value.func, ast.Attribute):
-                continue
-            if not any(ft in stmt.value.func.attr for ft in self.DJANGO_FIELD_TYPES):
-                continue
-
-            fields.append(target.id)
-
-            if any(
-                kw.arg == "blank"
-                and isinstance(kw.value, ast.Constant)
-                and kw.value.value is True
-                for kw in stmt.value.keywords
-            ):
-                blank_fields.append(target.id)
+            self._validate_ast_instances(stmt, target, fields, blank_fields)
         return fields, blank_fields
+
+    def _validate_ast_instances(
+        self, stmt: ast.Assign, target: ast.expr, fields: list, blank_fields: list
+    ) -> None:
+        """
+        Helper method to validate an ast instance to verify Django models.
+
+        Parameters
+        ----------
+        stmt : ast.Assign
+            The ast node representing an assignment statement of the django model.
+
+        target : ast.expr
+            The ast expression currently gets visited.
+
+        fields : list
+            A list to store the names of the fields found in the class.
+
+        blank_fields : list
+            A list to store the names of the fields that are considered blank.
+
+        Returns
+        -------
+        None
+            Mutates the fields and blank_fields in place.
+        """
+        if not isinstance(target, ast.Name):
+            return
+        if target.id.startswith("_"):
+            return
+        if not isinstance(stmt.value, ast.Call):
+            return
+        if not isinstance(stmt.value.func, ast.Attribute):
+            return
+        if not any(ft in stmt.value.func.attr for ft in self.DJANGO_FIELD_TYPES):
+            return
+
+        fields.append(target.id)
+
+        if any(
+            kw.arg == "blank"
+            and isinstance(kw.value, ast.Constant)
+            and kw.value.value is True
+            for kw in stmt.value.keywords
+        ):
+            blank_fields.append(target.id)
 
     def _build_models(
         self,
@@ -189,5 +216,5 @@ class DjangoModelParser(BackendModelParser):
         return ModelData(
             models_all_fields=models_all_fields,
             models_all_blank_fields=models_all_blank_fields,
-            models_all_fields_ordered=models_all_fields_ordered,
+            models_all_fields_and_blank_fields_ordered=models_all_fields_ordered,
         )

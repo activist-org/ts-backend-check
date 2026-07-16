@@ -190,7 +190,7 @@ def run_checks(
     results: list[bool] = []
     if not backend_type_filter:
         rprint(
-            "\n[red]❌  Please give a proper backend type command for django or fastapi models to check against. [/red]"
+            "\n[red]❌  Please give a proper backend type command django or fastapi models to check against. [/red]"
         )
         sys.exit(1)
     for identifier in identifiers:
@@ -295,7 +295,7 @@ def main() -> None:
         "-a",
         "--all",
         action="store_true",
-        help="Run checks of all django or fastapi backend models against their corresponding TypeScript interfaces, requires -b or --backend_type django or fastapi.",
+        help="Run checks of all django or fastapi backend models against their corresponding TypeScript interfaces, requires -b or --backend-type django or fastapi.",
     )
 
     # MARK: Setup CLI

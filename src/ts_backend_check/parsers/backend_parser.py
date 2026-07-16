@@ -18,7 +18,7 @@ class ModelData:
 
     models_all_fields: dict = field(default_factory=dict)
     models_all_blank_fields: dict = field(default_factory=dict)
-    models_all_fields_ordered: dict = field(default_factory=dict)
+    models_all_fields_and_blank_fields_ordered: dict = field(default_factory=dict)
 
 
 class BackendModelParser(ABC):

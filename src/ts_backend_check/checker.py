@@ -52,7 +52,7 @@ class TypeChecker:
         )
         model_data = self.parser_context.parse(models_file=models_file)
         self.models_all_fields_and_blank_fields_ordered = (
-            model_data.models_all_fields_ordered
+            model_data.models_all_fields_and_blank_fields_ordered
         )
         self.models_all_fields = model_data.models_all_fields
         self.models_all_blank_fields = model_data.models_all_blank_fields
@@ -62,6 +62,39 @@ class TypeChecker:
         self.backend_only = self.ts_parser.get_ignored_fields()
 
     # MARK: Run Check
+
+    def _extend_error_fields(
+        self, blank_fields: list[str], error_fields: list[str], model_name: str
+    ) -> None:
+        """
+        Extend blank-field validation errors to the error_fields list in place.
+
+        Parameters
+        ----------
+        blank_fields : list[str]
+            Fields that were found to be blank for the current model.
+        error_fields : list[str]
+            The running list of error messages to extend in place.
+        model_name : str
+            Name of the model currently being checked.
+
+        Returns
+        -------
+        None
+            This method mutates error_fields in place and returns nothing.
+        """
+        error_fields.extend(
+            self._format_optional_properties_message(
+                field=bf,
+                model_name=model_name,
+                models_file=self.models_file,
+            )
+            for bf in blank_fields
+            if not self._property_is_optional_when_field_is_blank(
+                model_name=model_name,
+                field=bf,
+            )
+        )
 
     def check(self) -> list[str]:
         """
@@ -99,18 +132,7 @@ class TypeChecker:
                     missing_fields_exist = True
 
             if self.check_blank and blank_fields:
-                error_fields.extend(
-                    self._format_optional_properties_message(
-                        field=bf,
-                        model_name=model_name,
-                        models_file=self.models_file,
-                    )
-                    for bf in blank_fields
-                    if not self._property_is_optional_when_field_is_blank(
-                        model_name=model_name,
-                        field=bf,
-                    )
-                )
+                self._extend_error_fields(blank_fields, error_fields, model_name)
 
             if not missing_fields_exist and not self._ts_interface_properties_ordered(
                 model_name=model_name, fields=fields_and_blank_fields_ordered
