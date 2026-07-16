@@ -1,112 +1,264 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import textwrap
+
+import pytest
+
 from ts_backend_check.checker import TypeChecker
 
 
-def test_checker_invalid_checks_fail(
-    return_invalid_django_models,
-    return_invalid_concatenated_types_file,
-    return_invalid_check_blank_models,
-    return_invalid_backend_to_ts_conversions,
-    return_invalid_backend_models_to_ignore,
+@pytest.mark.parametrize(
+    "backend_type,models,concatenated_types_file,check_blank_models,backend_to_ts_conversions,backend_models_to_ignore,expected_error_count",
+    [
+        pytest.param(
+            "django",
+            "return_invalid_django_models",
+            "return_invalid_django_concatenated_types_file",
+            "return_invalid_django_check_blank_models",
+            "return_invalid_django_backend_to_ts_conversions",
+            "return_invalid_django_backend_models_to_ignore",
+            3,
+            id="django",
+        ),
+        pytest.param(
+            "fastapi",
+            "return_invalid_fastapi_models",
+            "return_invalid_fastapi_concatenated_types_file",
+            "return_invalid_fastapi_check_blank_models",
+            "return_invalid_fastapi_backend_to_ts_conversions",
+            "return_invalid_fastapi_backend_models_to_ignore",
+            3,
+            id="fastapi",
+        ),
+    ],
+)
+def test_django_checker_invalid_checks_fail(
+    request,
+    backend_type,
+    models,
+    concatenated_types_file,
+    check_blank_models,
+    backend_to_ts_conversions,
+    backend_models_to_ignore,
+    expected_error_count,
 ):
     """
     Test that those checks that should fail in the invalid files do.
     """
     checker = TypeChecker(
-        models_file=return_invalid_django_models,
-        concatenated_types_file=return_invalid_concatenated_types_file,
-        check_blank=return_invalid_check_blank_models,
-        model_name_conversions=return_invalid_backend_to_ts_conversions,
-        backend_models_to_ignore=return_invalid_backend_models_to_ignore,
+        models_file=request.getfixturevalue(models),
+        concatenated_types_file=request.getfixturevalue(concatenated_types_file),
+        check_blank=request.getfixturevalue(check_blank_models),
+        backend_type=backend_type,
+        model_name_conversions=request.getfixturevalue(backend_to_ts_conversions),
+        backend_models_to_ignore=request.getfixturevalue(backend_models_to_ignore),
     )
     errors = checker.check()
 
-    assert len(errors) == 3  # missing, optional and no matching interface
+    assert (
+        len(errors) == expected_error_count
+    )  # missing, optional and no matching interface
 
 
+@pytest.mark.parametrize(
+    "backend_type,models,concatenated_types_file,check_blank_models,backend_to_ts_conversions,backend_models_to_ignore,expected_error_count",
+    [
+        pytest.param(
+            "django",
+            "return_valid_django_models",
+            "return_valid_django_concatenated_types_file",
+            "return_valid_django_check_blank_models",
+            "return_valid_django_backend_to_ts_conversions",
+            "return_valid_django_backend_models_to_ignore",
+            0,
+            id="django",
+        ),
+        pytest.param(
+            "fastapi",
+            "return_valid_fastapi_models",
+            "return_valid_fastapi_concatenated_types_file",
+            "return_valid_fastapi_check_blank_models",
+            "return_valid_fastapi_backend_to_ts_conversions",
+            "return_valid_fastapi_backend_models_to_ignore",
+            0,
+            id="fastapi",
+        ),
+    ],
+)
 def test_checker_ignored_missing_fields(
-    return_valid_django_models,
-    return_valid_concatenated_types_file,
-    return_valid_check_blank_models,
-    return_valid_backend_to_ts_conversions,
-    return_valid_backend_models_to_ignore,
+    request,
+    backend_type,
+    models,
+    concatenated_types_file,
+    check_blank_models,
+    backend_to_ts_conversions,
+    backend_models_to_ignore,
+    expected_error_count,
 ):
     """
     Test that the ignore fields comment functions properly.
     """
     checker = TypeChecker(
-        models_file=return_valid_django_models,
-        concatenated_types_file=return_valid_concatenated_types_file,
-        check_blank=return_valid_check_blank_models,
-        model_name_conversions=return_valid_backend_to_ts_conversions,
-        backend_models_to_ignore=return_valid_backend_models_to_ignore,
+        models_file=request.getfixturevalue(models),
+        concatenated_types_file=request.getfixturevalue(concatenated_types_file),
+        check_blank=request.getfixturevalue(check_blank_models),
+        backend_type=backend_type,
+        model_name_conversions=request.getfixturevalue(backend_to_ts_conversions),
+        backend_models_to_ignore=request.getfixturevalue(backend_models_to_ignore),
     )
     errors = checker.check()
 
     # The field 'date' is marked as ignored by ts-backend-check.
-    assert len(errors) == 0
+    assert len(errors) == expected_error_count
 
 
+@pytest.mark.parametrize(
+    "backend_type,models,concatenated_types_file,check_blank_models,backend_to_ts_conversions,backend_models_to_ignore,expected_error_count",
+    [
+        pytest.param(
+            "django",
+            "return_invalid_django_models",
+            "return_invalid_django_concatenated_types_file",
+            "return_invalid_django_check_blank_models",
+            "return_invalid_django_backend_to_ts_conversions",
+            "return_invalid_django_backend_models_to_ignore",
+            3,
+            id="django",
+        ),
+        pytest.param(
+            "fastapi",
+            "return_invalid_fastapi_models",
+            "return_invalid_fastapi_concatenated_types_file",
+            "return_invalid_fastapi_check_blank_models",
+            "return_invalid_fastapi_backend_to_ts_conversions",
+            "return_invalid_fastapi_backend_models_to_ignore",
+            3,
+            id="fastapi",
+        ),
+    ],
+)
 def test_checker_with_actual_missing_fields(
-    return_invalid_django_models,
-    return_invalid_concatenated_types_file,
-    return_invalid_check_blank_models,
-    return_invalid_backend_to_ts_conversions,
-    return_invalid_backend_models_to_ignore,
+    request,
+    backend_type,
+    models,
+    concatenated_types_file,
+    check_blank_models,
+    backend_to_ts_conversions,
+    backend_models_to_ignore,
+    expected_error_count,
 ):
     """
     Check that missing fields are reported in invalid files.
     """
     checker = TypeChecker(
-        models_file=return_invalid_django_models,
-        concatenated_types_file=return_invalid_concatenated_types_file,
-        check_blank=return_invalid_check_blank_models,
-        model_name_conversions=return_invalid_backend_to_ts_conversions,
-        backend_models_to_ignore=return_invalid_backend_models_to_ignore,
+        models_file=request.getfixturevalue(models),
+        concatenated_types_file=request.getfixturevalue(concatenated_types_file),
+        check_blank=request.getfixturevalue(check_blank_models),
+        backend_type=backend_type,
+        model_name_conversions=request.getfixturevalue(backend_to_ts_conversions),
+        backend_models_to_ignore=request.getfixturevalue(backend_models_to_ignore),
     )
     errors = checker.check()
 
-    assert len(errors) == 3
+    assert len(errors) == expected_error_count
     assert "description" in "".join(errors)
 
 
+@pytest.mark.parametrize(
+    "backend_type,models,concatenated_types_file,check_blank_models,backend_to_ts_conversions,backend_models_to_ignore,expected_error_count",
+    [
+        pytest.param(
+            "django",
+            "return_invalid_django_models",
+            "return_invalid_django_concatenated_types_file",
+            "return_invalid_django_check_blank_models",
+            "return_invalid_django_backend_to_ts_conversions",
+            "return_invalid_django_backend_models_to_ignore",
+            3,
+            id="django",
+        ),
+        pytest.param(
+            "fastapi",
+            "return_invalid_fastapi_models",
+            "return_invalid_fastapi_concatenated_types_file",
+            "return_invalid_fastapi_check_blank_models",
+            "return_invalid_fastapi_backend_to_ts_conversions",
+            "return_invalid_fastapi_backend_models_to_ignore",
+            3,
+            id="fastapi",
+        ),
+    ],
+)
 def test_checker_with_no_matching_interface(
-    return_invalid_django_models,
-    return_invalid_concatenated_types_file,
-    return_invalid_check_blank_models,
-    return_invalid_backend_to_ts_conversions,
-    return_invalid_backend_models_to_ignore,
+    request,
+    backend_type,
+    models,
+    concatenated_types_file,
+    check_blank_models,
+    backend_to_ts_conversions,
+    backend_models_to_ignore,
+    expected_error_count,
 ):
     """
     Check that missing interfaces will be reported.
     """
     checker = TypeChecker(
-        models_file=return_invalid_django_models,
-        concatenated_types_file=return_invalid_concatenated_types_file,
-        check_blank=return_invalid_check_blank_models,
-        model_name_conversions=return_invalid_backend_to_ts_conversions,
-        backend_models_to_ignore=return_invalid_backend_models_to_ignore,
+        models_file=request.getfixturevalue(models),
+        concatenated_types_file=request.getfixturevalue(concatenated_types_file),
+        check_blank=request.getfixturevalue(check_blank_models),
+        backend_type=backend_type,
+        model_name_conversions=request.getfixturevalue(backend_to_ts_conversions),
+        backend_models_to_ignore=request.getfixturevalue(backend_models_to_ignore),
     )
     errors = checker.check()
 
-    assert len(errors) == 3
+    assert len(errors) == expected_error_count
     assert (
         "No matching TypeScript interface found for the model 'UserModel'."
         in "".join(errors)
     )
 
 
-def test_checker_with_unordered_interface(tmp_path):
+@pytest.mark.parametrize(
+    "backend_type,model_content,expected",
+    [
+        pytest.param(
+            "django",
+            textwrap.dedent(
+                """
+            from django.db import models
+            class ModelWithOrder(models.Model):
+                name = models.CharField(max_length=100)
+                description = models.CharField(max_length=100)
+        """
+            ),
+            1,
+            id="django",
+        ),
+        pytest.param(
+            "fastapi",
+            textwrap.dedent(
+                """
+            from pydantic import BaseModel
+            class ModelWithOrder(BaseModel):
+                name: str
+                description: str
+            """
+            ),
+            1,
+            id="fastapi",
+        ),
+    ],
+)
+def test_checker_with_unordered_interface(
+    tmp_path,
+    backend_type,
+    model_content,
+    expected,
+):
     """
     Test that the checker will report an unordered interface (isn't reported in the test project check).
     """
-    model_content = """from django.db import models
-
-class ModelWithOrder(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
-"""
     model_file = tmp_path / "ordered_model.py"
     model_file.write_text(model_content)
 
@@ -123,11 +275,13 @@ class ModelWithOrder(models.Model):
         concatenated_types_file = f.read()
 
     checker = TypeChecker(
-        models_file=str(model_file), concatenated_types_file=concatenated_types_file
+        models_file=str(model_file),
+        concatenated_types_file=concatenated_types_file,
+        backend_type=backend_type,
     )
     errors = checker.check()
 
-    assert len(errors) == 1
+    assert len(errors) == expected
     assert "The interface properties of the 'ts_interface_paths' files" in errors[0]
     assert "are unordered" in errors[0]
     assert (
@@ -140,23 +294,52 @@ class ModelWithOrder(models.Model):
     )
 
 
+@pytest.mark.parametrize(
+    "backend_type,models,concatenated_types_file,check_blank_models,backend_to_ts_conversions,backend_models_to_ignore,expected_error_count",
+    [
+        pytest.param(
+            "django",
+            "return_valid_django_models",
+            "return_valid_django_concatenated_types_file",
+            "return_valid_django_check_blank_models",
+            "return_valid_django_backend_to_ts_conversions",
+            "return_valid_django_backend_models_to_ignore",
+            0,
+            id="django",
+        ),
+        pytest.param(
+            "fastapi",
+            "return_valid_fastapi_models",
+            "return_valid_fastapi_concatenated_types_file",
+            "return_valid_fastapi_check_blank_models",
+            "return_valid_fastapi_backend_to_ts_conversions",
+            "return_valid_fastapi_backend_models_to_ignore",
+            0,
+            id="fastapi",
+        ),
+    ],
+)
 def test_checker_with_ignored_backend_models(
-    return_valid_django_models,
-    return_valid_concatenated_types_file,
-    return_valid_check_blank_models,
-    return_valid_backend_to_ts_conversions,
-    return_valid_backend_models_to_ignore,
+    request,
+    backend_type,
+    models,
+    concatenated_types_file,
+    check_blank_models,
+    backend_to_ts_conversions,
+    backend_models_to_ignore,
+    expected_error_count,
 ):
     """
     Check that missing interfaces will be reported.
     """
     checker = TypeChecker(
-        models_file=return_valid_django_models,
-        concatenated_types_file=return_valid_concatenated_types_file,
-        check_blank=return_valid_check_blank_models,
-        model_name_conversions=return_valid_backend_to_ts_conversions,
-        backend_models_to_ignore=return_valid_backend_models_to_ignore,
+        models_file=request.getfixturevalue(models),
+        concatenated_types_file=request.getfixturevalue(concatenated_types_file),
+        check_blank=request.getfixturevalue(check_blank_models),
+        backend_type=backend_type,
+        model_name_conversions=request.getfixturevalue(backend_to_ts_conversions),
+        backend_models_to_ignore=request.getfixturevalue(backend_models_to_ignore),
     )
     errors = checker.check()
 
-    assert len(errors) == 0
+    assert len(errors) == expected_error_count
