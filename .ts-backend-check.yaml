@@ -69,7 +69,14 @@ invalid_backend_model_path:
   ts_interface_paths:
     - src/ts_backend_check/test_project/frontend/valid_interfaces_1.ts
 
-invalid_typescript_interface_path:
-  backend_model_path: src/ts_backend_check/test_project/backend/models.py
+invalid_django_typescript_interface_path:
+  backend_model_path: src/ts_backend_check/test_project/backend/django_models.py
+  backend_type: django
+  ts_interface_paths:
+    - invalid_path_to_interfaces.ts
+
+invalid_fastapi_typescript_interface_path:
+  backend_model_path: src/ts_backend_check/test_project/backend/fastapi_models.py
+  backend_type: fastapi
   ts_interface_paths:
     - invalid_path_to_interfaces.ts
