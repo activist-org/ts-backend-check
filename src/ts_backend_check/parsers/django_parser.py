@@ -7,15 +7,12 @@ import ast
 import re
 from typing import Any
 
+from ts_backend_check.parsers.backend_parser import BackendModelParser, ModelData
 
-class DjangoModelVisitor(ast.NodeVisitor):
+
+class DjangoModelParser(BackendModelParser):
     """
-    AST visitor to extract fields from Django models.
-
-    Parameters
-    ----------
-    models_to_ignore : list[str]
-        Model classes to ignore, obtained from the config file.
+    Concrete implementation of BackendModelParser for parsing FastAPI models.
     """
 
     DJANGO_FIELD_TYPES = {
@@ -36,170 +33,187 @@ class DjangoModelVisitor(ast.NodeVisitor):
         "AutoField",
     }
 
-    def __init__(self, models_to_ignore: list[str] | None) -> None:
-        self.current_model: str | None = None
-        self.models_and_fields: dict[str, list[str]] = {}
-        self.models_and_blank_fields: dict[str, list[str]] = {}
-        self.models_to_ignore: set[str] = set(models_to_ignore or [])
-
-    # MARK: Visit Class
-
-    def visit_ClassDef(self, node: ast.ClassDef) -> None:
-        """
-        Check class definitions, specifically those that inherit from other classes and not listed in ignore classes.
-
-        Parameters
-        ----------
-        node : ast.ClassDef
-            A class definition from Python AST (Abstract Syntax Tree).
-            It contains information about the class, such as its name, base classes, body, decorators, etc.
-        """
-        # Only process classes that inherit from something and are not ignored.
-        if node.bases and node.name not in self.models_to_ignore:
-            self.current_model = node.name
-            if self.current_model not in self.models_and_fields:
-                self.models_and_fields[self.current_model] = []
-
-            self.generic_visit(node)
-
-        self.current_model = None
-
-    # MARK: Visit Assign
-
-    def visit_Assign(self, node: ast.Assign) -> None:
-        """
-        Check assignment statements within a class.
-
-        Parameters
-        ----------
-        node : ast.Assign
-            An assignment definition from Python AST (Abstract Syntax Tree).
-            It represents an assignment statement (e.g., x = 42).
-        """
-        if not self.current_model:
-            return
-
-        for target in node.targets:
-            if (
-                isinstance(target, ast.Name)
-                and not target.id.startswith("_")
-                and isinstance(node.value, ast.Call)
-                and isinstance(node.value.func, ast.Attribute)
-            ) and any(
-                field_type in node.value.func.attr
-                for field_type in self.DJANGO_FIELD_TYPES
-            ):
-                self.models_and_fields[self.current_model].append(target.id)
-                if any(
-                    kw.arg == "blank"
-                    and isinstance(kw.value, ast.Constant)
-                    and kw.value.value is True
-                    for kw in node.value.keywords
-                ):
-                    if self.current_model not in self.models_and_blank_fields:
-                        self.models_and_blank_fields[self.current_model] = []
-
-                    self.models_and_blank_fields[self.current_model].append(target.id)
-
-
-# MARK: Extract Fields
-
-
-def extract_model_fields(
-    models_file: str, models_to_ignore: list[str] | None
-) -> tuple[dict[str, list[Any]], dict[str, list[Any]], dict[str, list[Any]]]:
-    """
-    Extract fields from Django models file.
-
-    Parameters
-    ----------
-    models_file : str
-        A models.py file that defines Django models.
-
-    models_to_ignore : list[str]
-        Model classes to ignore, obtained from the config file.
-
-    Returns
-    -------
-    tuple(dict[str, list[Any]], dict[str, list[Any]], dict[str, list[Any]])
-        The fields from the models file extracted into dictionaries for future processing.
-    """
-    with open(models_file, "r", encoding="utf-8") as f:
-        content = f.read().strip()
-        # Skip any empty lines at the beginning.
-        while content.startswith("\n"):
-            content = content[1:]
-
-    try:
-        tree = ast.parse(content)
-
-    except SyntaxError as e:
-        raise SyntaxError(
-            f"Failed to parse {models_file}. Make sure it's a valid Python file. Error: {str(e)}"
-        ) from e
-
-    visitor = DjangoModelVisitor(models_to_ignore=models_to_ignore)
-    visitor.visit(tree)
-
-    # Derive texts for all model classes.
+    # django specific model_text_regex to extract model class definitions
     MODEL_TEXT_REGEX = re.compile(
         r"^(class\s+(\w+).+?)(?=\nclass|\Z)", re.MULTILINE | re.DOTALL
     )
-    model_lines = {
-        match.group(2): match.group(1).strip()
-        for match in MODEL_TEXT_REGEX.finditer(content)
-    }
 
-    # Derive fields inherited from other classes via comments.
-    INHERIT_FIELD_COMMENT_REGEX = re.compile(
-        r"#.*?(?:tsbc|ts-backend-check): .*inherit\s+(\w+)\b(?!\s*\(blank=True\))"
-    )
-    INHERIT_BLANK_FIELD_COMMENT_REGEX = re.compile(
-        r"#\s*?(?:tsbc|ts-backend-check): .*inherit\s+(\w+)\s+\((blank=True)\)"
-    )
-
-    model_inherited_fields = {}
-    for k, v in model_lines.items():
-        model_inherited_fields[k] = {
-            "inherited_fields": INHERIT_FIELD_COMMENT_REGEX.findall(v)
-        }
-        model_inherited_fields[k]["inherited_blank_fields"] = [
-            match.group(1).strip()
-            for match in INHERIT_BLANK_FIELD_COMMENT_REGEX.finditer(v)
-        ]
-
-    # Derive all fields ordered.
+    # django specific regex to extract all model fields in order, including inherited fields
     ALL_MODEL_FIELDS_ORDERED_REGEX = re.compile(
         r"(?:^\s*(?!\s*_)(\w+)\s*=\s*\w+)"  # field (not including private)
         r"|"
         r"(?:#\s*(?:tsbc|ts-backend-check): .*inherit\s+(\w+)(?:\s*\((blank=True)\))?)",  # inherited
         re.MULTILINE,
     )
-    models_all_fields_and_blank_fields_ordered = {
-        m: [
-            f[0] if f[0] != "" else f[1]
-            for f in ALL_MODEL_FIELDS_ORDERED_REGEX.findall(model_lines[m])
-        ]
-        for m in set(
-            list(visitor.models_and_fields.keys())
-            + list(visitor.models_and_blank_fields.keys())
+
+    def parse(self, models_file: str) -> ModelData:
+        """
+        Parse the Django models from the given file and return a ModelData object containing parsed information.
+
+        Parameters
+        ----------
+        models_file : str
+            The path to the Django models file to be parsed.
+
+        Returns
+        -------
+        ModelData
+            A dataclass containing all fields, blank fields, and ordered fields for the parsed models using _build_models.
+        """
+        tree, content = self._load_ast(models_file)
+        inherited = self._extract_inherited_fields(content)
+
+        direct_fields: dict[str, list[Any]] = {}
+        direct_blank_fields: dict[str, list[Any]] = {}
+
+        model_lines = {
+            match.group(2): match.group(1).strip()
+            for match in self.MODEL_TEXT_REGEX.finditer(content)
+        }
+
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.ClassDef):
+                continue
+            if not node.bases:
+                continue
+            if self._should_ignore(node.name):
+                continue
+            fields: list = []
+            blank_fields: list = []
+
+            for stmt in node.body:
+                if not isinstance(stmt, ast.Assign):
+                    continue
+                self._visit_targets(stmt, fields, blank_fields)
+            direct_fields[node.name] = fields
+            direct_blank_fields[node.name] = blank_fields
+
+        return self._build_models(
+            direct_fields, direct_blank_fields, inherited, model_lines
         )
-    }
 
-    # Combine all fields for the model.
-    models_all_fields = {}
-    models_all_blank_fields = {}
-    for m in list(models_all_fields_and_blank_fields_ordered.keys()):
-        models_all_fields[m] = model_inherited_fields.get(m, {}).get(
-            "inherited_fields", []
-        ) + visitor.models_and_fields.get(m, [])
+    def _visit_targets(
+        self, stmt: ast.Assign, fields: list, blank_fields: list
+    ) -> None:
+        """
+        Visit the targets of an assignment statement and extract field names and blank field names.
 
-        models_all_blank_fields[m] = model_inherited_fields.get(m, {}).get(
-            "inherited_blank_fields", []
-        ) + visitor.models_and_blank_fields.get(m, [])
+        Parameters
+        ----------
+        stmt : ast.Assign
+            The ast node representing an assignment statement of the django model.
 
-    return (
-        models_all_fields_and_blank_fields_ordered,
-        models_all_fields,
-        models_all_blank_fields,
-    )
+        fields : list
+            A list to store the names of the fields found in the class.
+
+        blank_fields : list
+            A list to store the names of the fields that are considered blank.
+
+        Returns
+        -------
+        None
+            Mutates a tuple containing two lists: field names and blank field names found in the class.
+        """
+        for target in stmt.targets:
+            self._validate_ast_instances(stmt, target, fields, blank_fields)
+
+    def _validate_ast_instances(
+        self, stmt: ast.Assign, target: ast.expr, fields: list, blank_fields: list
+    ) -> None:
+        """
+        Helper method to validate an ast instance to verify Django models.
+
+        Parameters
+        ----------
+        stmt : ast.Assign
+            The ast node representing an assignment statement of the django model.
+
+        target : ast.expr
+            The ast expression currently gets visited.
+
+        fields : list
+            A list to store the names of the fields found in the class.
+
+        blank_fields : list
+            A list to store the names of the fields that are considered blank.
+
+        Returns
+        -------
+        None
+            Mutates the fields and blank_fields in place.
+        """
+        if not isinstance(target, ast.Name):
+            return
+        if target.id.startswith("_"):
+            return
+        if not isinstance(stmt.value, ast.Call):
+            return
+        if not isinstance(stmt.value.func, ast.Attribute):
+            return
+        if not any(ft in stmt.value.func.attr for ft in self.DJANGO_FIELD_TYPES):
+            return
+
+        fields.append(target.id)
+
+        if any(
+            kw.arg == "blank"
+            and isinstance(kw.value, ast.Constant)
+            and kw.value.value is True
+            for kw in stmt.value.keywords
+        ):
+            blank_fields.append(target.id)
+
+    def _build_models(
+        self,
+        direct_fields: dict[str, list[Any]],
+        direct_blank_fields: dict[str, list[Any]],
+        inherited: dict[str, dict[str, list[Any]]],
+        model_lines: dict[str, str],
+    ) -> ModelData:
+        """
+        Build the final model data structure from the parsed fields, blank fields, inherited fields, and model lines.
+
+        Parameters
+        ----------
+        direct_fields : dict[str, list[Any]]
+            A dictionary mapping model names to their directly defined fields.
+
+        direct_blank_fields : dict[str, list[Any]]
+            A dictionary mapping model names to their directly defined blank fields.
+
+        inherited : dict[str,dict[str,list[Any]]]
+            A dictionary mapping model names to their inherited fields and blank fields.
+
+        model_lines : dict[str,str]
+            A dictionary mapping model names to their corresponding lines of code in the models file.
+
+        Returns
+        -------
+        ModelData
+            A dataclass containing all fields, blank fields, and all_fields_blank_fields_ordered fields for the parsed models.
+        """
+        all_models = set(list(direct_fields.keys()) + list(direct_blank_fields.keys()))
+        models_all_fields_ordered: dict[str, list[Any]] = {
+            m: [
+                f[0] if f[0] != "" else f[1]
+                for f in self.ALL_MODEL_FIELDS_ORDERED_REGEX.findall(model_lines[m])
+            ]
+            for m in all_models
+            if m in model_lines
+        }
+
+        models_all_fields: dict[str, list[Any]] = {}
+        models_all_blank_fields: dict[str, list[Any]] = {}
+
+        for m in all_models:
+            models_all_fields[m] = inherited.get(m, {}).get(
+                "inherited_fields", []
+            ) + direct_fields.get(m, [])
+            models_all_blank_fields[m] = inherited.get(m, {}).get(
+                "inherited_blank_fields", []
+            ) + direct_blank_fields.get(m, [])
+        return ModelData(
+            models_all_fields=models_all_fields,
+            models_all_blank_fields=models_all_blank_fields,
+            models_all_fields_and_blank_fields_ordered=models_all_fields_ordered,
+        )

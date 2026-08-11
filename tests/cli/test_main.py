@@ -8,7 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 import yaml
 
@@ -111,25 +111,31 @@ class TestCliMain(unittest.TestCase):
         """
         Successful run when backend models and TypeScript types are in sync.
         """
-        model_name = "valid_model"
-        result = subprocess.run(
-            [
-                sys.executable,
-                "src/ts_backend_check/cli/main.py",
-                "--identifier",
-                model_name,
-            ],
-            capture_output=True,
-            text=True,
-        )
+        cases = [("django_model", "django"), ("fastapi_model", "fastapi")]
+        for identifier, backend_type in cases:
+            with self.subTest(identifier=identifier, backend_type=backend_type):
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "src/ts_backend_check/cli/main.py",
+                        "--identifier",
+                        identifier,
+                        "--backend-type",
+                        backend_type,
+                    ],
+                    capture_output=True,
+                    text=True,
+                )
 
-        self.assertEqual(result.returncode, 0)
-        stdout_flat = result.stdout.strip().replace("\n", "")
-        self.assertIn(
-            "✅ Success: All backend models are synced with their corresponding TypeScript",
-            stdout_flat,
-        )
-        self.assertIn(f"interfaces for the provided '{model_name}' files.", stdout_flat)
+                self.assertEqual(result.returncode, 0)
+                stdout_flat = result.stdout.strip().replace("\n", "")
+                self.assertIn(
+                    "✅ Success: All backend models are synced with their corresponding TypeScript",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    f"interfaces for the provided '{identifier}' files.", stdout_flat
+                )
 
     def test_cli_check_command_with_missing_fields(self):
         """
@@ -154,109 +160,130 @@ class TestCliMain(unittest.TestCase):
         When the model does not exist, CLI should print an informative message
         and exit with code 1.
         """
-        result = subprocess.run(
-            [
-                sys.executable,
-                "src/ts_backend_check/cli/main.py",
-                "--identifier",
-                "invalid_identifier",
-            ],
-            capture_output=True,
-            text=True,
-        )
+        cases = [("invalid_identifier", "django"), ("invalid_identifier", "fastapi")]
+        for identifier, backend_type in cases:
+            with self.subTest(identifier=identifier, backend_type=backend_type):
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "src/ts_backend_check/cli/main.py",
+                        "--identifier",
+                        "invalid_identifier",
+                        "--backend-type",
+                        backend_type,
+                    ],
+                    capture_output=True,
+                    text=True,
+                )
 
-        stdout_flat = result.stdout.strip().replace("\n", "")
-        self.assertEqual(result.returncode, 1)
-        self.assertEqual(
-            stdout_flat,
-            "invalid_identifier is not an index within the .ts-backend-check.yaml configuration file. Please check the defined models and try again.",
-        )
+                stdout_flat = result.stdout.strip().replace("\n", "")
+                self.assertEqual(result.returncode, 1)
+                self.assertEqual(
+                    stdout_flat,
+                    f"{identifier} is not an index within the .ts-backend-check.yaml configuration file. Please check the defined models and try again.",
+                )
 
     def test_cli_check_command_with_nonexistent_backend_model_files(self):
         """
         When the model does not exist, CLI should print an informative message
         and exit with code 1.
         """
-        result = subprocess.run(
-            [
-                sys.executable,
-                "src/ts_backend_check/cli/main.py",
-                "--identifier",
-                "invalid_backend_model_path",
-            ],
-            capture_output=True,
-            text=True,
-        )
+        cases = [
+            ("invalid_backend_model_path", "django"),
+            ("invalid_backend_model_path", "fastapi"),
+        ]
+        for identifier, backend_type in cases:
+            with self.subTest(identifier=identifier, backend_type=backend_type):
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "src/ts_backend_check/cli/main.py",
+                        "--identifier",
+                        identifier,
+                        "--backend-type",
+                        backend_type,
+                    ],
+                    capture_output=True,
+                    text=True,
+                )
 
-        stdout_flat = result.stdout.strip().replace("\n", "")
-        self.assertEqual(result.returncode, 1)
-        self.assertIn(
-            "❌ The 'backend_model_file_path' argument, invalid_path_to_models.py, is not a valid file.",
-            stdout_flat,
-        )
-        self.assertIn(
-            "This should be a file that contains the",
-            stdout_flat,
-        )
-        self.assertIn(
-            "'invalid_backend_model_path'",
-            stdout_flat,
-        )
-        self.assertIn(
-            "backend models.",
-            stdout_flat,
-        )
-        self.assertIn(
-            "Please check the .ts-backend-check.yaml configuration file and try again.",
-            stdout_flat,
-        )
+                stdout_flat = result.stdout.strip().replace("\n", "")
+                self.assertEqual(result.returncode, 1)
+                self.assertIn(
+                    "❌ The 'backend_model_file_path' argument, invalid_path_to_models.py, is not a valid file.",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    "This should be a file that contains the",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    "'invalid_backend_model_path'",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    "backend models.",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    "Please check the .ts-backend-check.yaml configuration file and try again.",
+                    stdout_flat,
+                )
 
     def test_cli_check_command_with_nonexistent_ts_files(self):
         """
         When TypeScript file does not exist, CLI should print an informative message
         and exit with code 1.
         """
-        result = subprocess.run(
-            [
-                sys.executable,
-                "src/ts_backend_check/cli/main.py",
-                "--identifier",
-                "invalid_typescript_interface_path",
-            ],
-            capture_output=True,
-            text=True,
-        )
+        cases = [
+            ("invalid_django_typescript_interface_path", "django"),
+            ("invalid_fastapi_typescript_interface_path", "fastapi"),
+        ]
+        for identifier, backend_type in cases:
+            with self.subTest(identifier=identifier, backend_type=backend_type):
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "src/ts_backend_check/cli/main.py",
+                        "--identifier",
+                        identifier,
+                        "--backend-type",
+                        backend_type,
+                    ],
+                    capture_output=True,
+                    text=True,
+                )
 
-        stdout_flat = result.stdout.strip().replace("\n", "")
-        self.assertEqual(result.returncode, 1)
-        self.assertIn(
-            "❌ The 'ts_interface_file_paths' argument should contain paths to the ",
-            stdout_flat,
-        )
-        self.assertIn(
-            "'invalid_typescript_interface_path'",
-            stdout_flat,
-        )
-        self.assertIn(
-            "TypeScript types",
-            stdout_flat,
-        )
-        self.assertIn(
-            "The following paths",
-            stdout_flat,
-        )
-        self.assertIn(
-            "valid files:",
-            stdout_flat,
-        )
-        self.assertIn(
-            "- invalid_path_to_interfaces.ts",
-            stdout_flat,
-        )
-        self.assertIn(
-            "Please check the .ts-backend-check.yaml configuration file and try again.",
-            stdout_flat,
-        )
+                stdout_flat = result.stdout.strip().replace("\n", "")
+                self.assertEqual(result.returncode, 1)
+                self.assertIn(
+                    "❌ The 'ts_interface_file_paths' argument should contain paths to the ",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    f"'{identifier}'",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    "TypeScript types",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    "The following paths",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    "valid files:",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    "- invalid_path_to_interfaces.ts",
+                    stdout_flat,
+                )
+                self.assertIn(
+                    "Please check the .ts-backend-check.yaml configuration file and try again.",
+                    stdout_flat,
+                )
 
     def test_version_flag_exits_with_zero(self):
         """
@@ -274,127 +301,187 @@ class TestCliMain(unittest.TestCase):
         """
         Providing --identifier should call the check_files_and_print_results function with the provided arg.
         """
-        with patch(
-            "ts_backend_check.cli.main.check_files_and_print_results"
-        ) as check_files_and_print_results_model:
-            with patch("sys.argv", ["ts-backend-check", "--identifier", "valid_model"]):
-                main()
+        cases = [("django_model", "django"), ("fastapi_model", "fastapi")]
+        for identifier, backend_type in cases:
+            with self.subTest(identifier=identifier, backend_type=backend_type):
+                with patch(
+                    "ts_backend_check.cli.main.check_files_and_print_results"
+                ) as check_files_and_print_results_model:
+                    with patch(
+                        "sys.argv",
+                        [
+                            "ts-backend-check",
+                            "--identifier",
+                            identifier,
+                            "--backend-type",
+                            backend_type,
+                        ],
+                    ):
+                        main()
 
-        check_files_and_print_results_model.assert_called_once_with(
-            identifier="valid_model",
-            backend_model_file_path=Path(config["valid_model"]["backend_model_path"]),
-            ts_interface_file_paths=[
-                Path(p) for p in config["valid_model"]["ts_interface_paths"]
-            ],
-            check_blank=True,
-            model_name_conversions={
-                "EventModel": ["Event", "EventExtended"],
-                "UserModel": ["User"],
-            },
-            backend_models_to_ignore=["BackendOnlyModel"],
-        )
+                    identifier_config = config[identifier]
+                    check_files_and_print_results_model.assert_called_once_with(
+                        identifier=identifier,
+                        backend_model_file_path=Path(
+                            identifier_config["backend_model_path"]
+                        ),
+                        ts_interface_file_paths=[
+                            Path(p) for p in identifier_config["ts_interface_paths"]
+                        ],
+                        backend_type=backend_type,
+                        check_blank=identifier_config.get(
+                            "check_blank_model_fields", False
+                        ),
+                        model_name_conversions=identifier_config.get(
+                            "backend_to_ts_model_name_conversions", {}
+                        ),
+                        backend_models_to_ignore=identifier_config.get(
+                            "backend_models_to_ignore", []
+                        ),
+                    )
 
     def test_all_flag_invokes_check_files_and_print_results_for_all_identifiers(self):
-        with patch(
-            "ts_backend_check.cli.main.check_files_and_print_results"
-        ) as check_files_and_print_results_model:
-            with patch("sys.argv", ["ts-backend-check", "--all"]):
-                main()
+        cases = [("django_model", "django"), ("fastapi_model", "fastapi")]
+        for identifier, backend_type in cases:
+            with self.subTest(identifier=identifier, backend_type=backend_type):
+                with patch(
+                    "ts_backend_check.cli.main.check_files_and_print_results"
+                ) as check_files_and_print_results_model:
+                    with patch(
+                        "sys.argv",
+                        ["ts-backend-check", "--all", "--backend-type", backend_type],
+                    ):
+                        main()
+                    expected_identifiers = [
+                        ident
+                        for ident, identifier_config in config.items()
+                        if identifier_config.get("backend_type", backend_type)
+                        == backend_type
+                    ]
+                    expected_calls = [
+                        call(
+                            identifier=ident,
+                            backend_model_file_path=Path(
+                                config[ident]["backend_model_path"]
+                            ),
+                            ts_interface_file_paths=[
+                                Path(p) for p in config[ident]["ts_interface_paths"]
+                            ],
+                            backend_type=config[ident].get(
+                                "backend_type", backend_type
+                            ),
+                            check_blank=config[ident].get(
+                                "check_blank_model_fields", False
+                            ),
+                            model_name_conversions=config[ident].get(
+                                "backend_to_ts_model_name_conversions", {}
+                            ),
+                            backend_models_to_ignore=config[ident].get(
+                                "backend_models_to_ignore", []
+                            ),
+                        )
+                        for ident in expected_identifiers
+                    ]
+                    assert (
+                        check_files_and_print_results_model.call_args_list
+                        == expected_calls
+                    )
+                    for ident in expected_identifiers:
+                        identifier_config = config[ident]
+                        expected_backend_model_file_path = Path(
+                            identifier_config["backend_model_path"]
+                        )
 
-        assert check_files_and_print_results_model.call_count == len(config.keys())
-
-        for identifier in list(config.keys())[:4]:
-            identifier_config = config[identifier]
-
-            expected_backend_model_file_path = Path(
-                identifier_config["backend_model_path"]
-            )
-
-            expected_ts_interface_file_paths = [
-                Path(p) for p in identifier_config["ts_interface_paths"]
-            ]
-
-            expected_check_blank = (
-                identifier_config["check_blank_model_fields"]
-                if "check_blank_model_fields" in identifier_config
-                else False
-            )
-
-            expected_model_name_conversions = (
-                identifier_config["backend_to_ts_model_name_conversions"]
-                if "backend_to_ts_model_name_conversions" in identifier_config
-                else {}
-            )
-
-            expected_backend_models_to_ignore = (
-                identifier_config["backend_models_to_ignore"]
-                if "backend_models_to_ignore" in identifier_config
-                else []
-            )
-
-            check_files_and_print_results_model.assert_any_call(
-                identifier=identifier,
-                backend_model_file_path=expected_backend_model_file_path,
-                ts_interface_file_paths=expected_ts_interface_file_paths,
-                check_blank=expected_check_blank,
-                model_name_conversions=expected_model_name_conversions,
-                backend_models_to_ignore=expected_backend_models_to_ignore,
-            )
+                        expected_ts_interface_file_paths = [
+                            Path(p) for p in identifier_config["ts_interface_paths"]
+                        ]
+                        expected_check_blank = identifier_config.get(
+                            "check_blank_model_fields", False
+                        )
+                        expected_model_name_conversions = identifier_config.get(
+                            "backend_to_ts_model_name_conversions", {}
+                        )
+                        expected_backend_models_to_ignore = identifier_config.get(
+                            "backend_models_to_ignore", []
+                        )
+                        expected_backend_type = identifier_config.get(
+                            "backend_type", backend_type
+                        )
+                        check_files_and_print_results_model.assert_any_call(
+                            identifier=ident,
+                            backend_model_file_path=expected_backend_model_file_path,
+                            ts_interface_file_paths=expected_ts_interface_file_paths,
+                            backend_type=expected_backend_type,
+                            check_blank=expected_check_blank,
+                            model_name_conversions=expected_model_name_conversions,
+                            backend_models_to_ignore=expected_backend_models_to_ignore,
+                        )
 
     def test_typechecker_no_missing_fields_prints_success(self):
         """
         When TypeChecker.check() returns an empty list, the CLI should print the success message.
         """
-        with patch("ts_backend_check.cli.main.TypeChecker") as MockTypeChecker:
-            MockTypeChecker.return_value.check.return_value = []
-
-            with patch("ts_backend_check.cli.main.rprint") as mock_rprint:
-                with patch(
-                    "sys.argv",
-                    [
-                        "ts-backend-check",
-                        "--identifier",
-                        "valid_model",
-                    ],
-                ):
-                    main()
-
-            # The success message is printed once with the exact green-markup string.
-            expected = (
-                "[green]✅ Success: All backend models are synced with their corresponding "
-                "TypeScript interfaces for the provided 'valid_model' files.[/green]"
-            )
-            # Ensure rprint was called and the final call contains the expected message.
-            self.assertTrue(mock_rprint.called)
-            self.assertEqual(mock_rprint.call_args_list[-1][0][0], expected)
+        cases = [("django_model", "django"), ("fastapi_model", "fastapi")]
+        for identifier, backend_type in cases:
+            with self.subTest(identifier=identifier, backend_type=backend_type):
+                with patch("ts_backend_check.cli.main.TypeChecker") as MockTypeChecker:
+                    MockTypeChecker.return_value.check.return_value = []
+                    with patch("ts_backend_check.cli.main.rprint") as mock_rprint:
+                        with patch(
+                            "sys.argv",
+                            [
+                                "ts-backend-check",
+                                "--identifier",
+                                identifier,
+                                "--backend-type",
+                                backend_type,
+                            ],
+                        ):
+                            main()
+                        # The success message is printed once with the exact green-markup string.
+                        expected = (
+                            "[green]✅ Success: All backend models are synced with their corresponding "
+                            f"TypeScript interfaces for the provided '{identifier}' files.[/green]"
+                        )
+                        # Ensure rprint was called and the final call contains the expected message.
+                        self.assertTrue(mock_rprint.called)
+                        self.assertEqual(mock_rprint.call_args_list[-1][0][0], expected)
 
     def test_typechecker_missing_fields_exits_with_one_and_prints_errors(self):
         """
         When TypeChecker.check() returns missing fields, the CLI should print errors
         and exit with status code 1.
         """
-        # Patch TypeChecker so its .check() returns a list of missing-field messages.
-        with patch("ts_backend_check.cli.main.TypeChecker") as MockTypeChecker:
-            MockTypeChecker.return_value.check.return_value = [
-                "TestModel.age is missing in TypeScript type"
-            ]
+        cases = [
+            ("invalid_django_model", "django"),
+            ("invalid_fastapi_model", "fastapi"),
+        ]
+        for identifier, backend_type in cases:
+            with self.subTest(identifier=identifier, backend_type=backend_type):
+                # Patch TypeChecker so its .check() returns a list of missing-field messages.
+                with patch("ts_backend_check.cli.main.TypeChecker") as MockTypeChecker:
+                    MockTypeChecker.return_value.check.return_value = [
+                        "TestModel.age is missing in TypeScript type"
+                    ]
 
-            # Make Text.from_markup return the raw string to simplify assertions.
-            with patch(
-                "ts_backend_check.cli.main.Text.from_markup",
-                side_effect=lambda s: s,
-            ):
-                with patch("ts_backend_check.cli.main.rprint") as mock_rprint:
+                    # Make Text.from_markup return the raw string to simplify assertions.
                     with patch(
-                        "sys.argv",
-                        [
-                            "ts-backend-check",
-                            "--identifier",
-                            "invalid_model",
-                        ],
+                        "ts_backend_check.cli.main.Text.from_markup",
+                        side_effect=lambda s: s,
                     ):
-                        with self.assertRaises(SystemExit) as cm:
-                            main()
+                        with patch("ts_backend_check.cli.main.rprint") as mock_rprint:
+                            with patch(
+                                "sys.argv",
+                                [
+                                    "ts-backend-check",
+                                    "--identifier",
+                                    identifier,
+                                    "--backend-type",
+                                    backend_type,
+                                ],
+                            ):
+                                with self.assertRaises(SystemExit) as cm:
+                                    main()
 
         # Check that the exit code is 1.
         self.assertEqual(cm.exception.code, 1)

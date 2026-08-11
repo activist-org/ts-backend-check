@@ -28,8 +28,9 @@ def get_test_project_config_file_text() -> str:
     return """# Configuration file for ts-backend-check validation.
 # See https://github.com/activist-org/ts-backend-check for details.
 
-valid_model:
-  backend_model_path: src/ts_backend_check/test_project/backend/models.py
+fastapi_model:
+  backend_model_path: src/ts_backend_check/test_project/backend/fastapi_models.py
+  backend_type: fastapi
   ts_interface_paths:
     - src/ts_backend_check/test_project/frontend/valid_interfaces_1.ts
     - src/ts_backend_check/test_project/frontend/valid_interfaces_2.ts
@@ -43,8 +44,9 @@ valid_model:
     UserModel:
       - User
 
-invalid_model:
-  backend_model_path: src/ts_backend_check/test_project/backend/models.py
+invalid_fastapi_model:
+  backend_model_path: src/ts_backend_check/test_project/backend/fastapi_models.py
+  backend_type: fastapi
   ts_interface_paths:
     - src/ts_backend_check/test_project/frontend/invalid_interfaces.ts
   check_blank_model_fields: true
@@ -56,6 +58,54 @@ invalid_model:
       - EventExtended
     # UserModel:
     #   - User
+
+django_model:
+  backend_model_path: src/ts_backend_check/test_project/backend/django_models.py
+  backend_type: django
+  ts_interface_paths:
+    - src/ts_backend_check/test_project/frontend/valid_interfaces_1.ts
+    - src/ts_backend_check/test_project/frontend/valid_interfaces_2.ts
+  check_blank_model_fields: true
+  backend_models_to_ignore:
+    - BackendOnlyModel
+  backend_to_ts_model_name_conversions:
+    EventModel:
+      - Event
+      - EventExtended
+    UserModel:
+      - User
+
+invalid_django_model:
+  backend_model_path: src/ts_backend_check/test_project/backend/django_models.py
+  backend_type: django
+  ts_interface_paths:
+    - src/ts_backend_check/test_project/frontend/invalid_interfaces.ts
+  check_blank_model_fields: true
+  backend_models_to_ignore:
+    - BackendOnlyModel
+  backend_to_ts_model_name_conversions:
+    EventModel:
+      - Event
+      - EventExtended
+    # UserModel:
+    #   - User
+
+invalid_backend_model_path:
+  backend_model_path: invalid_path_to_models.py
+  ts_interface_paths:
+    - src/ts_backend_check/test_project/frontend/valid_interfaces_1.ts
+
+invalid_django_typescript_interface_path:
+  backend_model_path: src/ts_backend_check/test_project/backend/django_models.py
+  backend_type: django
+  ts_interface_paths:
+    - invalid_path_to_interfaces.ts
+
+invalid_fastapi_typescript_interface_path:
+  backend_model_path: src/ts_backend_check/test_project/backend/fastapi_models.py
+  backend_type: fastapi
+  ts_interface_paths:
+    - invalid_path_to_interfaces.ts
 """
 
 
