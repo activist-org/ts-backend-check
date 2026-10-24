@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ts-backend-check"
-version = "1.6.1"
+version = "1.6.2"
 description = "Check TypeScript interfaces against backend models"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -32,20 +32,20 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "complexipy>=6.2.0",
-    "prek>=0.4.12",
+    "complexipy>=8.1.0",
+    "prek>=0.5.7",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
-    "ruff>=0.16.2",
-    "setuptools>=83.0.0",
+    "ruff>=0.17.2",
+    "setuptools>=84.2.1",
     "types-PyYAML>=6.0.12.20250915",
     "types-requests>=2.33.0.20260712",
-    "ty>=0.0.69",
+    "ty>=0.0.91",
 ]
 docs = [
     # Keep docs dependencies formatted in this way with ruff to allow for upgrades via VS Code extension.
     "myst-parser>=5.1.0",
-    "numpydoc>=1.10.0",
+    "numpydoc>=1.11.0",
     "sphinx-rtd-theme>=3.1.0",
 ]
 
