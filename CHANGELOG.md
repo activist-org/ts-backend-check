@@ -10,6 +10,10 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
+## ts-backend-check 1.6.2
+
+- All development dependencies were updated.
+
 ## ts-backend-check 1.6.1
 
 ### ♻️ Code Refactoring
