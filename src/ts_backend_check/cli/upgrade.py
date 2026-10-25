@@ -30,7 +30,7 @@ def upgrade_cli() -> None:
 
     if latest_version_message == UNKNOWN_VERSION_NOT_FETCHED:
         print(
-            "Unable to fetch the latest version from GitHub. Please check the GitHub repository or your internet connection."
+            "Unable to fetch the latest version from Codeberg. Please check the Codeberg repository or your internet connection."
         )
         return
 
@@ -56,7 +56,9 @@ def upgrade_cli() -> None:
         latest_ver = version.parse(latest_version_clean)
 
     except InvalidVersion:
-        print("Unable to parse the latest version. Please check the GitHub repository.")
+        print(
+            "Unable to parse the latest version. Please check the Codeberg repository."
+        )
         return
 
     # MARK: React to Version
@@ -66,7 +68,7 @@ def upgrade_cli() -> None:
 
     elif local_ver > latest_ver:
         print(
-            f"ts-backend-check v{local_version_clean} is higher than the currently released version ts-backend-check v{latest_version_clean}. Hopefully this is a development build, and if so, thanks for your work on ts-backend-check! If not, please report this to the team at https://github.com/activist-org/ts-backend-check/issues."
+            f"ts-backend-check v{local_version_clean} is higher than the currently released version ts-backend-check v{latest_version_clean}. Hopefully this is a development build, and if so, thanks for your work on ts-backend-check! If not, please report this to the team at https://codeberg.org/activist-org/ts-backend-check/issues."
         )
 
     else:
@@ -87,7 +89,7 @@ def upgrade_cli() -> None:
 
         except subprocess.CalledProcessError as e:
             print(
-                f"Failed to install the latest version of ts-backend-check with error {e}. Please check the error message and report any issues to the team at https://github.com/activist-org/ts-backend-check/issues."
+                f"Failed to install the latest version of ts-backend-check with error {e}. Please check the error message and report any issues to the team at https://codeberg.org/activist-org/ts-backend-check/issues."
             )
 
 

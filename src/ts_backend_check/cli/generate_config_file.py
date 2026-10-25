@@ -135,7 +135,7 @@ def write_config(config: dict[str, dict[str, object]]) -> None:
     """
     try:
         options = f"""# Configuration file for ts-backend-check validation.
-# See https://github.com/activist-org/ts-backend-check for details.
+# See https://codeberg.org/activist-org/ts-backend-check for details.
 
 {dump(config, sort_keys=False)}"""
 

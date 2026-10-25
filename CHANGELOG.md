@@ -1,6 +1,6 @@
 # Changelog
 
-See the [releases for ts-backend-check](https://github.com/activist-org/ts-backend-check/releases) for an up to date list of versions and their release dates.
+See the [releases for ts-backend-check](https://codeberg.org/activist-org/ts-backend-check/releases) for an up to date list of versions and their release dates.
 
 `ts-backend-check` tries to follow [semantic versioning](https://semver.org/), a `MAJOR.MINOR.PATCH` version where increments are made of the:
 
@@ -10,7 +10,15 @@ See the [releases for ts-backend-check](https://github.com/activist-org/ts-backe
 
 Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
+## ts-backend-check 1.7.0
+
+### ✨ Features
+
+- Development of the project was switched to [codeberg.org/activist-org/ts-backend-check](https://codeberg.org/activist-org/ts-backend-check).
+
 ## ts-backend-check 1.6.2
+
+### ⬆️ Dependencies
 
 - All development dependencies were updated.
 
@@ -18,16 +26,16 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ♻️ Code Refactoring
 
-- Static analysis has been shifted from `mypy` to `ty` ([#53](https://github.com/activist-org/ts-backend-check/issues/53)).
-- The legacy Python typing system was removed in favor of the more modern approach ([#53](https://github.com/activist-org/ts-backend-check/issues/53)).
-- The complexity of the code was reduced to improve maintainability via checks using `complexipy` ([#57](https://github.com/activist-org/ts-backend-check/issues/57)).
+- Static analysis has been shifted from `mypy` to `ty` ([#53](https://codeberg.org/activist-org/ts-backend-check/issues/53)).
+- The legacy Python typing system was removed in favor of the more modern approach ([#53](https://codeberg.org/activist-org/ts-backend-check/issues/53)).
+- The complexity of the code was reduced to improve maintainability via checks using `complexipy` ([#57](https://codeberg.org/activist-org/ts-backend-check/issues/57)).
 - The code was marked out with `MARK` identifiers for easier minimap navigation.
 
 ## ts-backend-check 1.6.0
 
 ### ✨ Features
 
-- The user is now able to use comments to indicate which fields in the model are being inherited from other classes and whether these fields are nullable ([#51](https://github.com/activist-org/ts-backend-check/issues/51)).
+- The user is now able to use comments to indicate which fields in the model are being inherited from other classes and whether these fields are nullable ([#51](https://codeberg.org/activist-org/ts-backend-check/issues/51)).
 
 ### 🐞 Bug Fixes
 
@@ -41,7 +49,7 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ✨ Features
 
-- The configuration generation process now allows for multiple interface file paths to be passed ([#49](https://github.com/activist-org/ts-backend-check/issues/49)).
+- The configuration generation process now allows for multiple interface file paths to be passed ([#49](https://codeberg.org/activist-org/ts-backend-check/issues/49)).
 
 ### ♻️ Code Refactoring
 
@@ -51,14 +59,14 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ✨ Features
 
-- Interface file paths can now be broken up over multiple files in the `.ts-backend-check.yaml` configuration file ([#39](https://github.com/activist-org/ts-backend-check/issues/39)).
-- Backend models can be ignored in the `.ts-backend-check.yaml` configuration file ([#40](https://github.com/activist-org/ts-backend-check/issues/40)).
-- The user is prompted to regenerate their `.ts-backend-check.yaml` if the file is found to be empty or is missing required arguments ([#41](https://github.com/activist-org/ts-backend-check/issues/41)).
-- The user is prompted to write a configuration file for the test project on generation ([#46](https://github.com/activist-org/ts-backend-check/issues/46)).
+- Interface file paths can now be broken up over multiple files in the `.ts-backend-check.yaml` configuration file ([#39](https://codeberg.org/activist-org/ts-backend-check/issues/39)).
+- Backend models can be ignored in the `.ts-backend-check.yaml` configuration file ([#40](https://codeberg.org/activist-org/ts-backend-check/issues/40)).
+- The user is prompted to regenerate their `.ts-backend-check.yaml` if the file is found to be empty or is missing required arguments ([#41](https://codeberg.org/activist-org/ts-backend-check/issues/41)).
+- The user is prompted to write a configuration file for the test project on generation ([#46](https://codeberg.org/activist-org/ts-backend-check/issues/46)).
 
 ### ♻️ Code Refactoring
 
-- The `--model` (`-m`) flag was renamed `--identifier` (`-i`) for clarity as we're passing a model-interface identifier to the CLI ([#42](https://github.com/activist-org/ts-backend-check/issues/42)).
+- The `--model` (`-m`) flag was renamed `--identifier` (`-i`) for clarity as we're passing a model-interface identifier to the CLI ([#42](https://codeberg.org/activist-org/ts-backend-check/issues/42)).
 - The `get_config_file_path` function was moved to `utils.py`.
 - Messages to the user were improved and refactored given the changes above.
 
@@ -76,19 +84,19 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### 🐞 Bug Fixes
 
-- The configuration setup was being ran again after a successful creation of a config file ([#36](https://github.com/activist-org/ts-backend-check/issues/36)).
+- The configuration setup was being ran again after a successful creation of a config file ([#36](https://codeberg.org/activist-org/ts-backend-check/issues/36)).
 
 ## ts-backend-check 1.4.2
 
 ### 🐞 Bug Fixes
 
-- The configuration file was being saved to the install directory rather than the current working directory ([#33](https://github.com/activist-org/ts-backend-check/issues/33)).
+- The configuration file was being saved to the install directory rather than the current working directory ([#33](https://codeberg.org/activist-org/ts-backend-check/issues/33)).
 
 ## ts-backend-check 1.4.1
 
 ### 🐞 Bug Fixes
 
-- The file paths were not being picked up when generating a configuration file ([#33](https://github.com/activist-org/ts-backend-check/issues/33)).
+- The file paths were not being picked up when generating a configuration file ([#33](https://codeberg.org/activist-org/ts-backend-check/issues/33)).
 
 ## ts-backend-check 1.4.0
 
@@ -99,14 +107,14 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 ### 🐞 Bug Fixes
 
 - The CLI wasn't printing help when the user entered no arguments without a configuration file.
-- The values in `backend_to_ts_model_name_conversions` dictionaries were being saved as strings instead of lists ([#34](https://github.com/activist-org/ts-backend-check/issues/34)).
+- The values in `backend_to_ts_model_name_conversions` dictionaries were being saved as strings instead of lists ([#34](https://codeberg.org/activist-org/ts-backend-check/issues/34)).
 - Type definitions were added to empty variables to assure that they're use appropriately.
 
 ## ts-backend-check 1.3.2
 
 ### 📝 Documentation
 
-- All documentation for the package was updated to improve clarity ([#26](https://github.com/activist-org/ts-backend-check/issues/26)).
+- All documentation for the package was updated to improve clarity ([#26](https://codeberg.org/activist-org/ts-backend-check/issues/26)).
 
 ## ts-backend-check 1.3.1
 
@@ -122,8 +130,8 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ✨ Features
 
-- The package was converted over to require a configuration file for its functionality ([#27](https://github.com/activist-org/ts-backend-check/issues/27)).
-- Fields that are able to be blank within backend models can be asserted as being optional within TypeScript interfaces ([#23](https://github.com/activist-org/ts-backend-check/issues/23)).
+- The package was converted over to require a configuration file for its functionality ([#27](https://codeberg.org/activist-org/ts-backend-check/issues/27)).
+- Fields that are able to be blank within backend models can be asserted as being optional within TypeScript interfaces ([#23](https://codeberg.org/activist-org/ts-backend-check/issues/23)).
 - Backend model field names can be converted in TypeScript interface checks if they're not the same.
 
 ### ⬆️ Dependencies
@@ -148,16 +156,16 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### 📝 Documentation
 
-- The readme and documentation files were updated to show the functionality of the package ([#20](https://github.com/activist-org/ts-backend-check/issues/20)).
+- The readme and documentation files were updated to show the functionality of the package ([#20](https://codeberg.org/activist-org/ts-backend-check/issues/20)).
 
 ## ts-backend-check 1.2.0
 
 ### ✨ Features
 
-- Adds the ability for the user to check the most recent version of the package via the CLI's version command and upgrade it via a simple CLI argument ([#12](https://github.com/activist-org/ts-backend-check/issues/12)).
-- The outputs of the CLI are colored using [Rich](https://github.com/Textualize/rich) ([#10](https://github.com/activist-org/ts-backend-check/issues/10)).
-- The help message is now displayed to the user instead of an error when no arguments are passed to an execution of `ts-backend-check` ([#18](https://github.com/activist-org/ts-backend-check/issues/18)).
-- The CLI can now check if a Django model field can be set as blank and asserts that the corresponding field in TypeScript interfaces be optional ([#11](https://github.com/activist-org/ts-backend-check/issues/11)).
+- Adds the ability for the user to check the most recent version of the package via the CLI's version command and upgrade it via a simple CLI argument ([#12](https://codeberg.org/activist-org/ts-backend-check/issues/12)).
+- The outputs of the CLI are colored using [Rich](https://github.com/Textualize/rich) ([#10](https://codeberg.org/activist-org/ts-backend-check/issues/10)).
+- The help message is now displayed to the user instead of an error when no arguments are passed to an execution of `ts-backend-check` ([#18](https://codeberg.org/activist-org/ts-backend-check/issues/18)).
+- The CLI can now check if a Django model field can be set as blank and asserts that the corresponding field in TypeScript interfaces be optional ([#11](https://codeberg.org/activist-org/ts-backend-check/issues/11)).
 
 ### ⬆️ Dependencies
 
@@ -171,7 +179,7 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ✨ Features
 
-- An argparse based CLI was developed ([#7](https://github.com/activist-org/ts-backend-check/issues/7)) to help check TypeScript types against their corresponding backend models.
+- An argparse based CLI was developed ([#7](https://codeberg.org/activist-org/ts-backend-check/issues/7)) to help check TypeScript types against their corresponding backend models.
   - Arguments include passing a backend model file and a TypeScript file that should be compared.
   - The backend model fields are extracted, which currently works for Django based models.
   - These model fields are then compared against a TypeScript file to check if they have been mentioned in the code.
@@ -188,14 +196,14 @@ Emojis for the following are chosen based on [gitmoji](https://gitmoji.dev/).
 
 ### ✅ Tests
 
-- Testing has been written for the CLI functionalities ([#2](https://github.com/activist-org/ts-bachend-check/issues/2)).
+- Testing has been written for the CLI functionalities ([#2](https://codeberg.org/activist-org/ts-backend-check/issues/2)).
 - GitHub Actions based checks are used to validate file license headers, ruff based code formatting, mypy static type checking and pytest based tests on each pull request.
 - pre-commit hooks are used to enforce code quality before commits during development.
 
 ### 📝 Documentation
 
 - All onboarding documentation has been written including an extensive readme, a contributing guide and GitHub templates to help people contribute effectively.
-- Read the Docs documentation has been generated for the project and can be found at [ts-backend-check.readthedocs.io](https://ts-backend-check.readthedocs.io/en/latest/) ([#3](https://github.com/activist-org/ts-bachend-check/issues/3)).
+- Read the Docs documentation has been generated for the project and can be found at [ts-backend-check.readthedocs.io](https://ts-backend-check.readthedocs.io/en/latest/) ([#3](https://codeberg.org/activist-org/ts-bachend-check/issues/3)).
 - All docstrings for functions and classes were standardized based on numpydoc.
 
 ### ♻️ Code Refactoring

@@ -38,7 +38,7 @@ def get_local_version() -> str:
 
 def get_latest_version() -> Any:
     """
-    Get the latest version of the ts-backend-check package from GitHub.
+    Get the latest version of the ts-backend-check package from Codeberg.
 
     Returns
     -------
@@ -48,7 +48,7 @@ def get_latest_version() -> Any:
     """
     try:
         response = requests.get(
-            "https://api.github.com/repos/activist-org/ts-backend-check/releases/latest"
+            "https://codeberg.org/api/v1/repos/activist-org/ts-backend-check/releases/latest"
         )
         response_data: dict[str, Any] = response.json()
         return response_data["name"]
@@ -86,7 +86,7 @@ def get_version_message() -> str:
         return f"ts-backend-check v{local_version_clean}"
 
     elif local_version_clean > latest_version_clean:
-        return f"ts-backend-check v{local_version_clean} is higher than the currently released version ts-backend-check v{latest_version_clean}. Hopefully this is a development build, and if so, thanks for your work on ts-backend-check! If not, please report this to the team at https://github.com/activist-org/ts-backend-check/issues."
+        return f"ts-backend-check v{local_version_clean} is higher than the currently released version ts-backend-check v{latest_version_clean}. Hopefully this is a development build, and if so, thanks for your work on ts-backend-check! If not, please report this to the team at https://codeberg.org/activist-org/ts-backend-check/issues."
 
     else:
         return f"ts-backend-check v{local_version_clean} (Upgrade available: ts-backend-check v{latest_version_clean}). To upgrade: ts-backend-check -u"

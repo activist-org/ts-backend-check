@@ -1,16 +1,16 @@
 <div align="center">
-  <a href="https://github.com/activist-org/ts-backend-check"><img src="https://raw.githubusercontent.com/activist-org/ts-backend-check/main/.github/resources/TSBackendCheckGitHubBanner.png" width=1024 alt="TS Backend Check logo"></a>
+  <a href="https://codeberg.org/activist-org/ts-backend-check"><img src="https://codeberg.org/activist-org/ts-backend-check/raw/branch/main/.forgejo/resources/images/TSBackendCheckBanner.png" style="width: 100%; max-width: 100%;" width=1024 alt="TS Backend Check logo"></a>
 </div>
 
 [![rtd](https://img.shields.io/readthedocs/ts-backend-check.svg?label=%20&logo=read-the-docs&logoColor=ffffff)](http://ts-backend-check.readthedocs.io/en/latest/)
-[![ci_static_analysis](https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/ci_static_analysis.yaml?branch=main&label=%20&logo=ruff&logoColor=ffffff)](https://github.com/activist-org/ts-backend-check/actions/workflows/ci_static_analysis.yaml)
-[![ci_pytest](https://img.shields.io/github/actions/workflow/status/activist-org/ts-backend-check/ci_pytest.yaml?branch=main&label=%20&logo=pytest&logoColor=ffffff)](https://github.com/activist-org/ts-backend-check/actions/workflows/ci_pytest.yaml)
-[![issues](https://img.shields.io/github/issues/activist-org/ts-backend-check?label=%20&logo=github)](https://github.com/activist-org/ts-backend-check/issues)
-[![python](https://img.shields.io/badge/Python-4B8BBE.svg?logo=python&logoColor=ffffff)](https://github.com/activist-org/ts-backend-check/blob/main/CONTRIBUTING.md)
+[![ci_static_analysis](https://codeberg.org/activist-org/ts-backend-check/actions/workflows/ci_static_analysis.yaml/badge.svg?branch=main&label=%20&logo=ruff&logoColor=ffffff)](https://codeberg.org/activist-org/ts-backend-check/actions?workflow=ci_static_analysis.yaml)
+[![ci_pytest](https://codeberg.org/activist-org/ts-backend-check/actions/workflows/ci_pytest.yaml/badge.svg?branch=main&label=%20&logo=pytest&logoColor=ffffff)](https://codeberg.org/activist-org/ts-backend-check/actions/?workflow=ci_pytest.yaml)
+[![issues](https://img.shields.io/gitea/issues/open/activist-org/ts-backend-check?gitea_url=https://codeberg.org&label=%20&logo=codeberg&logoColor=ffffff)](https://codeberg.org/activist-org/ts-backend-check/issues)
+[![python](https://img.shields.io/badge/Python-4B8BBE.svg?logo=python&logoColor=ffffff)](https://codeberg.org/activist-org/ts-backend-check/src/branch/main/CONTRIBUTING.md)
 [![pypi](https://img.shields.io/pypi/v/ts-backend-check.svg?label=%20&color=4B8BBE)](https://pypi.org/project/ts-backend-check/)
 [![pypistatus](https://img.shields.io/pypi/status/ts-backend-check.svg?label=%20)](https://pypi.org/project/ts-backend-check/)
-[![license](https://img.shields.io/github/license/activist-org/ts-backend-check.svg?label=%20)](https://github.com/activist-org/ts-backend-check/blob/main/LICENSE.txt)
-[![coc](https://img.shields.io/badge/Contributor%20Covenant-ff69b4.svg)](https://github.com/activist-org/ts-backend-check/blob/main/.github/CODE_OF_CONDUCT.md)
+[![license](https://img.shields.io/github/license/activist-org/ts-backend-check.svg?label=%20)](https://codeberg.org/activist-org/ts-backend-check/src/branch/main/LICENSE.txt)
+[![coc](https://img.shields.io/badge/Contributor%20Covenant-ff69b4.svg)](https://codeberg.org/activist-org/ts-backend-check/src/branch/main/.forgejo/CODE_OF_CONDUCT.md)
 [![matrix](https://img.shields.io/badge/Matrix-000000.svg?logo=matrix&logoColor=ffffff)](https://matrix.to/#/#activist_community:matrix.org)
 
 # Contents
@@ -26,7 +26,7 @@
 - [Configuration](#configuration)
   - [YAML File](#yaml-file)
   - [pre-commit](#pre-commit)
-  - [GitHub Action](#github-action)
+  - [CI Action](#ci-action)
 - [Contributing](#contributing)
   - [Contact the Team](#contact-the-team)
   - [Contributors](#contributors)
@@ -42,7 +42,7 @@
 
 `ts-backend-check` (`tsbc`) is a Python package for checking TypeScript types against their corresponding backend models to assure that all fields have been accounted for.
 
-Developed by the [activist community](https://github.com/activist-org), this package helps keep frontend and backend development teams in sync.
+Developed by the [activist community](https://codeberg.org/activist-org), this package helps keep frontend and backend development teams in sync.
 
 The package supports Django-based backends.
 
@@ -73,7 +73,7 @@ You can install the latest development build using uv, pip, or by cloning the re
 ### Clone the Repository (Development Build)
 
 ```bash
-git clone https://github.com/activist-org/ts-backend-check.git  # or ideally your fork
+git clone https://codeberg.org/activist-org/ts-backend-check.git  # or ideally your fork
 cd ts-backend-check
 ```
 
@@ -214,9 +214,9 @@ This is an example of a [prek](https://prek.j178.dev/) or [pre-commit](https://g
       pass_filenames: false
 ```
 
-## GitHub Action
+## CI Action
 
-This is an example YAML file for a GitHub Action to check your backend models and TypeScript interface files on pull requests and commits:
+This is an example YAML file for a Codeberg or GitHub Action to check your backend models and TypeScript interface files on pull requests and commits:
 
 ```yaml
 name: ci_ts_backend_check
@@ -266,7 +266,7 @@ See the [contribution guidelines](CONTRIBUTING.md) before contributing. You can 
 - ✨ Working with us on new features.
 - 📝 Improving the documentation.
 
-We track work that is in progress or may be implemented in the the [issues](https://github.com/activist-org/ts-backend-check/issues) and [projects](https://github.com/activist-org/ts-backend-check/projects).
+We track work that is in progress or may be implemented in the the [issues](https://codeberg.org/activist-org/ts-backend-check/issues) and [projects](https://codeberg.org/activist-org/ts-backend-check/projects).
 
 ## Contact the Team
 

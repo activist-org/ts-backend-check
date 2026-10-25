@@ -26,7 +26,7 @@ def get_test_project_config_file_text() -> str:
     """
 
     return """# Configuration file for ts-backend-check validation.
-# See https://github.com/activist-org/ts-backend-check for details.
+# See https://codeberg.org/ts-backend-check for details.
 
 valid_model:
   backend_model_path: src/ts_backend_check/test_project/backend/models.py

@@ -215,7 +215,7 @@ def main() -> None:
     parser = ArgumentParser(
         prog="ts-backend-check",
         description="Checks the types in TypeScript files against the corresponding backend models.",
-        epilog="Visit the codebase at https://github.com/activist-org/ts-backend-check to learn more!",
+        epilog="Visit the codebase at https://codeberg.org/ts-backend-check to learn more!",
         formatter_class=lambda prog: argparse.HelpFormatter(prog, max_help_position=60),
     )
 
