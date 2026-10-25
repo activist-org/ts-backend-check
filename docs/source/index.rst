@@ -1,4 +1,4 @@
-.. image:: https://codeberg.org/activist-org/ts-backend-check/raw/branch/main/.forgejo/resources/images/TSBackendCheckBanner.png
+.. image:: https://codeberg.org/activist-org/ts-backend-check/raw/branch/main/.forgejo/resources/TSBackendCheckBanner.png
     :width: 100%
     :align: center
     :target: https://codeberg.org/activist-org/ts-backend-check

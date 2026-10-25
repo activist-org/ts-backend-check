@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://codeberg.org/activist-org/ts-backend-check"><img src="https://codeberg.org/activist-org/ts-backend-check/raw/branch/main/.forgejo/resources/images/TSBackendCheckBanner.png" style="width: 100%; max-width: 100%;" width=1024 alt="TS Backend Check logo"></a>
+  <a href="https://codeberg.org/activist-org/ts-backend-check"><img src="https://codeberg.org/activist-org/ts-backend-check/raw/branch/main/.forgejo/resources/TSBackendCheckBanner.png" style="width: 100%; max-width: 100%;" width=1024 alt="TS Backend Check logo"></a>
 </div>
 
 [![rtd](https://img.shields.io/readthedocs/ts-backend-check.svg?label=%20&logo=read-the-docs&logoColor=ffffff)](http://ts-backend-check.readthedocs.io/en/latest/)
