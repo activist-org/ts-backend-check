@@ -15,6 +15,7 @@
 
 # Contents
 
+- [Maintenance](#maintenance)
 - [About ts-backend-check](#about-ts-backend-check)
 - [Installation](#installation)
   - [Users](#users)
@@ -29,6 +30,10 @@
 - [Contributing](#contributing)
   - [Contact the Team](#contact-the-team)
   - [Contributors](#contributors)
+
+# Maintenance
+
+`ts-backend-check` is maintained at [codeberg.org/activist-org/ts-backend-check](https://codeberg.org/activist-org/ts-backend-check). Please visit this remote repository for issues and pull requests.
 
 # About ts-backend-check
 
